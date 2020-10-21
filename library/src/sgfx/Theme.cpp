@@ -91,16 +91,13 @@ Theme &Theme::set_bits_per_pixel(u8 bits_per_pixel) {
 }
 
 Theme &Theme::write_palette(Style style, State state, const Palette &palette) {
-  if (palette.colors().count() != m_color_count) {
-    return -1;
-  }
-
+  API_ASSERT(m_color_count == palette.colors().count());
   m_color_file.seek(calculate_color_offset(style, state))
     .write(palette.colors());
   return *this;
 }
 
-Palette Theme::read_palette(styles style, State state) const {
+Palette Theme::read_palette(Style style, State state) const {
   Palette result;
   result
     .set_pixel_format(
@@ -124,7 +121,7 @@ Theme &Theme::create(
   enum pixel_format pixel_format) {
 
   m_header.version = VERSION;
-  m_header.bits_per_pixel = bits_per_pixel.argument();
+  m_header.bits_per_pixel = static_cast<u8>(bits_per_pixel);
   m_header.pixel_format = pixel_format;
   m_color_count = 0;
 
@@ -136,7 +133,7 @@ Theme &Theme::create(
   return *this;
 }
 
-Theme &Theme::set_display_palette(
+const Theme &Theme::set_display_palette(
   const Display &display,
   Style style,
   State state) const {

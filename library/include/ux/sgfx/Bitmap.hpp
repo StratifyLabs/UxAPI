@@ -57,7 +57,11 @@ public:
 
   BitmapData &resize(const Area &area, BitsPerPixel bits_per_pixel);
 
+  BitmapData &load(const fs::File &file);
+  Area load_area(const fs::File &file);
+
   var::View view() { return m_data; }
+  const var::View view() const { return m_data; }
 
 private:
   API_RAF(BitmapData, BitsPerPixel, bits_per_pixel, BitsPerPixel::one);
@@ -71,7 +75,7 @@ private:
  */
 class Bitmap : public Api, public BitmapFlags {
 public:
-  Bitmap() {}
+  Bitmap();
 
   Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel);
 
@@ -89,6 +93,8 @@ public:
   Pen get_pen() const { return Pen(m_bmap.pen); }
 
   Region get_viewable_region() const;
+
+  const Bitmap &save(const fs::File &file) const;
 
   /*! \details Returns the number of bytes used to store a Bitmap of specified
    * size
@@ -278,7 +284,7 @@ public:
    *
    *
    */
-  Bitmap &downsample_bitmap(const Bitmap &source, const Area &factor);
+  Bitmap &downsample(const Bitmap &source);
 
   /*! \details This function draws a pattern on the bitmap.
    *
@@ -435,19 +441,22 @@ private:
 
   sg_color_t calculate_color_sum();
   int set_internal_bits_per_pixel(u8 bpp);
-  void initialize_members();
+  void initialize_members(
+    var::View view,
+    const Area &area,
+    BitsPerPixel bits_per_pixel);
   void calculate_members(const Area &dim);
 };
 
 } // namespace ux::sgfx
 
-namespace sys {
+namespace printer {
 class Printer;
 Printer &operator<<(Printer &printer, const ux::sgfx::Bitmap &a);
 Printer &operator<<(Printer &printer, const ux::sgfx::Point &a);
 Printer &operator<<(Printer &printer, const ux::sgfx::Region &a);
 Printer &operator<<(Printer &printer, const ux::sgfx::Area &a);
 Printer &operator<<(Printer &printer, const ux::sgfx::Pen &a);
-} // namespace sys
+} // namespace printer
 
 #endif /* UXAPI_UX_SGFX_BITMAP_HPP_ */

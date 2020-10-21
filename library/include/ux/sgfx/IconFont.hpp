@@ -39,7 +39,7 @@ public:
 
   explicit IconFont(const fs::File &file);
 
-  int refresh();
+  IconFont &refresh();
 
   sg_size_t point_size() const { return m_header.max_height; }
 

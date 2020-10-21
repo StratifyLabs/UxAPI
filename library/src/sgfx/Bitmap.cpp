@@ -12,70 +12,69 @@
 #include "ux/sgfx/Cursor.hpp"
 
 printer::Printer &
-printer::operator<<(printer::Printer &printer, const sgfx::Bitmap &a) {
+printer::operator<<(printer::Printer &printer, const ux::sgfx::Bitmap &a) {
   sg_size_t i, j;
 
   sg_color_t color;
   sg_cursor_t y_cursor;
   sg_cursor_t x_cursor;
 
-  sgfx::Bitmap::api()->cursor_set(&y_cursor, a.bmap(), sg_point(0, 0));
+  ux::sgfx::Bitmap::api()->cursor_set(&y_cursor, a.bmap(), sg_point(0, 0));
 
   var::String line;
-  line << " ";
+  line += " ";
   for (j = 0; j < a.bmap()->area.width; j++) {
     if (j % 10) {
-      line << var::String().format("%d", j % 10);
+      line += var::NumberString(j % 10);
     } else {
-      line << (" ");
+      line += (" ");
     }
   }
 
   printer.key("lines    ", line);
   line.clear();
   for (j = 0; j < a.bmap()->area.width; j++) {
-    line.append("-");
+    line += ("-");
   }
-  line.append("--");
+  line += ("--");
   printer.key("start    ", line);
 
   for (i = 0; i < a.bmap()->area.height; i++) {
     sg_cursor_copy(&x_cursor, &y_cursor);
 
     line.clear();
-    line.append("|");
+    line += ("|");
     for (j = 0; j < a.bmap()->area.width; j++) {
-      color = sgfx::Bitmap::api()->cursor_get_pixel(&x_cursor);
-      line << Printer::get_bitmap_pixel_character(
-        color,
-        a.bmap()->bits_per_pixel);
+      color = ux::sgfx::Bitmap::api()->cursor_get_pixel(&x_cursor);
+      line
+        += Printer::get_bitmap_pixel_character(color, a.bmap()->bits_per_pixel);
       if ((j < a.bmap()->area.width - 1) && (a.bmap()->bits_per_pixel > 4)) {
-        line.append(" ");
+        line += (" ");
       }
     }
-    line.append("|");
+    line += ("|");
     printer.key(var::String().format("line-%04d", i), line);
-    sgfx::Bitmap::api()->cursor_inc_y(&y_cursor);
+    ux::sgfx::Bitmap::api()->cursor_inc_y(&y_cursor);
   }
   line.clear();
   for (j = 0; j < a.bmap()->area.width; j++) {
-    line.append("-");
+    line += ("-");
   }
-  line.append("--");
+  line += ("--");
   printer.key("lines end", line);
 
   return printer;
 }
 
 printer::Printer &
-printer::operator<<(printer::Printer &printer, const sgfx::Point &a) {
+printer::operator<<(printer::Printer &printer, const ux::sgfx::Point &a) {
   printer.key("x", NumberString(a.x()));
   printer.key("y", NumberString(a.y()));
   return printer;
 }
 
 printer::Printer &
-printer::operator<<(printer::Printer &printer, const sgfx::Region &a) {
+printer::operator<<(printer::Printer &printer, const ux::sgfx::Region &a) {
   printer.key("x", NumberString(a.point().x()));
   printer.key("y", NumberString(a.point().y()));
   printer.key("width", NumberString(a.area().width()));
@@ -84,22 +83,22 @@ printer::operator<<(printer::Printer &printer, const sgfx::Region &a) {
 }
 
 printer::Printer &
-printer::operator<<(printer::Printer &printer, const sgfx::Area &a) {
+printer::operator<<(printer::Printer &printer, const ux::sgfx::Area &a) {
   printer.key("width", NumberString(a.width()));
   printer.key("height", NumberString(a.height()));
   return printer;
 }
 
 printer::Printer &
-printer::operator<<(printer::Printer &printer, const sgfx::Pen &a) {
+printer::operator<<(printer::Printer &printer, const ux::sgfx::Pen &a) {
   printer.key("color", NumberString(a.color()));
   printer.key("thickness", NumberString(a.color()));
-  printer.key("o_flags", NumberString(a.o_flags(), "0x%x"));
+  printer.key("o_flags", NumberString(static_cast<int>(a.flags()), "0x%x"));
   printer.key_bool("solid", (a.is_solid()));
   printer.key_bool("invert", (a.is_invert()));
   printer.key_bool("erase", (a.is_erase()));
   printer.key_bool("blend", (a.is_blend()));
-  printer.key("fill", (a.is_fill()));
+  printer.key_bool("fill", (a.is_fill()));
   return printer;
 }
 
@@ -109,24 +108,48 @@ int AntiAliasFilter::initialize(var::Array<u8, 8> contrast_map) {
   return Bitmap::api()->antialias_filter_init(&m_filter, contrast_map.data());
 }
 
-u32 Bitmap::color_count() const { return 1 << bits_per_pixel(); }
+BitmapData &BitmapData::load(const fs::File &file) {
+  sg_bmap_header_t hdr = {0};
 
-Region Bitmap::get_viewable_region() const {
-  Point point = Point(margin_left(), margin_top());
-  Area dim = Area(
-    Area::Width(width() - margin_left() - margin_right()),
-    Area::Height(height() - margin_top() - margin_bottom()));
-  Region region(point, dim);
-  return region;
+  file.read(View(hdr));
+
+  if (
+    (hdr.version != api()->sos_api.version)
+    || (hdr.bits_per_pixel != api()->bits_per_pixel)) {
+    API_RETURN_VALUE_ASSIGN_ERROR(*this, "", EINVAL);
+  }
+
+  resize(
+    Area(hdr.width, hdr.height),
+    static_cast<BitsPerPixel>(hdr.bits_per_pixel));
+
+  file.read(view());
+
+  return *this;
 }
 
-void Bitmap::calculate_members(const Area &dim) {
-  // we need to grab the read only in case the Data object is read only
-  api()->bmap_set_data(
-    &m_bmap,
-    (sg_bmap_data_t *)((const sg_bmap_data_t *)to<sg_bmap_data_t>()),
-    dim,
-    m_bmap.bits_per_pixel);
+Area BitmapData::load_area(const fs::File &file) {
+  sg_bmap_header_t hdr;
+  file.read(View(hdr));
+  if (
+    (hdr.version != api()->sos_api.version)
+    || (hdr.bits_per_pixel != api()->bits_per_pixel)) {
+    return Area();
+  }
+
+  return Area(hdr.width, hdr.height);
+}
+
+u32 Bitmap::color_count() const {
+  return 1 << static_cast<u8>(bits_per_pixel());
+}
+
+Region Bitmap::get_viewable_region() const {
+  const Point point = Point(margin_left(), margin_top());
+  const Area area(
+    width() - margin_left() - margin_right(),
+    height() - margin_top() - margin_bottom());
+  return Region(point, area);
 }
 
 int Bitmap::set_internal_bits_per_pixel(u8 bpp) {
@@ -149,16 +172,17 @@ int Bitmap::set_internal_bits_per_pixel(u8 bpp) {
   return -1;
 }
 
-int Bitmap::set_bits_per_pixel(u8 bits_per_pixel) {
-  return allocate(area(), BitsPerPixel(bits_per_pixel));
-}
-
-void Bitmap::initialize_members() {
+void Bitmap::initialize_members(
+  var::View view,
+  const Area &area,
+  BitsPerPixel bits_per_pixel) {
 
   // ensure api() is valid
   if (api().is_valid() == false) {
     exit_fatal("sgfx api not available");
   }
+
+  m_bmap.data = view.to<sg_bmap_data_t>();
 
   if (api()->bits_per_pixel == 0) {
     m_bmap.bits_per_pixel = 1; // use 1 as the default others are supported
@@ -172,220 +196,31 @@ void Bitmap::initialize_members() {
   m_bmap.pen.color = 65535;
 }
 
-void Bitmap::refer_to(
-  ReadOnlyBuffer buffer,
-  const Area &area,
-  BitsPerPixel bpp) {
-  set_internal_bits_per_pixel(bpp.argument());
+Bitmap::Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel) {}
 
-  Data::refer_to(buffer, Size(calculate_size(area)));
+Bitmap::Bitmap(const BitmapData &data) {}
 
-  calculate_members(area);
-}
-
-void Bitmap::refer_to(
-  ReadWriteBuffer buffer,
-  const Area &area,
-  BitsPerPixel bpp) {
-  set_internal_bits_per_pixel(bpp.argument());
-  Data::refer_to(buffer, Size(calculate_size(area)));
-  calculate_members(area);
-}
-
-void Bitmap::refer_to(const sg_bmap_header_t *hdr, IsReadOnly is_read_only) {
-  char *ptr;
-  ptr = (char *)hdr;
-  ptr += sizeof(sg_bmap_header_t);
-
-  if (is_read_only.argument()) {
-    refer_to(
-      ReadOnlyBuffer(ptr),
-      Area(hdr->width, hdr->height),
-      BitsPerPixel(hdr->bits_per_pixel));
-  } else {
-    refer_to(
-      ReadWriteBuffer(ptr),
-      Area(hdr->width, hdr->height),
-      BitsPerPixel(hdr->bits_per_pixel));
-  }
-}
-
-Bitmap Bitmap::create_reference(const Region &region) {
-  Bitmap result;
-  result.m_bmap.bits_per_pixel = bits_per_pixel();
-
-  if (is_read_only()) {
-    result.Data::refer_to(
-      Reference::ReadOnlyBuffer(bmap_data(region.point())),
-      Size(result.calculate_size(region.area())));
-  } else {
-    result.Data::refer_to(
-      Reference::ReadWriteBuffer(bmap_data(region.point())),
-      Size(result.calculate_size(region.area())));
-  }
-  result.calculate_members(region.area());
-  return result;
-}
-
-int Bitmap::allocate(const Area &dim, BitsPerPixel bpp) {
-
-  set_internal_bits_per_pixel(bpp.argument());
-  if (Data::allocate(calculate_size(dim)) < 0) {
-    calculate_members(Area());
-    return -1;
-  }
-  calculate_members(dim);
-  return 0;
-}
-
-int Bitmap::free() {
-  int result = Data::free();
-  if (result == 0) {
-    calculate_members(Area());
-  }
-  return result;
-}
-
-Bitmap::Bitmap() {
-  initialize_members();
-  set_internal_bits_per_pixel(1);
-  calculate_members(Area());
-}
-
-Bitmap::Bitmap(ReadOnlyBuffer buffer, const Area &area, BitsPerPixel bpp) {
-  initialize_members();
-  refer_to(buffer, area, bpp);
-}
-
-Bitmap::Bitmap(ReadWriteBuffer buffer, const Area &area, BitsPerPixel bpp) {
-  initialize_members();
-  refer_to(buffer, area, bpp);
-}
-
-Bitmap::Bitmap(const sg_bmap_header_t *hdr, IsReadOnly is_read_only) {
-  initialize_members();
-  refer_to(hdr, is_read_only);
-}
-
-Bitmap::Bitmap(const Area &area, BitsPerPixel bits_per_pixel) {
-  initialize_members();
-  allocate(area, bits_per_pixel);
-}
-
-Bitmap::~Bitmap() { free(); }
+Bitmap::Bitmap() { m_bmap = {0}; }
 
 Point Bitmap::center() const { return Point(width() / 2, height() / 2); }
 
-bool Bitmap::resize(const Area &area) {
-  u32 size = calculate_size(area);
-  if (size <= capacity()) {
-    Data::resize(size);
-    api()->bmap_set_data(
-      &m_bmap,
-      to<sg_bmap_data_t>(),
-      area,
-      m_bmap.bits_per_pixel);
-    return true;
-  }
-  return false;
-}
-
 const sg_bmap_data_t *Bitmap::bmap_data(const Point &p) const {
-  const sg_bmap_data_t *data = to<sg_bmap_data_t>();
-  if (data == 0) {
-    return 0;
-  }
   return api()->bmap_data(bmap(), p);
 }
 
 sg_bmap_data_t *Bitmap::bmap_data(const Point &p) {
-  sg_bmap_data_t *data = to<sg_bmap_data_t>();
-  if (data == 0) {
-    return 0;
-  }
   return api()->bmap_data(bmap(), p);
 }
 
-int Bitmap::load(const var::String &path) {
+const Bitmap &Bitmap::save(const fs::File &file) const {
   sg_bmap_header_t hdr;
-  fs::File f;
-
-  if (f.open(path, fs::OpenFlags::read_only()) < 0) {
-    return -1;
-  }
-
-  if (f.read(&hdr, fs::File::Size(sizeof(hdr))) != sizeof(hdr)) {
-    return -1;
-  }
-
-  if (
-    (hdr.version != api()->sos_api.version)
-    || (hdr.bits_per_pixel != api()->bits_per_pixel)) {
-    return -1;
-  }
-
-  if (resize(Area(hdr.width, hdr.height)) == false) {
-    return -1;
-  }
-
-  if (f.read(to_void(), Size(hdr.size)) != (s32)hdr.size) {
-    return -1;
-  }
-
-  return 0;
-}
-
-Area Bitmap::load_area(const var::String &path) {
-  sg_bmap_header_t hdr;
-  fs::File f;
-  if (f.open(path, fs::OpenFlags::read_only()) < 0) {
-    return Area();
-  }
-
-  if (f.read(&hdr, fs::File::Size(sizeof(hdr))) != sizeof(hdr)) {
-    return Area();
-  }
-
-  if (
-    (hdr.version != api()->sos_api.version)
-    || (hdr.bits_per_pixel != api()->bits_per_pixel)) {
-    return Area();
-  }
-
-  return Area(hdr.width, hdr.height);
-}
-
-int Bitmap::save(const var::String &path) const {
-  sg_bmap_header_t hdr;
-
   hdr.width = width();
   hdr.height = height();
   hdr.size = calculate_size();
   hdr.bits_per_pixel = api()->bits_per_pixel;
   hdr.version = api()->sos_api.version;
-
-  fs::File f;
-  if (f.create(path, fs::File::IsOverwrite(true)) < 0) {
-    return -1;
-  }
-
-  if (f.write(&hdr, fs::File::Size(sizeof(hdr))) < 0) {
-    f.close();
-    fs::File::remove(path);
-    return -1;
-  }
-
-  if (f.write(to_const_void(), fs::File::Size(hdr.size)) != (s32)hdr.size) {
-    f.close();
-    fs::File::remove(path);
-    return -1;
-  }
-
-  if (f.close() < 0) {
-    return -1;
-  }
-
-  return 0;
+  file.write(View(hdr)).write(m_bmap.data, calculate_size());
+  return *this;
 }
 
 Region Bitmap::calculate_active_region() const {
@@ -457,38 +292,24 @@ bool Bitmap::is_empty(const Region &region) const {
   return true;
 }
 
-void Bitmap::downsample_bitmap(const Bitmap &source, const Area &factor) {
+Bitmap &Bitmap::downsample(const Bitmap &source) {
+
+  API_ASSERT(width() != 0);
+  API_ASSERT(height() != 0);
 
   Cursor cursor_x, cursor_y;
-
-  if (factor.width() == 0) {
-    return;
-  }
-  if (factor.height() == 0) {
-    return;
-  }
-
-  if (factor.width() > source.width()) {
-    return;
-  }
-  if (factor.height() > source.height()) {
-    return;
-  }
-
-  Bitmap sample(factor, BitsPerPixel(bits_per_pixel()));
+  Area factor(source.width() / width(), source.height() / height());
 
   cursor_y.set_bitmap(*this);
-
   for (sg_int_t y = 0; y <= source.height() - factor.height() / 2;
        y += factor.height()) {
-
     cursor_x = cursor_y;
 
     for (sg_int_t x = 0; x <= source.width() - factor.width() / 2;
          x += factor.width()) {
-
       Region region(Point(x, y), factor);
 
+#if defined NOT_BUILDING
       sample.clear();
       sample.draw_sub_bitmap(Point(), source, region);
 
@@ -498,12 +319,14 @@ void Bitmap::downsample_bitmap(const Bitmap &source, const Area &factor) {
       } else {
         bmap()->pen.color = 0;
       }
+#endif
 
       cursor_x.draw_pixel();
     }
 
     cursor_y.increment_y();
   }
+  return *this;
 }
 
 sg_color_t Bitmap::calculate_color_sum() {

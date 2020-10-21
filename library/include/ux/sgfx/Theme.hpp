@@ -67,7 +67,7 @@ public:
 
   u16 color_count() const { return m_color_count; }
 
-  int create(
+  Theme &create(
     const var::StringView path,
     fs::File::IsOverwrite is_overwrite,
     BitsPerPixel bits_per_pixel,
@@ -80,7 +80,7 @@ public:
 
   Palette read_palette(Style style, State state) const;
 
-  Theme &
+  const Theme &
   set_display_palette(const Display &display, Style style, State state) const;
 
   static var::StringView get_state_name(State value);

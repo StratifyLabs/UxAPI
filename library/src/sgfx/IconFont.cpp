@@ -4,15 +4,8 @@
 
 using namespace ux::sgfx;
 
-IconFont::Info::Info(u8 point_size) { m_point_size = point_size; }
-
-IconFont::Info::~Info() {
-  if (m_icon_font != nullptr) {
-    delete m_icon_font;
-  }
-}
-
-IconFont::Info::Info(const var::StringView path) {
+#if defined NOT_BUILDING
+IconFont::FontInfo::FontInfo(const var::StringView path) {
   m_path = fs::Path(path);
 
   StringViewList tokens = fs::Path(path).name().split("-.");
@@ -27,12 +20,7 @@ IconFont::Info::Info(const var::StringView path) {
     m_icon_font = new IconFont(m_file);
   }
 }
-
-bool IconFont::Info::ascending_point_size(
-  const IconFont::Info &a,
-  const IconFont::Info &b) {
-  return a.point_size() < b.point_size();
-}
+#endif
 
 IconFont::IconFont(const fs::File &file) : m_file(file) { refresh(); }
 
@@ -45,7 +33,7 @@ size_t IconFont::find(const var::StringView name) const {
   return m_list.count();
 }
 
-int IconFont::refresh() {
+IconFont &IconFont::refresh() {
   m_list.clear();
 
   m_file.seek(0).read(var::View(m_header));
@@ -63,23 +51,23 @@ int IconFont::refresh() {
   m_master_canvas_idx = -1;
   m_master_canvas.resize(
     Area(m_header.canvas_width, m_header.canvas_height),
-    m_header.bits_per_pixel);
+    static_cast<Bitmap::BitsPerPixel>(m_header.bits_per_pixel));
 
-  return 0;
+  return *this;
 }
 
-IconFont &
+const IconFont &
 IconFont::draw(size_t offset, Bitmap &dest, const Point &point) const {
 
-  if (offset >= m_list.count()) {
-    return -1;
-  }
+  API_ASSERT(offset < m_list.count());
 
   const sg_font_icon_t &icon = m_list.at(offset);
 
   if (icon.canvas_idx != m_master_canvas_idx) {
-    const u32 offset = m_header.size + icon.canvas_idx * m_master_canvas.size();
-    m_file.seek(offset).read(m_master_canvas);
+    const u32 file_offset
+      = m_header.size + icon.canvas_idx * m_master_canvas.view().size();
+
+    m_file.seek(file_offset).read(m_master_canvas.view());
     m_master_canvas_idx = icon.canvas_idx;
   }
 
@@ -88,7 +76,7 @@ IconFont::draw(size_t offset, Bitmap &dest, const Point &point) const {
     Bitmap(m_master_canvas),
     Region(Point(icon.canvas_x, icon.canvas_y), Area(icon.width, icon.height)));
 
-  return 0;
+  return *this;
 }
 
 const IconFont &IconFont::draw(
