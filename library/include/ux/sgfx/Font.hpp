@@ -59,7 +59,7 @@ public:
   private:
     API_AF(Info, Style, style, Style::any);
     API_AF(Info, sg_size_t, point_size, 0);
-    API_AC(Info, fs::Path, file_path);
+    API_AC(Info, var::PathString, file_path);
   };
 
   Font(const fs::File &file);

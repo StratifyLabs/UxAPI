@@ -4,7 +4,7 @@
 #include <sgfx/sgfx_types.h>
 
 #include <var/Data.hpp>
-#include <var/String.hpp>
+#include <var/StackString.hpp>
 
 namespace ux::sgfx {
 

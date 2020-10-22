@@ -3,8 +3,8 @@
 
 #include <printer/Printer.hpp>
 
-#include "var/String.hpp"
 #include "Event.hpp"
+#include "var/StackString.hpp"
 
 namespace ux {
 

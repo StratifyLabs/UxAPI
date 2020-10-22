@@ -3,6 +3,7 @@
 #ifndef UXAPI_UX_COMPONENT_HPP
 #define UXAPI_UX_COMPONENT_HPP
 
+#include <fs/Path.hpp>
 #include <var/String.hpp>
 
 #include "Display.hpp"
@@ -141,12 +142,12 @@ public:
     return m_reference_drawing_attributes;
   }
 
-  var::String get_class_name() const {
-    return var::String(fs::Path(name()).parent_directory());
+  var::KeyString get_class_name() const {
+    return var::KeyString(fs::Path::parent_directory(name()));
   }
 
-  var::String get_instance_name() const {
-    return var::String(fs::Path(name()).name());
+  var::KeyString get_instance_name() const {
+    return var::KeyString(fs::Path::name(name()));
   }
 
   static void set_event_loop(EventLoop &value) {
