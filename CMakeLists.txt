@@ -10,8 +10,7 @@ include(sos-sdk)
 
 include(targets/JsonAPI)
 
-set(LOCAL_NAME UxAPI)
-project(${LOCAL_NAME} CXX C)
+project(UxAPI CXX C)
 include(CTest)
 
 add_subdirectory(sgfx sgfx)

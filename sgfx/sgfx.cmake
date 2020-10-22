@@ -1,4 +1,4 @@
 
-include(targets/ChartAPI)
+include(targets/StratifyAPI)
 
-sos_sdk_include_target(UxAPI "${STRATIFYAPI_CONFIG_LIST}")
+sos_sdk_include_target(sgfx "${STRATIFYAPI_CONFIG_LIST}")

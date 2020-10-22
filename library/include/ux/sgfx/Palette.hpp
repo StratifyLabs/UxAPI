@@ -162,8 +162,8 @@ public:
     return *this;
   }
 
-  var::StackString32 to_hex_code() const {
-    return var::StackString32().format("#%02x%02x%02x", red(), green(), blue());
+  var::KeyString to_hex_code() const {
+    return var::KeyString().format("#%02x%02x%02x", red(), green(), blue());
   }
 
   sg_color_t to_pixel_format(enum pixel_format pixel_format) const;
