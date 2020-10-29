@@ -3,11 +3,11 @@
 #ifndef UXAPI_UX_TOUCHGESTURE_HPP
 #define UXAPI_UX_TOUCHGESTURE_HPP
 
-#include <chrono/ClockTimer.hpp>
-#include "sgfx/Point.hpp"
-#include "sgfx/Region.hpp"
 #include "Drawing.hpp"
 #include "Event.hpp"
+#include "sgfx/Point.hpp"
+#include "sgfx/Region.hpp"
+#include <chrono/ClockTimer.hpp>
 
 namespace ux {
 

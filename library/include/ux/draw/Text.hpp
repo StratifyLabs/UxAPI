@@ -23,7 +23,7 @@ public:
   /*! \details Draw the scaled text as specified by \a attr */
   virtual void draw(const DrawingScaledAttributes &attr);
 
-  Text &set_string(const var::String &value) {
+  Text &set_string(const var::StringView value) {
     m_string = value;
     return *this;
   }
@@ -48,7 +48,7 @@ public:
     return *this;
   }
 
-  Text &set_font_name(const var::StringView value) {
+  Text &set_font_name(const var::StringView  value) {
     m_font_name = value;
     return *this;
   }
@@ -76,12 +76,12 @@ public:
   /*! \details Returns the font style. */
   sgfx::Font::Style font_style() const { return m_font_style; }
 
-  sg_size_t get_width(const var::String &sample, sg_size_t height);
+  sg_size_t get_width(const var::StringView sample, sg_size_t height);
 
 protected:
-  const var::String &string() const { return m_string; }
+  const var::StringView string() const { return m_string; }
   bool resolve_font(sg_size_t h);
-  var::String m_string;
+  var::StringView m_string;
   var::NameString m_font_name;
   const sgfx::Font *m_font = nullptr;
   sg_size_t m_font_point_size = 0;

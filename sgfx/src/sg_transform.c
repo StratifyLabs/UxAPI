@@ -2,7 +2,7 @@
 // LICENSE.md for rights.
 
 #include "sg_config.h"
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 static void
 shift_right(const sg_bmap_t *bmap, int count, sg_point_t start, sg_area_t d);

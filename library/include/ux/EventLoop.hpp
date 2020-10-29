@@ -21,7 +21,7 @@ public:
   EventLoop(
     Controller &controller,
     Model &model,
-    sgfx::Display &display,
+    Display &display,
     const sgfx::Theme &theme);
 
   int loop();
@@ -43,9 +43,9 @@ public:
 
   const sgfx::Theme *theme() const { return m_theme; }
 
-  sgfx::Display *display() { return m_display; }
+  Display *display() { return m_display; }
 
-  const sgfx::Display *display() const { return m_display; }
+  const Display *display() const { return m_display; }
 
   const Controller &controller() const { return m_controller; }
   Controller &controller() { return m_controller; }
@@ -56,7 +56,7 @@ public:
 private:
   Controller &m_controller;
   Model &m_model;
-  sgfx::Display *m_display = nullptr;
+  Display *m_display = nullptr;
   const sgfx::Theme *m_theme = nullptr;
 
   chrono::ClockTimer m_timer;

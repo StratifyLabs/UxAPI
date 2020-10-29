@@ -17,7 +17,7 @@ printer::Printer &printer::operator<<(
 using namespace ux::sgfx;
 
 enum PaletteFlags::pixel_format
-PaletteFlags::decode_pixel_format(const var::String &format) {
+PaletteFlags::decode_pixel_format(const var::StringView format) {
   if (format == "rgb332") {
     return pixel_format_rgb332;
   }
@@ -59,7 +59,7 @@ u32 PaletteFlags::bits_per_pixel_format(enum pixel_format format) {
   return 1;
 }
 
-void PaletteColor::import_hex_code(const var::StringView hex) {
+void PaletteColor::import_hex_code(const var::StringView  hex) {
 
   if (hex.length() != 7) {
     return;

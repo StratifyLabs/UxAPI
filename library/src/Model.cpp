@@ -29,11 +29,11 @@ void Model::update(const Entry &value) {
   entry_list().push_back(value);
 }
 
-const var::String &Model::lookup(const var::String &name) const {
+const var::StringView Model::lookup(const var::StringView name) const {
   for (const Entry &entry : entry_list()) {
-    if (name == entry.name()) {
+    if (name == entry.name().string_view()) {
       return entry.value();
     }
   }
-  return var::String::empty_string();
+  return var::StringView();
 }

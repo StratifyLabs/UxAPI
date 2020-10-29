@@ -5,7 +5,7 @@
 using namespace ux::sgfx;
 
 #if defined NOT_BUILDING
-IconFont::FontInfo::FontInfo(const var::StringView path) {
+IconFont::FontInfo::FontInfo(const var::StringView  path) {
   m_path = fs::Path(path);
 
   StringViewList tokens = fs::Path(path).name().split("-.");
@@ -24,7 +24,7 @@ IconFont::FontInfo::FontInfo(const var::StringView path) {
 
 IconFont::IconFont(const fs::File &file) : m_file(file) { refresh(); }
 
-size_t IconFont::find(const var::StringView name) const {
+size_t IconFont::find(const var::StringView  name) const {
   for (size_t i = 0; i < m_list.count(); i++) {
     if (this->get_info(i).name() == name) {
       return i;
@@ -80,7 +80,7 @@ IconFont::draw(size_t offset, Bitmap &dest, const Point &point) const {
 }
 
 const IconFont &IconFont::draw(
-  const var::StringView name,
+  const var::StringView  name,
   Bitmap &dest,
   const Point &point) const {
   size_t offset = find(name);

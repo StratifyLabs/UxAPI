@@ -19,7 +19,9 @@ public:
     event_id_held
   };
 
-  Button(const var::String &name) : ComponentAccess(name) { set_value(name); }
+  Button(const var::StringView name) : ComponentAccess(name) {
+    set_value(name);
+  }
 
   Button &toggle() {
     m_is_state = !m_is_state;
@@ -30,7 +32,7 @@ public:
   void handle_event(const ux::Event &event);
 
 private:
-  API_ACCESS_COMPOUND(Button, var::String, value);
+  API_ACCESS_COMPOUND(Button, var::KeyString, value);
   API_ACCESS_BOOL(Button, state, false);
   chrono::ClockTimer m_hold_timer;
 };

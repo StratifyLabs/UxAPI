@@ -9,12 +9,12 @@ namespace ux {
 
 class TextArea : public ComponentAccess<TextArea> {
 public:
-  TextArea(const var::String &name);
+  TextArea(const var::StringView name);
 
   void draw(const DrawingScaledAttributes &attributes);
   void handle_event(const ux::Event &event);
 
-  TextArea &append(const var::String &input) {
+  TextArea &append(const var::StringView input) {
     return set_value(value() + input);
   }
 
@@ -28,9 +28,9 @@ public:
     return *this;
   }
 
-  TextArea &set_value(const var::StringView value);
+  TextArea &set_value(const var::StringView  value);
 
-  const var::String &value() const { return lookup_model_value(); }
+  const var::StringView value() const { return lookup_model_value(); }
 
 private:
   API_ACCESS_FUNDAMENTAL(TextArea, size_t, max_length, 256);
@@ -40,7 +40,7 @@ private:
   sg_int_t m_scroll_accumulator = 0;
   sg_size_t m_line_height = 0;
   draw::TextBox m_text_box;
-  var::String get_display_text();
+  var::StringView get_display_text();
 };
 
 } // namespace ux

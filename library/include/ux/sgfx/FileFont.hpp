@@ -17,11 +17,11 @@ namespace ux::sgfx {
 class FileFont : public Font {
 public:
   FileFont();
-  FileFont(const var::String &name, FileLocation offset = FileLocation(0));
+  FileFont(const var::StringView name, FileLocation offset = FileLocation(0));
 
   ~FileFont();
 
-  int set_file(const var::String &path, FileLocation offset = FileLocation(0));
+  int set_file(const var::StringView path, FileLocation offset = FileLocation(0));
 
   sg_size_t get_height() const;
   sg_size_t get_width() const;

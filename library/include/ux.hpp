@@ -2,7 +2,7 @@
 #ifndef UXAPI_UX_HPP
 #define UXAPI_UX_HPP
 
-#include "sgfx.hpp"
+#include "ux/sgfx.hpp"
 
 namespace ux {}
 
@@ -18,14 +18,12 @@ namespace ux {}
 #include "ux/Model.hpp"
 #include "ux/Progress.hpp"
 #include "ux/ProgressBar.hpp"
-#include "ux/Scene.hpp"
 #include "ux/Separator.hpp"
 #include "ux/Slider.hpp"
 #include "ux/TextArea.hpp"
 #include "ux/ToggleSwitch.hpp"
 #include "ux/TouchGesture.hpp"
 
-using namespace ux::sgfx;
 using namespace ux;
 
 #endif // UXAPI_UX_HPP

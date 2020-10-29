@@ -4,7 +4,7 @@
 #ifndef UXAPI_UX_SGFX_REGION_HPP_
 #define UXAPI_UX_SGFX_REGION_HPP_
 
-#include "sgfx/sgfx_types.h"
+#include "sgfx_types.h"
 
 #include "Area.hpp"
 #include "Point.hpp"

@@ -10,7 +10,7 @@ using namespace ux;
 EventLoop::EventLoop(
   Controller &controller,
   Model &model,
-  sgfx::Display &display,
+  Display &display,
   const sgfx::Theme &theme)
   : m_controller(controller), m_model(model), m_display(&display),
     m_theme(&theme) {}

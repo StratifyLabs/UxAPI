@@ -5,7 +5,7 @@
 
 #include <var/Vector.hpp>
 
-#include "sgfx/Theme.hpp"
+#include "Theme.hpp"
 
 #include "Component.hpp"
 
@@ -17,26 +17,26 @@ class Scene : api::WorkObject {
 public:
   virtual ~Scene();
 
-  Scene &add_component(const var::String &name, Component &component) {
+  Scene &add_component(const var::StringView name, Component &component) {
     // component.set_scene(this);
     // component.set_name(name);
     m_component_list.push_back(&component);
     return *this;
   }
 
-  Scene &remove_component(const var::String &name) {
+  Scene &remove_component(const var::StringView name) {
     // delete and remove
     return *this;
   }
 
-  template <typename T> T *find_component(const var::String &name) {
+  template <typename T> T *find_component(const var::StringView name) {
     return static_cast<T *>(find_generic_component(name));
   }
 
   Scene &enable();
   Scene &disable();
 
-  const var::String &name() { return m_name; }
+  const var::StringView name() { return m_name; }
 
   SceneCollection *scene_collection() { return m_scene_collection; }
 
@@ -57,27 +57,27 @@ private:
   chrono::MicroTime m_update_period = chrono::Milliseconds(30);
   SceneCollection *m_scene_collection = nullptr;
   var::Vector<Component *> m_component_list;
-  Component *find_generic_component(const var::String &name);
+  Component *find_generic_component(const var::StringView name);
 };
 
 class SceneCollection : public api::WorkObject {
 public:
-  SceneCollection(sgfx::Display &display) : m_display(display) {}
+  SceneCollection(Display &display) : m_display(display) {}
   ~SceneCollection();
 
-  SceneCollection &add_scene(const var::String &name, Scene *scene) {
+  SceneCollection &add_scene(const var::StringView name, Scene *scene) {
     scene->m_name = name;
     scene->m_scene_collection = this;
     m_scene_list.push_back(scene);
     return *this;
   }
 
-  SceneCollection &remove_scene(const var::String &name) {
+  SceneCollection &remove_scene(const var::StringView name) {
     // find scene by name
     return *this;
   }
 
-  Scene *find_scene(const var::String &name);
+  Scene *find_scene(const var::StringView name);
   void trigger_event(const Event &event);
 
   SceneCollection &set_theme(const sgfx::Theme &theme) {
@@ -87,7 +87,7 @@ public:
 
   const sgfx::Theme &theme() const { return (*m_theme); }
 
-  bool set_current_scene(const var::String &name) {
+  bool set_current_scene(const var::StringView name) {
     if (name.is_empty()) {
       m_current_scene = nullptr;
       return true;
@@ -103,10 +103,10 @@ public:
 
   Scene *current_scene() const { return m_current_scene; }
 
-  sgfx::Display &display() { return m_display; }
+  Display &display() { return m_display; }
 
 private:
-  sgfx::Display &m_display;
+  Display &m_display;
   var::Vector<Scene *> m_scene_list;
   Scene *m_current_scene = nullptr;
   const sgfx::Theme *m_theme = nullptr;

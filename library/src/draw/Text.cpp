@@ -77,7 +77,7 @@ void Text::draw(const DrawingScaledAttributes &attr) {
   }
 }
 
-sg_size_t Text::get_width(const var::String &sample, sg_size_t height) {
+sg_size_t Text::get_width(const var::StringView sample, sg_size_t height) {
   const Font *font;
   if (
     resolve_font(m_font_point_size == 0 ? height : m_font_point_size)

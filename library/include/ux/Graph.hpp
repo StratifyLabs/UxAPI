@@ -97,7 +97,7 @@ using LineGraphDataSet = var::Vector<LineGraphData>;
 
 class LineGraph : public GraphAxes, public ComponentAccess<LineGraph> {
 public:
-  LineGraph(const var::String &name) : ComponentAccess(name) {}
+  LineGraph(const var::StringView name) : ComponentAccess(name) {}
 
   virtual void draw(const DrawingScaledAttributes &attr);
 
@@ -122,10 +122,10 @@ private:
 
 class BarGraphValue {
 public:
-  BarGraphValue(const var::String &label, float value)
+  BarGraphValue(const var::StringView label, float value)
     : m_label(label), m_value(value) {}
 
-  const var::String &label() const { return m_label; }
+  const var::StringView label() const { return m_label; }
 
   float value() const { return m_value; }
 

@@ -8,8 +8,8 @@
 using namespace ux;
 using namespace ux::sgfx;
 
-Slider::Slider(const var::String &name) : ComponentAccess(name) {
-  const var::StringViewList list = Model::to_list(lookup_model_value());
+Slider::Slider(const var::StringView name) : ComponentAccess(name) {
+  auto list = Model::to_list(lookup_model_value());
   set_value(list.count() ? list.at(0).to_unsigned_long() : 0);
   set_maximum(list.count() > 1 ? list.at(1).to_unsigned_long() : 100);
 }
@@ -93,6 +93,6 @@ void Slider::update_touch_point(const sgfx::Point display_point) {
     m_value = (point.x() - 50) * m_maximum / 900;
   }
 
-  update_model(Model::from_list<u16>({value(), maximum()}));
+  update_model(Model::from_list<u16>({value(), maximum()}).string_view());
   redraw();
 }

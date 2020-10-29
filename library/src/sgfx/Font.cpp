@@ -13,7 +13,7 @@
 using namespace ux::sgfx;
 
 #if defined NOT_BUILDING
-Font::Info::Info(const var::StringView path) {
+Font::Info::Info(const var::StringView  path) {
   m_path = path;
 
   const fs::Path file_path = fs::Path(path);
@@ -94,7 +94,7 @@ bool Font::Info::ascending_style(const Info &a, const Info &b) {
   return a.style() < b.style();
 }
 
-const var::StringView Font::ascii_character_set() {
+const var::StringView  Font::ascii_character_set() {
   return " !\"#$%&'()*+,-./"
          "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
          "abcdefghijklmnopqrstuvwxyz{|}~";
@@ -137,7 +137,7 @@ void Font::refresh() {
   return;
 }
 
-int Font::get_width(const var::StringView str) const {
+int Font::get_width(const var::StringView  str) const {
   u32 length = 0;
   for (auto c : str) {
     if (c == ' ') {
@@ -184,7 +184,7 @@ Bitmap Font::character_bitmap(u32 offset) {
 #endif
 
 int Font::draw(
-  const var::String &const_string,
+  const var::StringView const_string,
   Bitmap &bitmap,
   const Point &point) const {
   sg_int_t w;

@@ -10,44 +10,10 @@
 
 namespace ux {
 
-/*! \brief Assets Class
- * \details The Assets class is a static class
- * that allows the application to access kernel assets
- * such as fonts, bitmaps, and vector graphics.
- *
- * This class will search the following locations
- * for fonts and graphics files:
- *
- * - /assets
- * - /home
- * - /home/assets
- *
- * Several other classes within the StratifyAPI use
- * this class without the user ever needed to reference it.
- *
- * - draw::Text will lookup fonts using this class
- * - draw::Icon will lookup icons files installed as assets
- *
- *
- */
 class Assets {
 public:
-  /*! \details Initializes system assets.
-   *
-   * @return Zero
-   *
-   * This method can be called explicitly, but will
-   * be called whenever as needed if not.
-   *
-   */
   static int initialize();
 
-  /*! \details Returns a read-only reference to the font information list.
-   *
-   * This list contains a list of the fonts that are available in the system
-   * assets.
-   *
-   */
   static var::Vector<sgfx::Font::Info> &font_info_list() {
     initialize();
     return m_font_info_list;
@@ -81,7 +47,7 @@ public:
     return m_vector_path_list;
   }
 
-  static sgfx::VectorPath find_vector_path(const var::String &name);
+  static sgfx::VectorPath find_vector_path(const var::StringView  name);
 #endif
 
 private:

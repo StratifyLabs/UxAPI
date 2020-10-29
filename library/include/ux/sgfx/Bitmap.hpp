@@ -116,7 +116,7 @@ public:
   /*! \details Returns the maximum y value. */
   sg_int_t y_max() const { return height() - 1; }
 
-  static Area load_area(const var::StringView path);
+  static Area load_area(const var::StringView  path);
 
   const Bitmap &transform_flip_x() const {
     api()->transform_flip_x(bmap());
@@ -348,39 +348,6 @@ public:
     api()->draw_rectangle(bmap(), &region);
     return *this;
   }
-
-  /*! \details This method is designated as an interface
-   * for classes that inherit Bitmap to copy the bitmap to a physical
-   * device (such as sgfx::DisplayDev).  The implementation in this class is
-   * simple an empty method.  Here is an example:
-   *
-   * \code
-   * DisplayDev display; //this class inherits bitmap and re-implments refresh()
-   *
-   * display.clear(); //clear the bitmap in memory
-   * display.refresh(); //copy the memory to the physical device (or notify the
-   * underlying driver that it is time to copy) \endcode
-   *
-   */
-  virtual void refresh() const {}
-
-  /*! \details This method is designated as an interface for classes
-   * that inherit Bitmap and use refresh() to copy the bitmap memory to a
-   * physical device. The default implementation always returns false.
-   *
-   * The bitmap should not be modified while a refresh is in progress to prevent
-   * a frame from being partially copied.
-   *
-   * See refresh() for an example.
-   *
-   * @return True if the refresh() is still in progress, false if the bitmap can
-   * be modified again
-   */
-  virtual bool is_busy() const { return false; }
-
-  /*! \details This method will block until the refresh operation is complete */
-  virtual void wait(const chrono::MicroTime &resolution) const {}
-
   bool is_empty(const Region &region) const;
 
   sg_size_t height() const { return m_bmap.area.height; }

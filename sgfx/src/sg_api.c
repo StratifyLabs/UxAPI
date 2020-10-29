@@ -2,7 +2,7 @@
 // LICENSE.md for rights.
 
 #include "sg_config.h"
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 #if !defined SOS_GIT_HASH
 #define SOS_GIT_HASH "??"

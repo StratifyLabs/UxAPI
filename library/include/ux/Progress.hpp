@@ -21,7 +21,7 @@ private:
 class ProgressBar : public ComponentAccess<ProgressBar> {
 public:
 
-  ProgressBar(const var::String &name) : ComponentAccess(name) {
+  ProgressBar(const var::StringView name) : ComponentAccess(name) {
     // set_horizontal_padding(10);
     // set_vertical_padding(10);
   }
@@ -33,7 +33,7 @@ public:
 
   ProgressBar &set_value(u16 value) {
     progress().set_value(value);
-    update_model(var::NumberString(value));
+    update_model(var::NumberString(value).string_view());
     return *this;
   }
 

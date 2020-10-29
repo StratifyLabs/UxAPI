@@ -2,7 +2,7 @@
 // LICENSE.md for rights.
 
 #include "sg_config.h"
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 typedef struct {
   s16 cosine;

@@ -8,6 +8,7 @@ set(SOURCES
 	TouchGesture.cpp
 	Controller.cpp
 	Model.cpp
+	Display.cpp
 
 	# Components
 	Label.cpp

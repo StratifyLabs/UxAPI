@@ -104,11 +104,9 @@ void Component::refresh_drawing() {
 
 const sgfx::Theme *Component::theme() const { return event_loop()->theme(); }
 
-const sgfx::Display *Component::display() const {
-  return event_loop()->display();
-}
+const Display *Component::display() const { return event_loop()->display(); }
 
-sgfx::Display *Component::display() { return event_loop()->display(); }
+Display *Component::display() { return event_loop()->display(); }
 
 void Component::erase() {
   if (is_ready_to_draw()) {
@@ -158,11 +156,11 @@ void Component::apply_antialias_filter(
   }
 }
 
-const var::String &Component::lookup_model_value() const {
+const var::StringView Component::lookup_model_value() const {
   return lookup_model_value(name());
 }
 
-const var::String &Component::lookup_model_value(const var::String &key) const {
+const var::StringView Component::lookup_model_value(const var::StringView key) const {
   return event_loop()->model().lookup(key);
 }
 
@@ -175,8 +173,8 @@ void Component::trigger_event(u32 event_type, u32 event_id) {
     Event().set_type(event_type).set_id(event_id).set_context(this));
 }
 
-void Component::update_model(const var::String &value) {
-  update_model(Model::Entry().set_name(name()).set_value(value));
+void Component::update_model(const var::StringView value) {
+  update_model(Model::Entry().set_name(name()).set_value(value.get_string()));
 }
 
 void Component::update_model(bool value) {

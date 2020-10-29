@@ -17,7 +17,7 @@ int TextBox::count_lines(sg_size_t w) {
 
 int TextBox::count_lines(
   const Font *font,
-  const var::String &string,
+  const var::StringView string,
   sg_size_t w) {
 
   int num_lines;

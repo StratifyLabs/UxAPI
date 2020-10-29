@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "sg_config.h"
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 static inline int abs_value(int x) {
   if (x < 0) {

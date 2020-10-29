@@ -13,7 +13,7 @@ public:
   Model();
 
   class Entry {
-    API_AC(Entry, var::String, name);
+    API_AC(Entry, var::KeyString, name);
     API_AC(Entry, var::String, value);
 
   public:
@@ -33,12 +33,12 @@ public:
 
   void update(const Entry &entry);
 
-  const var::String &lookup(const var::String &key) const;
+  const var::StringView lookup(const var::StringView key) const;
 
   static var::String from_list(std::initializer_list<var::String> il) {
     var::String v;
     for (auto i : il) {
-      v += i + "`";
+      v += i + ";";
     }
     v.pop_back();
     return v;
@@ -47,7 +47,7 @@ public:
   static var::String from_list(const var::StringList &list) {
     var::String v;
     for (auto i : list) {
-      v += i + "`";
+      v += i + ";";
     }
     v.pop_back();
     return v;
@@ -57,14 +57,14 @@ public:
   static var::String from_list(std::initializer_list<T> il) {
     var::String v;
     for (auto i : il) {
-      v += var::NumberString(i) + "`";
+      v += var::NumberString(i) + ";";
     }
     v.pop_back();
-    return v;
+    return std::move(v);
   }
 
   static var::StringViewList to_list(const var::StringView value) {
-    return value.split("`");
+    return value.split(";");
   }
 
   using EntryList = var::Vector<Entry>;

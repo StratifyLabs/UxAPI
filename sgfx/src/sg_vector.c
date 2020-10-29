@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #include "sg_config.h"
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 static void draw_line_with_map(
   sg_point_t p1,

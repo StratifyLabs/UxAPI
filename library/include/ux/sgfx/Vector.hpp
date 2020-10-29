@@ -7,7 +7,7 @@
 #include <var/Vector.hpp>
 #include <var/View.hpp>
 
-#include "sgfx/sgfx_types.h"
+#include "sgfx_types.h"
 
 #include "Bitmap.hpp"
 #include "Pen.hpp"

@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "sg_config.h"
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 static int calc_offset(const sg_bmap_t *bmap, sg_point_t p) {
   return (p.x / SG_PIXELS_PER_WORD(bmap)) + p.y * (bmap->columns);

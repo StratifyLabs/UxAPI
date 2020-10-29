@@ -4,7 +4,7 @@
 #ifndef UXAPI_UX_SGFX_AREA_HPP_
 #define UXAPI_UX_SGFX_AREA_HPP_
 
-#include "sgfx/sgfx_types.h"
+#include "sgfx_types.h"
 
 namespace ux::sgfx {
 

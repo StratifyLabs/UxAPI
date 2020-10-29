@@ -5,7 +5,6 @@ set(SOURCES
 	ux/Display.hpp
 	ux/Drawing.hpp
 	ux/Layout.hpp
-	ux/Scene.hpp
 	ux/TouchGesture.hpp
 	ux/Button.hpp
 	ux/Event.hpp
@@ -15,7 +14,6 @@ set(SOURCES
 	ux/EventLoop.hpp
 	ux/Model.hpp
 	ux/Slider.hpp
-	ux/CompoundComponent.hpp
 	ux/Graph.hpp
 	ux/Progress.hpp
 	ux/TextArea.hpp
@@ -31,6 +29,7 @@ set(SOURCES
 	ux/draw/Text.hpp
 	ux/draw/TextBox.hpp
 
+	ux/sgfx.hpp
 	ux/sgfx/Api.hpp
 	ux/sgfx/Area.hpp
 	ux/sgfx/Palette.hpp

@@ -3,7 +3,7 @@
 
 #include <api/api.hpp>
 
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 namespace ux::sgfx {
 typedef api::Api<sg_api_t, SGFX_API_REQUEST> SgfxApi;

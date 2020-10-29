@@ -8,7 +8,7 @@
 
 #include <fs/File.hpp>
 
-#include "sgfx/sgfx_font_types.h"
+#include "sgfx_font_types.h"
 
 #include "Bitmap.hpp"
 
@@ -65,7 +65,7 @@ public:
   Font(const fs::File &file);
 
   /*! \details Returns a string of the available character set */
-  static const var::StringView ascii_character_set();
+  static const var::StringView  ascii_character_set();
 
   /*! \details Returns the maximum height of any character in the font. */
   sg_size_t get_height() const;
@@ -79,7 +79,7 @@ public:
 
   /*! \details Calculates the length (pixels on x-axis) of the specified string.
    */
-  int get_width(const var::StringView str) const;
+  int get_width(const var::StringView  str) const;
 
   /*! \details Returns the number of characters in the font. */
   int size() const { return m_header.character_count; }
@@ -103,7 +103,7 @@ public:
    * @param point The top left corner to start drawing the string
    * @return Zero on success
    */
-  int draw(const var::String &const_string, Bitmap &dest, const Point &point)
+  int draw(const var::StringView const_string, Bitmap &dest, const Point &point)
     const;
 
   /*! \details Draws a character on the bitmap.

@@ -44,12 +44,12 @@ public:
 
   enum flows { flow_vertical, flow_horizontal, flow_free };
 
-  Layout(const var::String &name);
+  Layout(const var::StringView name);
 
   virtual ~Layout();
 
   Layout &add_component(Component &component);
-  Layout &delete_component(const var::String &component_name);
+  Layout &delete_component(const var::StringView component_name);
 
   Layout &set_vertical_scroll_enabled(bool value = true) {
     set_vertical_scroll_enabled_internal(true);
@@ -63,7 +63,7 @@ public:
 
   void update_drawing_area(const Component *component, const DrawingArea &area);
 
-  void update_drawing_area(const var::String &name, const DrawingArea &area) {
+  void update_drawing_area(const var::StringView name, const DrawingArea &area) {
     update_drawing_area(find<Component>(name), area);
   }
 
@@ -71,7 +71,7 @@ public:
   update_drawing_point(const Component *component, const DrawingPoint &point);
 
   void
-  update_drawing_point(const var::String &name, const DrawingPoint &point) {
+  update_drawing_point(const var::StringView name, const DrawingPoint &point) {
     update_drawing_point(find<Component>(name), point);
   }
 
@@ -95,7 +95,7 @@ public:
     return false;
   }
 
-  Layout *find_layout(const var::String &name) {
+  Layout *find_layout(const var::StringView name) {
     for (Item &cp : m_component_list) {
       if (
         cp.component() && (name == cp.component()->name())
@@ -106,7 +106,7 @@ public:
     return nullptr;
   }
 
-  template <class T, bool is_fatal = true> T *search(const var::String &name) {
+  template <class T, bool is_fatal = true> T *search(const var::StringView name) {
     for (Item &cp : m_component_list) {
       if (cp.component() && cp.component()->is_layout()) {
         T *result
@@ -122,20 +122,23 @@ public:
       }
     }
     if (is_fatal) {
-      printf("Failed to search %s\n", name.cstring());
+      printf("Failed to search %s\n", var::IdString(name).cstring());
       abort();
     }
     return nullptr;
   }
 
-  template <class T, bool is_fatal = true> T *find(const var::String &name) {
+  template <class T, bool is_fatal = true> T *find(const var::StringView name) {
     for (Item &cp : m_component_list) {
       if (cp.component() && (name == cp.component()->name())) {
         return static_cast<T *>(cp.component());
       }
     }
     if (is_fatal) {
-      printf("%s Failed to find %s\n", this->name().cstring(), name.cstring());
+      printf(
+        "%s Failed to find %s\n",
+        var::IdString(this->name()).cstring(),
+        var::IdString(name).cstring());
       abort();
     }
     return nullptr;
@@ -183,13 +186,13 @@ private:
 
 template <class T> class LayoutAccess : public Layout {
 public:
-  LayoutAccess<T>(const var::String &name) : Layout(name) {}
+  LayoutAccess<T>(const var::StringView name) : Layout(name) {}
 
   T &add_component(Component &component) {
     return static_cast<T &>(Layout::add_component(component));
   }
 
-  T &delete_component(const var::String &component_name) {
+  T &delete_component(const var::StringView component_name) {
     return static_cast<T &>(Layout::delete_component(component_name));
   }
 

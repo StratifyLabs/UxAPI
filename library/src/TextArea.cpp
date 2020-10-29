@@ -6,7 +6,7 @@
 using namespace ux::sgfx;
 using namespace ux;
 
-TextArea::TextArea(const var::String &name) : ComponentAccess(name) {}
+TextArea::TextArea(const var::StringView name) : ComponentAccess(name) {}
 
 void TextArea::draw(const DrawingScaledAttributes &attributes) {
   draw_base_properties(attributes.bitmap(), attributes.region(), theme());
@@ -38,23 +38,15 @@ TextArea &TextArea::set_value(const var::StringView value) {
 
   // if the value is too big --truncate it
   if (value.length() > max_length()) {
-    update_model(var::String(
-      value.get_substring_at_position(value.length() - max_length())));
+    update_model(
+      value.get_substring_at_position(value.length() - max_length()));
   } else {
-    update_model(var::String(value));
+    update_model(value);
   }
   return *this;
 }
 
-var::String TextArea::get_display_text() {
-  // convert text to display text
-  var::String result;
-
-  // may want to convert to HEX format
-  result = value();
-
-  return result;
-}
+var::StringView TextArea::get_display_text() { return value(); }
 
 void TextArea::handle_event(const ux::Event &event) {
   TouchContext *touch_context = event.is_trigger<TouchContext>();

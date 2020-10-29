@@ -11,10 +11,12 @@
 
 #include "sgfx/Bitmap.hpp"
 
-namespace ux::sgfx {
+namespace ux {
 
-class Display : public sgfx::Bitmap {
+class Display : public sgfx::Bitmap, public fs::FileMemberAccess<Display> {
 public:
+  enum class Mode { palette, raw };
+
   class Info {
   public:
     Info() { m_info = {0}; }
@@ -48,90 +50,28 @@ public:
     display_info_t m_info;
   };
 
-  /*! \details Constructs a new object and dynamically allocates memory for
-   * the buffer.
-   *
-   * @param w The width of the display
-   * @param h The height of the display
-   */
-  Display(var::View view, const Area &area, BitsPerPixel bpp)
-    : sgfx::Bitmap(view, area, bpp) {}
+  Display(fs::FileObject &device) : fs::FileMemberAccess<Display>(device) {}
 
-  Display(const BitmapData &bitmap_data) : Bitmap(bitmap_data) {}
+  Display::Info get_info() const;
 
-  const Display &set_window(const sgfx::Region &region) const {
-    API_RETURN_VALUE_IF_ERROR(*this);
-    API_SYSTEM_CALL("", interface_set_window(region));
-    return *this;
-  }
-
-  const Display &write(const sgfx::Bitmap &bitmap) const {
-    API_RETURN_VALUE_IF_ERROR(*this);
-    API_SYSTEM_CALL("", interface_write(bitmap));
-    return *this;
-  }
-
-  const Display &enable() const {
-    API_RETURN_VALUE_IF_ERROR(*this);
-    API_SYSTEM_CALL("", interface_enable());
-    return *this;
-  }
-
-  const Display &clear() const {
-    API_RETURN_VALUE_IF_ERROR(*this);
-    API_SYSTEM_CALL("", interface_clear());
-    return *this;
-  }
-
-  const Display &disable() const {
-    API_RETURN_VALUE_IF_ERROR(*this);
-    API_SYSTEM_CALL("", interface_disable());
-    return *this;
-  }
-
-  virtual Info get_info() const { return Info(); }
-  virtual sgfx::Palette get_palette() const { return sgfx::Palette(); }
-
-  virtual int set_palette(const sgfx::Palette &palette) const {
-    MCU_UNUSED_ARGUMENT(palette);
-    return -1;
-  }
+  // const Display &write(const sgfx::Bitmap &bitmap) const;
+  const Display &set_window(const sgfx::Region &region) const;
+  const Display &set_mode(Mode value) const;
+  const Display &enable() const;
+  const Display &clear() const;
+  const Display &disable() const;
+  const Display &refresh() const;
+  const Display &
+  wait(const chrono::MicroTime &resolution = 10_milliseconds) const;
+  bool is_busy() const;
+  const Display &set_palette(const sgfx::Palette &palette) const;
+  sgfx::Palette get_palette() const;
 
 protected:
-  virtual int interface_enable() const = 0;
-  virtual int interface_disable() const = 0;
 
-  virtual int interface_set_window(const sgfx::Region &region) const {
-    return 0;
-  }
-  virtual int interface_write(const sgfx::Bitmap &bitmap) const { return 0; }
-  virtual int interface_clear() const { return 0; }
+private:
 };
 
-template <class Derived> class DisplayAccess : public Display {
-public:
-  DisplayAccess(var::View view, const Area &area, BitsPerPixel bpp)
-    : Display(view, area, bpp) {}
-
-  DisplayAccess(const BitmapData &bitmap_data) : Display(bitmap_data) {}
-
-  const DisplayAccess &set_window(const sgfx::Region &region) const {
-    return static_cast<Derived &>(Display::set_window(region));
-  }
-
-  const DisplayAccess &write(const sgfx::Bitmap &bitmap) const {
-    return static_cast<Derived &>(Display::write(bitmap));
-  }
-
-  const DisplayAccess &enable() const {
-    return static_cast<Derived &>(Display::enable());
-  }
-
-  const DisplayAccess &disable() const {
-    return static_cast<Derived &>(Display::disable());
-  }
-};
-
-} // namespace ux::sgfx
+} // namespace ux
 
 #endif /* UXAPI_UX_DISPLAY_HPP_ */

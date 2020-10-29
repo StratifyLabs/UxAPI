@@ -43,7 +43,7 @@ class Component : public Drawing {
   };
 
 public:
-  Component(const var::String &name) {
+  Component(const var::StringView name) {
     set_name(name);
     set_drawing_point(DrawingPoint(0, 0));
     set_drawing_area(DrawingArea(1000, 1000));
@@ -80,14 +80,14 @@ public:
   }
 
   const sgfx::Theme *theme() const;
-  const sgfx::Display *display() const;
-  sgfx::Display *display();
+  const Display *display() const;
+  Display *display();
 
   // update the location of the component (allow animations)
 
   virtual void handle_event(const ux::Event &event) {}
 
-  const var::String &name() const { return m_name; }
+  const var::StringView name() const { return m_name.string_view(); }
 
   void apply_antialias_filter(const DrawingAttributes &attributes);
   void apply_antialias_filter(const DrawingScaledAttributes &attributes);
@@ -115,10 +115,10 @@ public:
 
   const Layout *parent() const { return m_parent; }
 
-  const var::String &lookup_model_value() const;
-  const var::String &lookup_model_value(const var::String &key) const;
+  const var::StringView lookup_model_value() const;
+  const var::StringView lookup_model_value(const var::StringView key) const;
 
-  void update_model(const var::String &value);
+  void update_model(const var::StringView value);
   void update_model(const Model::Entry &entry);
   void update_model(bool value);
 
@@ -240,7 +240,7 @@ protected:
   bool is_ready_to_draw() const { return is_enabled() && is_visible(); }
 
 private:
-  var::String m_name;
+  var::IdString m_name;
   // needs to know where on the display it is drawn
   DrawingAttributes m_reference_drawing_attributes;
   DrawingAttributes m_local_drawing_attributes;
@@ -253,7 +253,7 @@ private:
 
   static EventLoop *m_event_loop;
 
-  void set_name(const var::String &name) { m_name = name; }
+  void set_name(const var::StringView name) { m_name = name; }
 };
 
 #define COMPONENT_ACCESS_DERIVED(B, T)                                         \
@@ -290,7 +290,7 @@ template <class T>
 class ComponentAccess : public Component,
                         public DrawingComponentProperties<T> {
 public:
-  ComponentAccess(const var::String &name) : Component(name) {
+  ComponentAccess(const var::StringView name) : Component(name) {
   }
 
   COMPONENT_ACCESS_DERIVED(Component, T)

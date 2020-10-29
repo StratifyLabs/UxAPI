@@ -21,7 +21,7 @@ public:
     event_id_changed
   };
 
-  Slider(const var::String &name);
+  Slider(const var::StringView name);
 
   void draw(const DrawingScaledAttributes &attributes);
   void handle_event(const ux::Event &event);
@@ -32,7 +32,7 @@ public:
   Slider &set_value(u16 value) {
     m_value = value;
     trigger_event(event_id_changed);
-    update_model(var::NumberString(value));
+    update_model(var::NumberString(value).string_view());
     return *this;
   }
 

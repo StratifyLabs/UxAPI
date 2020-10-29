@@ -26,9 +26,9 @@ public:
 
 protected:
   /*! \cond */
-  API_ACCESS_COMPOUND(RichText, var::String, value);
-  API_ACCESS_COMPOUND(RichText, var::NameString, text_font_name);
-  API_ACCESS_COMPOUND(RichText, var::NameString, icon_font_name);
+  API_ACCESS_COMPOUND(RichText, var::StringView, value);
+  API_ACCESS_COMPOUND(RichText, var::StringView, text_font_name);
+  API_ACCESS_COMPOUND(RichText, var::StringView, icon_font_name);
   API_ACCESS_FUNDAMENTAL(RichText, const sgfx::Font *, text_font, nullptr);
   API_ACCESS_FUNDAMENTAL(RichText, const sgfx::IconFont *, icon_font, nullptr);
   API_ACCESS_FUNDAMENTAL(RichText, sg_size_t, font_point_size, 0);

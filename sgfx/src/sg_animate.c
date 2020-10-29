@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #include "sg_config.h"
-#include "sgfx/sgfx.h"
+#include "sgfx.h"
 
 static int sg_animate_push_right(
   sg_bmap_t *bmap,

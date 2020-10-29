@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 
-#include "sgfx/sgfx_types.h"
+#include "sgfx_types.h"
 
 #if !defined SG_BITS_PER_PIXEL
 #define SG_BITS_PER_PIXEL 1

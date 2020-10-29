@@ -12,7 +12,7 @@ class ListItem : public ComponentAccess<ListItem> {
 public:
   enum event_ids { event_id_none, event_id_selected };
 
-  ListItem(const var::String &name) : ComponentAccess(name) {
+  ListItem(const var::StringView name) : ComponentAccess(name) {
     set_left_padding(5);
     set_right_padding(5);
     set_value(lookup_model_value());
@@ -22,17 +22,17 @@ public:
   void handle_event(const ux::Event &event);
 
 private:
-  API_ACCESS_COMPOUND(ListItem, var::String, label);
-  API_ACCESS_COMPOUND(ListItem, var::String, value);
+  API_ACCESS_COMPOUND(ListItem, var::KeyString, label);
+  API_ACCESS_COMPOUND(ListItem, var::StringView, value);
   API_ACCESS_BOOL(ListItem, interactive, true);
 };
 
 template <class T> class ListItemAccess : public ListItem {
 public:
-  ListItemAccess(const var::String &name) : ListItem(name) {}
+  ListItemAccess(const var::StringView name) : ListItem(name) {}
 
-  API_ACCESS_DERIVED_COMPOUND(ListItem, T, var::String, label)
-  API_ACCESS_DERIVED_COMPOUND(ListItem, T, var::String, value)
+  API_ACCESS_DERIVED_COMPOUND(ListItem, T, var::KeyString, label)
+  API_ACCESS_DERIVED_COMPOUND(ListItem, T, var::StringView, value)
   API_ACCESS_DERIVED_BOOL(ListItem, T, interactive)
 
   COMPONENT_ACCESS_DERIVED(Component, T)
@@ -42,7 +42,7 @@ public:
 
 class List : public LayoutAccess<List> {
 public:
-  List(const var::String &name, EventLoop *event_loop) : LayoutAccess(name) {
+  List(const var::StringView name, EventLoop *event_loop) : LayoutAccess(name) {
     set_flow(flow_vertical);
   }
 

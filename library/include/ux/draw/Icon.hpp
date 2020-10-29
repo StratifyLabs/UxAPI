@@ -26,7 +26,7 @@ public:
   /*! \details Construct an empty graphic */
   Icon();
 
-  Icon &set_name(const var::StringView value) {
+  Icon &set_name(const var::StringView  value) {
     if (value.find("icon@") == 0) {
       m_name = var::String(value.get_substring_at_position(5));
     } else {

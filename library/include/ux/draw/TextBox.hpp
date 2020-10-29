@@ -19,7 +19,7 @@ public:
   TextBox();
 
   static int
-  count_lines(const sgfx::Font *font, const var::String &string, sg_size_t w);
+  count_lines(const sgfx::Font *font, const var::StringView string, sg_size_t w);
 
   virtual void draw(const DrawingScaledAttributes &attr);
 

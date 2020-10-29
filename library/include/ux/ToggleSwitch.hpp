@@ -15,7 +15,7 @@ class ToggleSwitch : public ComponentAccess<ToggleSwitch> {
 public:
   enum event_ids { event_id_none, event_id_changed };
 
-  ToggleSwitch(const var::String &name) : ComponentAccess(name) {}
+  ToggleSwitch(const var::StringView name) : ComponentAccess(name) {}
 
   bool state() const { return m_state; }
 

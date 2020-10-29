@@ -108,14 +108,14 @@ Palette Theme::read_palette(Style style, State state) const {
   return result;
 }
 
-Theme &Theme::load(const var::String &path) {
+Theme &Theme::load(const var::StringView path) {
   m_color_file = std::move(fs::File(path).read(var::View(m_header)));
   m_color_count = header_color_count();
   return *this;
 }
 
 Theme &Theme::create(
-  const var::StringView path,
+  const var::StringView  path,
   fs::File::IsOverwrite is_overwrite,
   BitsPerPixel bits_per_pixel,
   enum pixel_format pixel_format) {

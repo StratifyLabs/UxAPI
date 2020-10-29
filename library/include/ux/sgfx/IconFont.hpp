@@ -24,7 +24,7 @@ public:
   public:
     IconInfo(const sg_font_icon_t &icon) : m_icon(icon) {}
     Area area() const { return Area(m_icon.width, m_icon.height); }
-    const var::StringView name() const { return var::StringView(m_icon.name); }
+    const var::StringView  name() const { return var::StringView(m_icon.name); }
     u32 canvas_idx() const { return m_icon.canvas_idx; }
     Point canvas_point() const {
       return Point(m_icon.canvas_x, m_icon.canvas_y);
@@ -56,12 +56,12 @@ public:
     return IconInfo(m_list.at(offset % m_list.count()));
   }
 
-  size_t find(const var::StringView name) const;
+  size_t find(const var::StringView  name) const;
 
   size_t count() const { return m_list.count(); }
 
   const IconFont &
-  draw(const var::StringView name, Bitmap &dest, const Point &point) const;
+  draw(const var::StringView  name, Bitmap &dest, const Point &point) const;
 
   const IconFont &draw(size_t offset, Bitmap &dest, const Point &point) const;
 

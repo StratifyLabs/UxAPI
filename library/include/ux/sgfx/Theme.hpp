@@ -47,32 +47,32 @@ public:
   Theme &set_bits_per_pixel(u8 bits_per_pixel);
   u8 bits_per_pixel() const { return m_header.bits_per_pixel; }
 
-  Theme &set_primary_font_name(const var::StringView name) {
+  Theme &set_primary_font_name(const var::StringView  name) {
     m_primary_font_name = name;
     return *this;
   }
 
-  Theme &set_primary_icon_font_name(const var::StringView name) {
+  Theme &set_primary_icon_font_name(const var::StringView  name) {
     m_primary_icon_font_name = name;
     return *this;
   }
 
-  const var::StringView primary_font_name() const {
+  const var::StringView  primary_font_name() const {
     return m_primary_font_name.string_view();
   }
 
-  const var::StringView primary_icon_font_name() const {
+  const var::StringView  primary_icon_font_name() const {
     return m_primary_icon_font_name.string_view();
   }
 
   u16 color_count() const { return m_color_count; }
 
   Theme &create(
-    const var::StringView path,
+    const var::StringView  path,
     fs::File::IsOverwrite is_overwrite,
     BitsPerPixel bits_per_pixel,
     enum pixel_format pixel_format);
-  Theme &load(const var::String &path);
+  Theme &load(const var::StringView path);
 
   size_t calculate_color_offset(Style style, State state) const;
 

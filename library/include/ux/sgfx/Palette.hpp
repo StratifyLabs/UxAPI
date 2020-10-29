@@ -1,10 +1,10 @@
 ﻿#ifndef UXAPI_UX_SGFX_PALETTE_HPP
 #define UXAPI_UX_SGFX_PALETTE_HPP
 
-#include <sgfx/sgfx_types.h>
-
 #include <var/Data.hpp>
 #include <var/StackString.hpp>
+
+#include "sgfx_types.h"
 
 namespace ux::sgfx {
 
@@ -47,13 +47,13 @@ public:
     u8 alpha;
   } palette_color_t;
 
-  static enum pixel_format decode_pixel_format(const var::String &format);
+  static enum pixel_format decode_pixel_format(const var::StringView format);
   static u32 bits_per_pixel_format(enum pixel_format format);
 };
 
 class PaletteColor : public PaletteFlags {
 public:
-  explicit PaletteColor(const var::String &hex_code) {
+  explicit PaletteColor(const var::StringView hex_code) {
     import_hex_code(hex_code);
   }
 
@@ -199,7 +199,7 @@ private:
   static u8 subtract_component(u8 a, u8 b);
   static u8 blend_component(u8 a, u8 b, float ratio);
 
-  void import_hex_code(const var::StringView hex);
+  void import_hex_code(const var::StringView  hex);
 };
 
 class Palette : public PaletteFlags {

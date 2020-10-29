@@ -6,7 +6,7 @@
 using namespace ux::sgfx;
 using namespace ux;
 
-Layout::Layout(const var::String &name) : ComponentAccess(name) {
+Layout::Layout(const var::StringView name) : ComponentAccess(name) {
   m_origin = DrawingPoint(0, 0);
   set_align_left();
   set_align_top();
@@ -28,7 +28,7 @@ void Layout::examine_visibility() {
     if (is_created() == false) {
       printf(
         "fatal %s was note created using Component::create()\n",
-        name().cstring());
+        var::IdString(name()).cstring());
       exit(1);
     }
 
@@ -98,7 +98,7 @@ Layout &Layout::add_component(Component &component) {
   return *this;
 }
 
-Layout &Layout::delete_component(const var::String &component_name) {
+Layout &Layout::delete_component(const var::StringView component_name) {
 
   for (Item &cp : m_component_list) {
     if (cp.component() && (component_name == cp.component()->name())) {

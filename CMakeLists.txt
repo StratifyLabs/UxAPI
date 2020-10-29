@@ -9,7 +9,8 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_MODULE_PATH}/sos-toolchain.cmake)
 include(sos-sdk)
 
 if(NOT DEFINED IS_SDK)
-include(JsonAPI)
+	include(JsonAPI)
+	include(HalAPI)
 endif()
 
 project(UxAPI CXX C)
