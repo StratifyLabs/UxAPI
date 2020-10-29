@@ -115,12 +115,10 @@ public:
 
   const Layout *parent() const { return m_parent; }
 
-  const var::StringView lookup_model_value() const;
-  const var::StringView lookup_model_value(const var::StringView key) const;
+  const var::StringView get_model() const;
 
-  void update_model(const var::StringView value);
-  void update_model(const Model::Entry &entry);
-  void update_model(bool value);
+  void set_model(const var::StringView value);
+  void set_model_bool(bool value);
 
   void set_drawing_area(const DrawingArea &drawing_area) {
     m_reference_drawing_attributes.set_area(drawing_area);
@@ -140,14 +138,6 @@ public:
 
   DrawingAttributes &reference_drawing_attributes() {
     return m_reference_drawing_attributes;
-  }
-
-  var::KeyString get_class_name() const {
-    return var::KeyString(fs::Path::parent_directory(name()));
-  }
-
-  var::KeyString get_instance_name() const {
-    return var::KeyString(fs::Path::name(name()));
   }
 
   static void set_event_loop(EventLoop &value) {

@@ -31,32 +31,32 @@ printer::Printer &printer::operator<<(
   printer::Printer &printer,
   const ux::sgfx::VectorPathDescription &a) {
   switch (a.type()) {
-  case ux::sgfx::VectorPathDescription::type_none:
+  case ux::sgfx::VectorPathDescription::Type::none:
     printer.key("type", "none");
     break;
-  case ux::sgfx::VectorPathDescription::type_move:
+  case ux::sgfx::VectorPathDescription::Type::move:
     printer.key("type", "move");
     printer.object("point", ux::sgfx::Point(a.to_move().point));
     break;
-  case ux::sgfx::VectorPathDescription::type_line:
+  case ux::sgfx::VectorPathDescription::Type::line:
     printer.key("type", "line");
     printer.object("point", ux::sgfx::Point(a.to_line().point));
     break;
-  case ux::sgfx::VectorPathDescription::type_quadratic_bezier:
+  case ux::sgfx::VectorPathDescription::Type::quadratic_bezier:
     printer.key("type", "quadratic bezier");
     printer.object("point", ux::sgfx::Point(a.to_quadratic_bezier().point));
     printer.object("control", ux::sgfx::Point(a.to_quadratic_bezier().control));
     break;
-  case ux::sgfx::VectorPathDescription::type_cubic_bezier:
+  case ux::sgfx::VectorPathDescription::Type::cubic_bezier:
     printer.key("type", "cubic bezier");
     printer.object("point", ux::sgfx::Point(a.to_cubic_bezier().point));
     printer.object("control0", ux::sgfx::Point(a.to_cubic_bezier().control[0]));
     printer.object("control1", ux::sgfx::Point(a.to_cubic_bezier().control[1]));
     break;
-  case ux::sgfx::VectorPathDescription::type_close:
+  case ux::sgfx::VectorPathDescription::Type::close:
     printer.key("type", "close");
     break;
-  case ux::sgfx::VectorPathDescription::type_pour:
+  case ux::sgfx::VectorPathDescription::Type::pour:
     printer.key("type", "pour");
     printer.object("point", ux::sgfx::Point(a.to_pour().point));
     break;

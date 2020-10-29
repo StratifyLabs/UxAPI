@@ -26,29 +26,20 @@ public:
   void draw(const DrawingScaledAttributes &attributes);
   void handle_event(const ux::Event &event);
 
-  u16 value() const { return m_value; }
-  u16 maximum() const { return m_maximum; }
+  var::Array<u16, 2> value() const;
 
-  Slider &set_value(u16 value) {
-    m_value = value;
-    trigger_event(event_id_changed);
-    update_model(var::NumberString(value).string_view());
-    return *this;
-  }
-
-  Slider &set_maximum(u16 value) {
-    m_maximum = value;
+  Slider &set_value(u16 value, u16 maximum) {
+    set_model(
+      var::NumberString(value).append("/").append(var::NumberString(maximum)));
     return *this;
   }
 
 private:
-  u16 m_value;
-  u16 m_maximum;
   bool m_is_touched = false;
   void update_touch_point(const sgfx::Point display_point);
 
-  var::String get_model_value() const {
-    return Model::from_list<u16>({value(), maximum()});
+  const var::StringViewList model_list() const {
+    return get_model().split("/");
   }
 };
 

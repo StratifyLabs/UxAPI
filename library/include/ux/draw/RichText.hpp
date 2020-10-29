@@ -34,7 +34,7 @@ protected:
   API_ACCESS_FUNDAMENTAL(RichText, sg_size_t, font_point_size, 0);
   API_ACCESS_FUNDAMENTAL(
     RichText,
-    enum sgfx::Font::Style,
+    sgfx::Font::Style,
     font_style,
     sgfx::Font::Style::regular);
   API_ACCESS_FUNDAMENTAL(RichText, sg_color_t, color, 0);
@@ -42,12 +42,12 @@ protected:
 
   class RichToken {
   public:
-    enum types { type_text, type_icon };
+    enum class Type { text, icon };
 
   private:
     API_ACCESS_FUNDAMENTAL(RichToken, sg_size_t, width, 0);
     API_ACCESS_FUNDAMENTAL(RichToken, sg_size_t, height, 0);
-    API_ACCESS_FUNDAMENTAL(RichToken, enum types, type, type_text);
+    API_ACCESS_FUNDAMENTAL(RichToken, Type, type, Type::text);
     API_ACCESS_FUNDAMENTAL(RichToken, u32, icon_index, 0);
     API_ACCESS_COMPOUND(RichToken, var::String, value);
   };

@@ -22,7 +22,9 @@ void Component::examine_visibility() {
       return;
     }
 
+#if NOT_BUILDING
     m_reference_drawing_attributes.set_bitmap(*display());
+#endif
     // local bitmap is a small section of the reference bitmap
     m_reference_drawing_attributes.calculate_area_on_bitmap();
 
@@ -156,16 +158,8 @@ void Component::apply_antialias_filter(
   }
 }
 
-const var::StringView Component::lookup_model_value() const {
-  return lookup_model_value(name());
-}
-
-const var::StringView Component::lookup_model_value(const var::StringView key) const {
-  return event_loop()->model().lookup(key);
-}
-
-void Component::update_model(const Model::Entry &entry) {
-  event_loop()->model().update(entry);
+const var::StringView Component::get_model() const {
+  return event_loop()->model().get(name());
 }
 
 void Component::trigger_event(u32 event_type, u32 event_id) {
@@ -173,10 +167,10 @@ void Component::trigger_event(u32 event_type, u32 event_id) {
     Event().set_type(event_type).set_id(event_id).set_context(this));
 }
 
-void Component::update_model(const var::StringView value) {
-  update_model(Model::Entry().set_name(name()).set_value(value.get_string()));
+void Component::set_model(const var::StringView value) {
+  event_loop()->model().set(name(), value);
 }
 
-void Component::update_model(bool value) {
-  update_model(Model::Entry().set_name(name()).set_value(value));
+void Component::set_model_bool(bool value) {
+  set_model(value ? "true" : "false");
 }

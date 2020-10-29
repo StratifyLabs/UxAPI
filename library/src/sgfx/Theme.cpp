@@ -100,9 +100,8 @@ Theme &Theme::write_palette(Style style, State state, const Palette &palette) {
 Palette Theme::read_palette(Style style, State state) const {
   Palette result;
   result
-    .set_pixel_format(
-      static_cast<enum Palette::pixel_format>(m_header.pixel_format))
-    .set_color_count(static_cast<enum Palette::color_count>(m_color_count));
+    .set_pixel_format(static_cast<Palette::PixelFormat>(m_header.pixel_format))
+    .set_color_count(static_cast<Palette::ColorCount>(m_color_count));
   const int offset = calculate_color_offset(style, state);
   m_color_file.seek(offset).read(result.colors());
   return result;
@@ -115,14 +114,14 @@ Theme &Theme::load(const var::StringView path) {
 }
 
 Theme &Theme::create(
-  const var::StringView  path,
+  const var::StringView path,
   fs::File::IsOverwrite is_overwrite,
   BitsPerPixel bits_per_pixel,
-  enum pixel_format pixel_format) {
+  Palette::PixelFormat pixel_format) {
 
   m_header.version = VERSION;
   m_header.bits_per_pixel = static_cast<u8>(bits_per_pixel);
-  m_header.pixel_format = pixel_format;
+  m_header.pixel_format = static_cast<u8>(pixel_format);
   m_color_count = 0;
 
   m_color_file

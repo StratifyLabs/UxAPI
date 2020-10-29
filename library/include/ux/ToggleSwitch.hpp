@@ -21,13 +21,13 @@ public:
 
   ToggleSwitch &set_state(bool value) {
     m_state = value;
-    update_model(value ? "true" : "false");
+    set_model(value ? "true" : "false");
     return *this;
   }
 
   ToggleSwitch &toggle() {
     m_state = !m_state;
-    update_model(m_state ? "true" : "false");
+    set_model(m_state ? "true" : "false");
     return *this;
   }
 

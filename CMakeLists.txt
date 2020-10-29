@@ -10,7 +10,6 @@ include(sos-sdk)
 
 if(NOT DEFINED IS_SDK)
 	include(JsonAPI)
-	include(HalAPI)
 endif()
 
 project(UxAPI CXX C)

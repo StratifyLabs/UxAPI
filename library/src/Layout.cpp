@@ -37,7 +37,9 @@ void Layout::examine_visibility() {
       return;
     }
 
+#if NOT_BUILDING
     m_reference_drawing_attributes.set_bitmap(*display());
+#endif
     m_refresh_region = Region(
       Point(0, 0),
       Region(reference_drawing_attributes().calculate_region_on_bitmap())
@@ -195,19 +197,19 @@ DrawingPoint Layout::calculate_next_point(
   DrawingPoint result(0, 0);
   for (Item &component_pointer : m_component_list) {
     if (component_pointer.component()) {
-      if (m_flow == flow_vertical) {
+      if (m_flow == Flow::vertical) {
         result += DrawingPoint(0, component_pointer.drawing_area().height());
-      } else if (m_flow == flow_horizontal) {
+      } else if (m_flow == Flow::horizontal) {
         result += DrawingPoint(component_pointer.drawing_area().width(), 0);
       }
     }
   }
 
   switch (m_flow) {
-  case flow_free:
+  case Flow::free:
     result = point;
     break;
-  case flow_vertical:
+  case Flow::vertical:
     // left,right,center alignment
     if (is_align_left()) {
       result.set_x(0);
@@ -218,7 +220,7 @@ DrawingPoint Layout::calculate_next_point(
       result.set_x((Drawing::scale() - area.width()) / 2);
     }
     break;
-  case flow_horizontal:
+  case Flow::horizontal:
     // top,bottom,middle alignment
     if (is_align_top()) {
       result.set_y(0);
@@ -346,13 +348,13 @@ drawing_int_t Layout::handle_horizontal_scroll(sg_int_t scroll) { return 0; }
 void Layout::generate_layout_positions() {
   switch (m_flow) {
   default:
-  case flow_free:
+  case Flow::free:
     generate_free_layout_positions();
     return;
-  case flow_vertical:
+  case Flow::vertical:
     generate_vertical_layout_positions();
     return;
-  case flow_horizontal:
+  case Flow::horizontal:
     generate_horizontal_layout_positions();
     return;
   }

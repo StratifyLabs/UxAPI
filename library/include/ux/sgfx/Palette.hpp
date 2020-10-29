@@ -12,12 +12,12 @@ class PaletteFlags {
 public:
   enum class IsAscending { no, yes };
 
-  enum color_count {
-    color_count_invalid = 0,
-    color_count_1bpp = 2,
-    color_count_2bpp = 4,
-    color_count_4bpp = 16,
-    color_count_8bpp = 256
+  enum class ColorCount {
+    null = 0,
+    x1bpp = 2,
+    x2bpp = 4,
+    x4bpp = 16,
+    x8bpp = 256
   };
 
   enum class PixelFormat {
@@ -30,16 +30,6 @@ public:
     rgba8888
   };
 
-  enum pixel_format {
-    pixel_format_invalid,
-    pixel_format_rgb332,
-    pixel_format_rgb444,
-    pixel_format_rgb565,
-    pixel_format_rgb666,
-    pixel_format_rgb888,
-    pixel_format_rgba8888
-  };
-
   typedef struct MCU_PACK {
     u8 red;
     u8 green;
@@ -47,8 +37,8 @@ public:
     u8 alpha;
   } palette_color_t;
 
-  static enum pixel_format decode_pixel_format(const var::StringView format);
-  static u32 bits_per_pixel_format(enum pixel_format format);
+  static PixelFormat decode_pixel_format(const var::StringView format);
+  static u32 bits_per_pixel_format(PixelFormat format);
 };
 
 class PaletteColor : public PaletteFlags {
@@ -128,21 +118,21 @@ public:
   PaletteColor darker(float a) const;
   PaletteColor blend(const PaletteColor &a, float ratio) const;
 
-  u32 to(enum pixel_format pixel_format) {
+  u32 to(PixelFormat pixel_format) {
     switch (pixel_format) {
-    case pixel_format_invalid:
+    case PixelFormat::null:
       return 0;
-    case pixel_format_rgb332:
+    case PixelFormat::rgb332:
       return to_rgb332();
-    case pixel_format_rgb444:
+    case PixelFormat::rgb444:
       return to_rgb444();
-    case pixel_format_rgb565:
+    case PixelFormat::rgb565:
       return to_rgb565();
-    case pixel_format_rgb666:
+    case PixelFormat::rgb666:
       return to_rgb666();
-    case pixel_format_rgb888:
+    case PixelFormat::rgb888:
       return to_rgb888();
-    case pixel_format_rgba8888:
+    case PixelFormat::rgba8888:
       return to_rgba8888();
     }
     return 0;
@@ -166,7 +156,7 @@ public:
     return var::KeyString().format("#%02x%02x%02x", red(), green(), blue());
   }
 
-  sg_color_t to_pixel_format(enum pixel_format pixel_format) const;
+  sg_color_t to_pixel_format(PixelFormat pixel_format) const;
   sg_color_t to_rgb332() const;
   sg_color_t to_rgb444() const;
   sg_color_t to_rgb565() const;
@@ -205,24 +195,24 @@ private:
 class Palette : public PaletteFlags {
 public:
   Palette();
-  Palette &set_pixel_format(enum pixel_format value) {
+  Palette &set_pixel_format(PixelFormat value) {
     m_pixel_format = value;
     return *this;
   }
 
   bool is_valid() const {
-    return (colors().count() > 0) && (pixel_format() != pixel_format_invalid);
+    return (colors().count() > 0) && (pixel_format() != PixelFormat::null);
   }
 
-  static enum color_count get_color_count(u8 bits_per_pixel);
+  static ColorCount get_color_count(u8 bits_per_pixel);
   u8 get_bits_per_pixel() const;
 
-  Palette &set_color_count(enum color_count color_count);
+  Palette &set_color_count(ColorCount color_count);
 
   Palette &assign_color(u32 v, const PaletteColor &color);
 
   /*! \details Returns the pixel format. */
-  enum pixel_format pixel_format() const { return m_pixel_format; }
+  PixelFormat pixel_format() const { return m_pixel_format; }
 
   Palette &create_gradient(
     const PaletteColor &color,
@@ -234,7 +224,7 @@ public:
   PaletteColor palette_color(size_t offset) const;
 
 private:
-  enum pixel_format m_pixel_format;
+  PixelFormat m_pixel_format;
   var::Vector<sg_color_t> m_colors;
 };
 

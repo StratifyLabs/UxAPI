@@ -15,7 +15,7 @@ public:
   ListItem(const var::StringView name) : ComponentAccess(name) {
     set_left_padding(5);
     set_right_padding(5);
-    set_value(lookup_model_value());
+    set_value(get_model());
   }
 
   void draw(const DrawingScaledAttributes &attributes);
@@ -43,7 +43,7 @@ public:
 class List : public LayoutAccess<List> {
 public:
   List(const var::StringView name, EventLoop *event_loop) : LayoutAccess(name) {
-    set_flow(flow_vertical);
+    set_flow(Flow::vertical);
   }
 
   List &add_component(Component &component);

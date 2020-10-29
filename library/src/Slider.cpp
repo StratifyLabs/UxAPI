@@ -8,10 +8,14 @@
 using namespace ux;
 using namespace ux::sgfx;
 
-Slider::Slider(const var::StringView name) : ComponentAccess(name) {
-  auto list = Model::to_list(lookup_model_value());
-  set_value(list.count() ? list.at(0).to_unsigned_long() : 0);
-  set_maximum(list.count() > 1 ? list.at(1).to_unsigned_long() : 100);
+Slider::Slider(const var::StringView name) : ComponentAccess(name) {}
+
+var::Array<u16, 2> Slider::value() const {
+  auto list = model_list();
+  var::Array<u16, 2> result;
+  result.at(0) = list.count() ? list.at(0).to_unsigned_long() : 0;
+  result.at(1) = list.count() > 1 ? list.at(1).to_unsigned_long() : 100;
+  return result;
 }
 
 void Slider::draw(const DrawingScaledAttributes &attributes) {
@@ -31,7 +35,8 @@ void Slider::draw(const DrawingScaledAttributes &attributes) {
   const u16 indicator_range
     = region_inside_margin.width() - indicator_area.width();
 
-  const sg_int_t indicator_position = m_value * indicator_range / m_maximum;
+  const var::Array<u16, 2> v = value();
+  const sg_int_t indicator_position = v.at(0) * indicator_range / v.at(1);
 
   attributes.bitmap()
     .set_pen(sgfx::Pen().set_color(theme()->background_color()))
@@ -85,14 +90,16 @@ void Slider::handle_event(const ux::Event &event) {
 void Slider::update_touch_point(const sgfx::Point display_point) {
   DrawingPoint point = translate_point(display_point);
 
+  var::Array<u16, 2> v = value();
+
   if (point.x() < 50) {
-    m_value = 0;
+    v.at(0) = 0;
   } else if (point.x() > 950) {
-    m_value = m_maximum;
+    v.at(0) = v.at(1);
   } else {
-    m_value = (point.x() - 50) * m_maximum / 900;
+    v.at(0) = (point.x() - 50) * v.at(1) / 900;
   }
 
-  update_model(Model::from_list<u16>({value(), maximum()}).string_view());
+  set_value(v.at(0), v.at(1));
   redraw();
 }

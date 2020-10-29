@@ -42,7 +42,7 @@ public:
     DrawingArea m_drawing_area;
   };
 
-  enum flows { flow_vertical, flow_horizontal, flow_free };
+  enum class Flow { vertical, horizontal, free };
 
   Layout(const var::StringView name);
 
@@ -160,7 +160,7 @@ protected:
 private:
   friend class Controller;
   friend class EventLoop;
-  API_AF(Layout, enum flows, flow, flow_free);
+  API_AF(Layout, Flow, flow, Flow::free);
   API_ACCESS_COMPOUND(Layout, var::Vector<Item>, component_list);
   DrawingPoint m_origin;
   DrawingArea m_area;
@@ -196,7 +196,7 @@ public:
     return static_cast<T &>(Layout::delete_component(component_name));
   }
 
-  API_ACCESS_DERIVED_FUNDAMETAL(Layout, T, enum flows, flow)
+  API_ACCESS_DERIVED_FUNDAMETAL(Layout, T, Flow, flow)
   API_ACCESS_DERIVED_BOOL(Layout, T, vertical_scroll_enabled)
   API_ACCESS_DERIVED_BOOL(Layout, T, horizontal_scroll_enabled)
 

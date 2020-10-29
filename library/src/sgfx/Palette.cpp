@@ -16,44 +16,44 @@ printer::Printer &printer::operator<<(
 
 using namespace ux::sgfx;
 
-enum PaletteFlags::pixel_format
+PaletteFlags::PixelFormat
 PaletteFlags::decode_pixel_format(const var::StringView format) {
   if (format == "rgb332") {
-    return pixel_format_rgb332;
+    return PixelFormat::rgb332;
   }
   if (format == "rgb444") {
-    return pixel_format_rgb444;
+    return PixelFormat::rgb444;
   }
   if (format == "rgb565") {
-    return pixel_format_rgb565;
+    return PixelFormat::rgb565;
   }
   if (format == "rgb666") {
-    return pixel_format_rgb666;
+    return PixelFormat::rgb666;
   }
   if (format == "rgb888") {
-    return pixel_format_rgb888;
+    return PixelFormat::rgb888;
   }
   if (format == "rgba8888") {
-    return pixel_format_rgba8888;
+    return PixelFormat::rgba8888;
   }
-  return pixel_format_invalid;
+  return PixelFormat::null;
 }
 
-u32 PaletteFlags::bits_per_pixel_format(enum pixel_format format) {
+u32 PaletteFlags::bits_per_pixel_format(PixelFormat format) {
   switch (format) {
-  case pixel_format_invalid:
+  case PixelFormat::null:
     return 1;
-  case pixel_format_rgb332:
+  case PixelFormat::rgb332:
     return 8;
-  case pixel_format_rgb444:
+  case PixelFormat::rgb444:
     return 12;
-  case pixel_format_rgb565:
+  case PixelFormat::rgb565:
     return 16;
-  case pixel_format_rgb666:
+  case PixelFormat::rgb666:
     return 18;
-  case pixel_format_rgb888:
+  case PixelFormat::rgb888:
     return 24;
-  case pixel_format_rgba8888:
+  case PixelFormat::rgba8888:
     return 32;
   }
   return 1;
@@ -128,21 +128,21 @@ PaletteColor PaletteColor::lighter(float a) const { return adjust(a); }
 
 PaletteColor PaletteColor::darker(float a) const { return adjust(-1.0 * a); }
 
-sg_color_t PaletteColor::to_pixel_format(enum pixel_format pixel_format) const {
+sg_color_t PaletteColor::to_pixel_format(PixelFormat pixel_format) const {
   switch (pixel_format) {
-  case pixel_format_invalid:
+  case PixelFormat::null:
     return 0;
-  case pixel_format_rgb332:
+  case PixelFormat::rgb332:
     return to_rgb332();
-  case pixel_format_rgb444:
+  case PixelFormat::rgb444:
     return to_rgb444();
-  case pixel_format_rgb565:
+  case PixelFormat::rgb565:
     return to_rgb565();
-  case pixel_format_rgb666:
+  case PixelFormat::rgb666:
     return to_rgb666();
-  case pixel_format_rgb888:
+  case PixelFormat::rgb888:
     return to_rgb888();
-  case pixel_format_rgba8888:
+  case PixelFormat::rgba8888:
     return to_rgba8888();
   }
   return 0;
@@ -201,22 +201,22 @@ var::Vector<PaletteColor> PaletteColor::calculate_gradient(
   return result;
 }
 
-Palette::Palette() { m_pixel_format = pixel_format_invalid; }
+Palette::Palette() { m_pixel_format = PixelFormat::null; }
 
-enum Palette::color_count Palette::get_color_count(u8 bits_per_pixel) {
+PaletteFlags::ColorCount Palette::get_color_count(u8 bits_per_pixel) {
   if (bits_per_pixel == 1) {
-    return color_count_1bpp;
+    return ColorCount::x1bpp;
   }
   if (bits_per_pixel == 2) {
-    return color_count_2bpp;
+    return ColorCount::x2bpp;
   }
   if (bits_per_pixel == 4) {
-    return color_count_4bpp;
+    return ColorCount::x4bpp;
   }
   if (bits_per_pixel == 8) {
-    return color_count_8bpp;
+    return ColorCount::x8bpp;
   }
-  return color_count_invalid;
+  return ColorCount::null;
 }
 
 u8 Palette::get_bits_per_pixel() const {
@@ -239,9 +239,9 @@ u8 Palette::get_bits_per_pixel() const {
   return 1;
 }
 
-Palette &Palette::set_color_count(enum color_count color_count) {
+Palette &Palette::set_color_count(ColorCount color_count) {
   m_colors = var::Vector<sg_color_t>();
-  m_colors.resize(color_count);
+  m_colors.resize(static_cast<size_t>(color_count));
   return *this;
 }
 
@@ -259,19 +259,19 @@ PaletteColor Palette::palette_color(size_t offset) const {
   if (offset < colors().count()) {
     sg_color_t color = colors().at(offset);
     switch (pixel_format()) {
-    case pixel_format_invalid:
+    case PixelFormat::null:
       return PaletteColor();
-    case pixel_format_rgb332:
+    case PixelFormat::rgb332:
       return PaletteColor::from_rgb332(color);
-    case pixel_format_rgb444:
+    case PixelFormat::rgb444:
       return PaletteColor::from_rgb444(color);
-    case pixel_format_rgb565:
+    case PixelFormat::rgb565:
       return PaletteColor::from_rgb565(color);
-    case pixel_format_rgb666:
+    case PixelFormat::rgb666:
       return PaletteColor::from_rgb666(color);
-    case pixel_format_rgb888:
+    case PixelFormat::rgb888:
       return PaletteColor::from_rgb888(color);
-    case pixel_format_rgba8888:
+    case PixelFormat::rgba8888:
       return PaletteColor::from_rgb8888(color);
     }
   }

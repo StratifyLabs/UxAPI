@@ -13,9 +13,11 @@
 
 namespace ux {
 
-class Display : public sgfx::Bitmap, public fs::FileMemberAccess<Display> {
+class Display : public fs::FileMemberAccess<Display>,
+                public api::ExecutionContext {
 public:
   enum class Mode { palette, raw };
+  using BitsPerPixel = sgfx::Bitmap::BitsPerPixel;
 
   class Info {
   public:

@@ -73,17 +73,17 @@ public:
   }
   operator const sg_vector_path_description_t &() const { return m_value; }
 
-  enum type {
-    type_none = SG_VECTOR_PATH_NONE,
-    type_move = SG_VECTOR_PATH_MOVE,
-    type_line = SG_VECTOR_PATH_LINE,
-    type_quadratic_bezier = SG_VECTOR_PATH_QUADRATIC_BEZIER,
-    type_cubic_bezier = SG_VECTOR_PATH_CUBIC_BEZIER,
-    type_close = SG_VECTOR_PATH_CLOSE,
-    type_pour = SG_VECTOR_PATH_POUR,
+  enum class Type {
+    none = SG_VECTOR_PATH_NONE,
+    move = SG_VECTOR_PATH_MOVE,
+    line = SG_VECTOR_PATH_LINE,
+    quadratic_bezier = SG_VECTOR_PATH_QUADRATIC_BEZIER,
+    cubic_bezier = SG_VECTOR_PATH_CUBIC_BEZIER,
+    close = SG_VECTOR_PATH_CLOSE,
+    pour = SG_VECTOR_PATH_POUR,
   };
 
-  u16 type() const { return m_value.type; }
+  Type type() const { return static_cast<Type>(m_value.type); }
   sg_vector_path_move_t to_move() const { return m_value.move; }
   sg_vector_path_line_t to_line() const { return m_value.line; }
   sg_vector_path_quadtratic_bezier_t to_quadratic_bezier() const {
@@ -100,7 +100,7 @@ private:
 
 class VectorPath {
 public:
-  VectorPath() { memset(&m_path, 0, sizeof(m_path)); }
+  VectorPath() { m_path = {0}; }
   VectorPath(const sg_vector_path_t &path) { m_path = path; }
 
   bool is_valid() const { return m_path.icon.count > 0; }

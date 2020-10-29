@@ -56,7 +56,7 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
     if (
       (raw_token.length() > 2) && (raw_token.front() == ':')
       && (raw_token.back() == ':')) {
-      entry.set_type(RichToken::type_icon)
+      entry.set_type(RichToken::Type::icon)
         .set_value(String(
           raw_token(StringView::GetSubstring().set_position(1).set_length(
             raw_token.length() - 2))));
@@ -73,7 +73,7 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
   for (RichToken &rich_token : rich_token_list) {
     sg_size_t width;
     sg_size_t height;
-    if (rich_token.type() == RichToken::type_text) {
+    if (rich_token.type() == RichToken::Type::text) {
       width = text_font()->get_width(rich_token.value());
       height = text_font()->get_height();
     } else {
@@ -119,7 +119,7 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
     sg_size_t y_offset; // center within max height
     y_offset = (max_height - rich_token.height()) / 2;
 
-    if (rich_token.type() == RichToken::type_icon) {
+    if (rich_token.type() == RichToken::Type::icon) {
       icon_font()->draw(
         rich_token.icon_index(),
         attr.bitmap(),

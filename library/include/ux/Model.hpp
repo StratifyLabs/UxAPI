@@ -31,46 +31,30 @@ public:
     bool operator==(const Entry &a) const;
   };
 
-  void update(const Entry &entry);
-
-  const var::StringView lookup(const var::StringView key) const;
-
-  static var::String from_list(std::initializer_list<var::String> il) {
-    var::String v;
-    for (auto i : il) {
-      v += i + ";";
-    }
-    v.pop_back();
-    return v;
+  Model &set(const var::StringView key, const var::StringView value) {
+    interface_set(key, value);
+    return *this;
   }
 
-  static var::String from_list(const var::StringList &list) {
-    var::String v;
-    for (auto i : list) {
-      v += i + ";";
-    }
-    v.pop_back();
-    return v;
+  var::StringView get(const var::StringView key) const {
+    return interface_get(key);
   }
 
-  template <typename T>
-  static var::String from_list(std::initializer_list<T> il) {
-    var::String v;
-    for (auto i : il) {
-      v += var::NumberString(i) + ";";
-    }
-    v.pop_back();
-    return std::move(v);
-  }
-
-  static var::StringViewList to_list(const var::StringView value) {
-    return value.split(";");
+  var::Array<var::StringView, 2> at(size_t offset) const {
+    return interface_at(offset);
   }
 
   using EntryList = var::Vector<Entry>;
 
-private:
-  API_AC(Model, EntryList, entry_list);
+protected:
+  virtual void
+  interface_set(const var::StringView key, const var::StringView value)
+    = 0;
+
+  virtual var::StringView interface_get(const var::StringView key) const = 0;
+
+  virtual const var::Array<var::StringView, 2>
+  interface_at(size_t offset) const = 0;
 };
 
 } // namespace ux

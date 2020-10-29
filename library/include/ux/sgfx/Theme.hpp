@@ -71,7 +71,7 @@ public:
     const var::StringView  path,
     fs::File::IsOverwrite is_overwrite,
     BitsPerPixel bits_per_pixel,
-    enum pixel_format pixel_format);
+    PixelFormat pixel_format);
   Theme &load(const var::StringView path);
 
   size_t calculate_color_offset(Style style, State state) const;

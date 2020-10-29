@@ -63,7 +63,7 @@ bool Display::is_busy() const {
 
 const Display &Display::set_palette(const sgfx::Palette &palette) const {
   display_palette_t display_palette;
-  display_palette.pixel_format = palette.pixel_format();
+  display_palette.pixel_format = static_cast<u8>(palette.pixel_format());
   display_palette.count = palette.colors().count();
   display_palette.colors = (void *)palette.colors().to_const_void();
   return ioctl(I_DISPLAY_SETPALETTE, &display_palette);
@@ -77,10 +77,10 @@ sgfx::Palette Display::get_palette() const {
   // copy colors from display_palette_t
   sgfx::Palette result;
   result
-    .set_pixel_format(static_cast<enum sgfx::Palette::pixel_format>(
-      display_palette.pixel_format))
+    .set_pixel_format(
+      static_cast<sgfx::Palette::PixelFormat>(display_palette.pixel_format))
     .set_color_count(
-      static_cast<enum sgfx::Palette::color_count>(display_palette.count));
+      static_cast<sgfx::Palette::ColorCount>(display_palette.count));
 
   const sg_color_t *display_palette_colors
     = static_cast<const sg_color_t *>(display_palette.colors);

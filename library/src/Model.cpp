@@ -4,36 +4,17 @@
 
 printer::Printer &
 printer::operator<<(printer::Printer &printer, const ux::Model &a) {
-  for (const ux::Model::Entry &entry : a.entry_list()) {
-    printer.key(entry.name(), entry.value());
-  }
+  size_t offset = 0;
+  bool is_null;
+  do {
+    const var::Array<var::StringView, 2> entry = a.at(offset);
+    is_null = entry.at(0).is_null() || entry.at(1).is_null();
+    if (!is_null) {
+      printer.key(entry.at(0), entry.at(1));
+    }
+  } while (!is_null);
   return printer;
 }
 
 using namespace ux;
 
-Model::Model() { m_entry_list.reserve(64); }
-
-bool Model::Entry::operator==(const Entry &a) const {
-  return (a.name() == name());
-}
-
-void Model::update(const Entry &value) {
-  for (Entry &entry : entry_list()) {
-    if (entry == value) {
-      entry.set_value(value.value());
-      return;
-    }
-  }
-
-  entry_list().push_back(value);
-}
-
-const var::StringView Model::lookup(const var::StringView name) const {
-  for (const Entry &entry : entry_list()) {
-    if (name == entry.name().string_view()) {
-      return entry.value();
-    }
-  }
-  return var::StringView();
-}

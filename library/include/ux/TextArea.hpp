@@ -30,7 +30,7 @@ public:
 
   TextArea &set_value(const var::StringView  value);
 
-  const var::StringView value() const { return lookup_model_value(); }
+  const var::StringView value() const { return get_model(); }
 
 private:
   API_ACCESS_FUNDAMENTAL(TextArea, size_t, max_length, 256);
