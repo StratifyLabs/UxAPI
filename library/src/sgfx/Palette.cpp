@@ -65,11 +65,11 @@ void PaletteColor::import_hex_code(const var::StringView  hex) {
     return;
   }
   m_color.red = hex(StringView::GetSubstring().set_position(1).set_length(2))
-                  .to_unsigned_long(StringView::Base::hexidecimal);
+                  .to_unsigned_long(StringView::Base::hexadecimal);
   m_color.green = hex(StringView::GetSubstring().set_position(3).set_length(2))
-                    .to_unsigned_long(StringView::Base::hexidecimal);
+                    .to_unsigned_long(StringView::Base::hexadecimal);
   m_color.blue = hex(StringView::GetSubstring().set_position(4).set_length(2))
-                   .to_unsigned_long(StringView::Base::hexidecimal);
+                   .to_unsigned_long(StringView::Base::hexadecimal);
 }
 
 u8 PaletteColor::multiply_component(u8 value, float a) {
