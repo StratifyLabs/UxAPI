@@ -57,6 +57,7 @@ public:
   Display::Info get_info() const;
 
   // const Display &write(const sgfx::Bitmap &bitmap) const;
+  sgfx::Region region() const { return sgfx::Region(); }
   const Display &set_window(const sgfx::Region &region) const;
   const Display &set_mode(Mode value) const;
   const Display &enable() const;

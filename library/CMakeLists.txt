@@ -1,5 +1,5 @@
 
-set(LIBRARIES ChartAPI JsonAPI FsAPI ChronoAPI VarAPI)
+set(LIBRARIES	JsonAPI FsAPI ChronoAPI VarAPI)
 
 
 stratifyapi_add_api_library(${PROJECT_NAME} "${LIBRARIES}")
