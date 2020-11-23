@@ -16,7 +16,7 @@ namespace ux::draw {
  * middle of the bitmap specified by attributes.
  *
  * ```
- * #include <sapi/draw.hpp>
+ * #include <draw.hpp>
  * DrawingAttributes attributes;
  *
  * //construct attributes

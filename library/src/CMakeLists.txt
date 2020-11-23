@@ -9,6 +9,7 @@ set(SOURCES
 	Controller.cpp
 	Model.cpp
 	Display.cpp
+	Assets.cpp
 
 	# Components
 	Label.cpp

@@ -219,8 +219,8 @@ private:
  * pixel bitmap.
  *
  * ```
- * #include <sapi/sgfx.hpp>
- * #include <sapi/draw.hpp>
+ * #include <sgfx.hpp>
+ * #include <draw.hpp>
  *
  * Bitmap bitmap(64,64); //64x64 pixel bitmap
  * DrawingAttributes attributes;

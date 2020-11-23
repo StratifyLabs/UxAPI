@@ -18,3 +18,4 @@ printer::operator<<(printer::Printer &printer, const ux::Model &a) {
 
 using namespace ux;
 
+Model::Model() {}

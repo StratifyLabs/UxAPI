@@ -49,20 +49,24 @@ class Font : public Api, public FontFlags {
 public:
   class Info {
   public:
-    Info();
+    Info() {}
+    Info(const var::StringView path);
 
     /*! \details Enables sorting Info objects by point size. */
     static bool ascending_point_size(const Info &a, const Info &b);
     /*! \details Enables sorting Info objects by style. */
     static bool ascending_style(const Info &a, const Info &b);
 
+    bool is_valid() const { return m_style != Style::any; }
+
   private:
     API_AF(Info, Style, style, Style::any);
     API_AF(Info, sg_size_t, point_size, 0);
+    API_AC(Info, var::StringView, name);
     API_AC(Info, var::PathString, file_path);
   };
 
-  Font(const fs::File &file);
+  Font(const fs::FileObject *file);
 
   /*! \details Returns a string of the available character set */
   static const var::StringView  ascii_character_set();
@@ -151,7 +155,7 @@ protected:
   u32 m_canvas_start = 0;
   u32 m_canvas_size = 0;
   var::Vector<sg_font_kerning_pair_t> m_kerning_pairs;
-  const fs::File &m_file;
+  const fs::FileObject *m_file;
 
   void refresh();
   static int to_charset(char ascii);

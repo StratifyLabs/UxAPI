@@ -39,9 +39,9 @@ public:
 
   static void find_fonts_in_directory(const var::StringView path);
   static void find_icons_in_directory(const var::StringView path);
+#if 0
   static void find_vector_paths_in_directory(const var::StringView path);
 
-#if 0
   static const var::Vector<fmt::Svic> &vector_path_list() {
     initialize();
     return m_vector_path_list;

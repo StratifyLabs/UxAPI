@@ -5,86 +5,80 @@
 #include <cstdio>
 #include <errno.h>
 
+#include <fs/File.hpp>
+#include <fs/Path.hpp>
 #include <var.hpp>
 
-#include "fs/File.hpp"
 #include "ux/sgfx/Font.hpp"
 
 using namespace ux::sgfx;
 
-#if defined NOT_BUILDING
 Font::Info::Info(const var::StringView  path) {
-  m_path = path;
+  m_file_path = path;
 
-  const fs::Path file_path = fs::Path(path);
-
-  const var::StringViewList tokens = file_path.name().string_view().split("-.");
+  const var::StringViewList tokens = fs::Path::name(path).split("-.");
 
   if (tokens.count() != 4) {
     m_point_size = 0;
   } else {
 
-    m_font = 0;
     m_name = tokens.at(0);
-    m_point_size = var::String(tokens.at(2)).to_integer();
-    var::String style = tokens.at(1);
-    style.to_lower();
+    m_point_size = tokens.at(2).to_integer();
+    const auto style = tokens.at(1);
 
-    m_style = style_any;
     if (style == "t") {
-      m_style = style_thin;
+      m_style = Style::thin;
     }
     if (style == "ti") {
-      m_style = style_thin_italic;
+      m_style = Style::thin_italic;
     }
     if (style == "el") {
-      m_style = style_extra_light;
+      m_style = Style::extra_light;
     }
     if (style == "eli") {
-      m_style = style_extra_light_italic;
+      m_style = Style::extra_light_italic;
     }
     if (style == "l") {
-      m_style = style_light;
+      m_style = Style::light;
     }
     if (style == "li") {
-      m_style = style_light_italic;
+      m_style = Style::light_italic;
     }
     if (style == "r") {
-      m_style = style_regular;
+      m_style = Style::regular;
     }
     if (style == "ri") {
-      m_style = style_regular_italic;
+      m_style = Style::regular_italic;
     }
     if (style == "m") {
-      m_style = style_medium;
+      m_style = Style::medium;
     }
     if (style == "mi") {
-      m_style = style_medium_italic;
+      m_style = Style::medium_italic;
     }
     if (style == "sb") {
-      m_style = style_semi_bold;
+      m_style = Style::semi_bold;
     }
     if (style == "sbi") {
-      m_style = style_semi_bold_italic;
+      m_style = Style::semi_bold_italic;
     }
     if (style == "b") {
-      m_style = style_bold;
+      m_style = Style::bold;
     }
     if (style == "bi") {
-      m_style = style_bold_italic;
+      m_style = Style::bold_italic;
     }
     if (style == "eb") {
-      m_style = style_extra_bold;
+      m_style = Style::extra_bold;
     }
     if (style == "ebi") {
-      m_style = style_extra_bold_italic;
+      m_style = Style::extra_bold_italic;
     }
     if (style == "ico") {
-      m_style = style_icons;
+      m_style = Style::icons;
     }
   }
 }
-#endif
 
 bool Font::Info::ascending_point_size(const Info &a, const Info &b) {
   return a.point_size() < b.point_size();
@@ -107,7 +101,7 @@ int Font::to_charset(char ascii) {
   return (int)(ascii - ' ' - 1);
 }
 
-Font::Font(const fs::File &file) : m_file(file) {
+Font::Font(const fs::FileObject *file) : m_file(file) {
   m_space_size = 8;
   m_letter_spacing = 1;
   m_is_kerning_enabled = true;
@@ -116,7 +110,7 @@ Font::Font(const fs::File &file) : m_file(file) {
 
 void Font::refresh() {
 
-  m_file.seek(0).read(View(m_header));
+  m_file->seek(0).read(View(m_header));
 
   m_canvas.resize(
     Area(m_header.canvas_width, m_header.canvas_height),
@@ -129,7 +123,7 @@ void Font::refresh() {
   m_kerning_pairs = var::Vector<sg_font_kerning_pair_t>();
   m_kerning_pairs.resize(m_header.kerning_pair_count);
 
-  m_file.seek(sizeof(sg_font_header_t)).read(View(m_kerning_pairs));
+  m_file->seek(sizeof(sg_font_header_t)).read(View(m_kerning_pairs));
 
   set_space_size(m_header.max_word_width);
   set_letter_spacing(m_header.max_height / 8);
@@ -238,7 +232,7 @@ int Font::load_char(sg_font_char_t &ch, char c, bool ascii) const {
       + sizeof(sg_font_kerning_pair_t) * m_header.kerning_pair_count
       + ind * sizeof(sg_font_char_t);
 
-  m_file.seek(offset).read(View(ch));
+  m_file->seek(offset).read(View(ch));
 
   return 0;
 }
@@ -272,7 +266,7 @@ void Font::draw_char_on_bitmap(
 
   if (ch.canvas_idx != m_current_canvas) {
     const size_t canvas_offset = m_canvas_start + ch.canvas_idx * m_canvas_size;
-    m_file.seek(canvas_offset).read(m_canvas.view());
+    m_file->seek(canvas_offset).read(m_canvas.view());
     m_current_canvas = ch.canvas_idx;
   }
 
