@@ -128,6 +128,16 @@ BitmapData &BitmapData::load(const fs::File &file) {
   return *this;
 }
 
+BitmapData &BitmapData::resize(const Area &area, BitsPerPixel bits_per_pixel) {
+  sg_bmap_t bmap = {0};
+  bmap.bits_per_pixel = static_cast<u8>(bits_per_pixel);
+
+  // use sgfx to get the size of the bitmap
+  size_t size = api()->calc_bmap_size(&bmap, area.area());
+  m_data.resize(size);
+  return *this;
+}
+
 Area BitmapData::load_area(const fs::File &file) {
   sg_bmap_header_t hdr;
   file.read(View(hdr));

@@ -14,11 +14,6 @@ class Assets {
 public:
   static int initialize();
 
-  static var::Vector<sgfx::Font::Info> &font_info_list() {
-    initialize();
-    return m_font_info_list;
-  }
-
   class FindFont {
     API_AC(FindFont, var::StringView, name);
     API_AF(FindFont, u16, point_size, 0);
@@ -27,11 +22,6 @@ public:
   };
 
   static const sgfx::Font::Info *find_font(const FindFont &options);
-
-  static var::Vector<sgfx::IconFont::FontInfo> &icon_font_info_list() {
-    initialize();
-    return m_icon_font_info_list;
-  }
 
   using FindIconFont = FindFont;
   static const sgfx::IconFont::FontInfo *
@@ -51,10 +41,52 @@ public:
 #endif
 
 private:
+  template <class Font> struct Entry {
+    sgfx::Font::Info info;
+    fs::File file;
+    Font font;
+
+    sgfx::Font::Info *create() {
+      if (font.is_valid() == false) {
+        file = fs::File(info.file_path());
+        font = Font(&file);
+      }
+      return &info;
+    }
+
+    void destroy() {
+      if (font.is_valid()) {
+        file = fs::File();
+        font = Font();
+      }
+    }
+
+    static bool ascending_point_size(const Entry &a, const Entry &b) {
+      return a.info.point_size() < b.info.point_size();
+    }
+
+    static bool ascending_style(const Entry &a, const Entry &b) {
+      return a.info.style() < b.info.style();
+    }
+  };
+
+  using FontEntry = Entry<sgfx::Font>;
+  using IconFontEntry = Entry<sgfx::IconFont>;
+
   static bool m_is_initialized;
-  static var::Vector<sgfx::Font::Info> m_font_info_list;
-  static var::Vector<sgfx::IconFont::FontInfo> m_icon_font_info_list;
+  static var::Vector<FontEntry> m_font_info_list;
+  static var::Vector<IconFontEntry> m_icon_font_info_list;
   //  static var::Vector<fmt::Svic> m_vector_path_list;
+
+  static var::Vector<FontEntry> &font_info_list() {
+    initialize();
+    return m_font_info_list;
+  }
+
+  static var::Vector<IconFontEntry> &icon_font_info_list() {
+    initialize();
+    return m_icon_font_info_list;
+  }
 };
 
 } // namespace ux

@@ -37,7 +37,10 @@ public:
     sg_font_icon_t m_icon = {0};
   };
 
-  explicit IconFont(const fs::File &file);
+  IconFont() {}
+  explicit IconFont(const fs::FileObject *file);
+
+  bool is_valid() const { return m_file != nullptr; }
 
   IconFont &refresh();
 
@@ -69,8 +72,8 @@ private:
   mutable s32 m_master_canvas_idx = -1;
   sg_font_icon_header_t m_header = {0};
   BitmapData m_master_canvas;
+  const fs::FileObject *m_file = nullptr;
   var::Vector<sg_font_icon_t> m_list;
-  const fs::File &m_file;
 };
 
 } // namespace ux::sgfx

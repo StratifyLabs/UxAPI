@@ -66,7 +66,10 @@ public:
     API_AC(Info, var::PathString, file_path);
   };
 
+  Font() {}
   Font(const fs::FileObject *file);
+
+  bool is_valid() const { return m_file != nullptr; }
 
   /*! \details Returns a string of the available character set */
   static const var::StringView  ascii_character_set();
@@ -154,8 +157,8 @@ protected:
   mutable u8 m_current_canvas = 0;
   u32 m_canvas_start = 0;
   u32 m_canvas_size = 0;
+  const fs::FileObject *m_file = nullptr;
   var::Vector<sg_font_kerning_pair_t> m_kerning_pairs;
-  const fs::FileObject *m_file;
 
   void refresh();
   static int to_charset(char ascii);

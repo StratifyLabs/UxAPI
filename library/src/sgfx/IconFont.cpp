@@ -22,7 +22,7 @@ IconFont::FontInfo::FontInfo(const var::StringView  path) {
 }
 #endif
 
-IconFont::IconFont(const fs::File &file) : m_file(file) { refresh(); }
+IconFont::IconFont(const fs::FileObject *file) : m_file(file) { refresh(); }
 
 size_t IconFont::find(const var::StringView  name) const {
   for (size_t i = 0; i < m_list.count(); i++) {
@@ -36,11 +36,11 @@ size_t IconFont::find(const var::StringView  name) const {
 IconFont &IconFont::refresh() {
   m_list.clear();
 
-  m_file.seek(0).read(var::View(m_header));
+  m_file->seek(0).read(var::View(m_header));
 
   for (u32 i = 0; i < m_header.icon_count; i++) {
     sg_font_icon_t icon;
-    m_file.read(View(icon));
+    m_file->read(View(icon));
     if (is_error()) {
       m_list.clear();
     }
@@ -67,7 +67,7 @@ IconFont::draw(size_t offset, Bitmap &dest, const Point &point) const {
     const u32 file_offset
       = m_header.size + icon.canvas_idx * m_master_canvas.view().size();
 
-    m_file.seek(file_offset).read(m_master_canvas.view());
+    m_file->seek(file_offset).read(m_master_canvas.view());
     m_master_canvas_idx = icon.canvas_idx;
   }
 
