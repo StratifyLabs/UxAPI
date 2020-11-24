@@ -37,9 +37,8 @@ void Layout::examine_visibility() {
       return;
     }
 
-#if NOT_BUILDING
-    m_reference_drawing_attributes.set_bitmap(*display());
-#endif
+    m_reference_drawing_attributes.set_bitmap(display()->bitmap());
+
     m_refresh_region = Region(
       Point(0, 0),
       Region(reference_drawing_attributes().calculate_region_on_bitmap())

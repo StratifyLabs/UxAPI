@@ -57,8 +57,8 @@ public:
 
   BitmapData &resize(const Area &area, BitsPerPixel bits_per_pixel);
 
-  BitmapData &load(const fs::File &file);
-  Area load_area(const fs::File &file);
+  BitmapData &load(const fs::FileObject &file);
+  Area load_area(const fs::FileObject &file);
 
   var::View view() { return m_data; }
   const var::View view() const { return m_data; }

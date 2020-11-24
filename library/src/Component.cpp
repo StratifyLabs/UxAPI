@@ -22,22 +22,20 @@ void Component::examine_visibility() {
       return;
     }
 
-#if NOT_BUILDING
-    m_reference_drawing_attributes.set_bitmap(*display());
-#endif
+    m_reference_drawing_attributes.set_bitmap(display()->bitmap());
+
     // local bitmap is a small section of the reference bitmap
     m_reference_drawing_attributes.calculate_area_on_bitmap();
 
-#if 0
     if (
-      m_local_bitmap.allocate(
+      m_local_bitmap_data.resize(
         m_reference_drawing_attributes.calculate_area_on_bitmap(),
-        sgfx::Bitmap::BitsPerPixel(
-          m_reference_drawing_attributes.bitmap().bits_per_pixel()))
+        m_reference_drawing_attributes.bitmap().bits_per_pixel())
       < 0) {
       return;
     }
-#endif
+
+    m_local_bitmap = Bitmap(m_local_bitmap_data);
 
     // local attributes fill local bitmap
     m_local_drawing_attributes.set_area(DrawingArea(1000, 1000))
@@ -49,7 +47,7 @@ void Component::examine_visibility() {
     handle_event(SystemEvent(SystemEvent::event_id_enter));
   } else {
     handle_event(SystemEvent(SystemEvent::event_id_exit));
-    //   m_local_bitmap.free();
+    m_local_bitmap_data = BitmapData();
   }
 }
 

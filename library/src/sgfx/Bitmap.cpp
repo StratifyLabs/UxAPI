@@ -108,7 +108,7 @@ int AntiAliasFilter::initialize(var::Array<u8, 8> contrast_map) {
   return Bitmap::api()->antialias_filter_init(&m_filter, contrast_map.data());
 }
 
-BitmapData &BitmapData::load(const fs::File &file) {
+BitmapData &BitmapData::load(const fs::FileObject &file) {
   sg_bmap_header_t hdr = {0};
 
   file.read(View(hdr));
@@ -138,7 +138,7 @@ BitmapData &BitmapData::resize(const Area &area, BitsPerPixel bits_per_pixel) {
   return *this;
 }
 
-Area BitmapData::load_area(const fs::File &file) {
+Area BitmapData::load_area(const fs::FileObject &file) {
   sg_bmap_header_t hdr;
   file.read(View(hdr));
   if (
@@ -206,9 +206,27 @@ void Bitmap::initialize_members(
   m_bmap.pen.color = 65535;
 }
 
-Bitmap::Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel) {}
+Bitmap::Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel) {
+  api()->bmap_set_data(
+    &m_bmap,
+    view.to<sg_bmap_data_t>(),
+    area,
+    static_cast<u8>(bits_per_pixel));
 
-Bitmap::Bitmap(const BitmapData &data) {}
+  // verify the view size is acceptable for the bitmap
+  if (view.to_void() != nullptr) {
+    const size_t minimum_size = api()->calc_bmap_size(&m_bmap, area.area());
+    API_ASSERT(view.size() >= minimum_size);
+  }
+}
+
+Bitmap::Bitmap(const BitmapData &data) {
+  api()->bmap_set_data(
+    &m_bmap,
+    data.view().to<sg_bmap_data_t>(),
+    data.area(),
+    static_cast<u8>(data.bits_per_pixel()));
+}
 
 Bitmap::Bitmap() { m_bmap = {0}; }
 

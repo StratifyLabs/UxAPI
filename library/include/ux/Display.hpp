@@ -73,6 +73,7 @@ public:
 protected:
 
 private:
+  API_AC(Display, sgfx::Bitmap, bitmap);
 };
 
 } // namespace ux
