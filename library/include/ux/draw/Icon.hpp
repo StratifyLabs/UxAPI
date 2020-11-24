@@ -52,10 +52,10 @@ private:
   API_ACCESS_FUNDAMENTAL(Icon, sg_color_t, color, 0);
   /*! \cond */
   sg_region_t m_bounds;
-  sgfx::IconFont *m_icon_font;
+  const sgfx::IconFont *m_icon_font;
   /*! \endcond */
 
-  sgfx::IconFont *icon_font() { return m_icon_font; }
+  const sgfx::IconFont *icon_font() { return m_icon_font; }
 
   bool resolve_font(sg_size_t h);
 };

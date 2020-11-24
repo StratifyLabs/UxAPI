@@ -144,7 +144,7 @@ public:
     return load_kerning(offset);
   }
   sg_font_char_t character(u32 offset);
-  Bitmap character_bitmap(u32 offset);
+  // Bitmap character_bitmap(u32 offset);
 
 protected:
   /*! \cond */

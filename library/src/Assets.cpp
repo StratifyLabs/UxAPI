@@ -65,8 +65,8 @@ void Assets::find_fonts_in_directory(const var::StringView path) {
   m_font_info_list.reserve(m_font_info_list.count() + entry_count);
   for (const auto &entry : file_list) {
     if (fs::Path::suffix(entry) == "sbf") {
-      m_font_info_list.vector().emplace_back(FontEntry());
-      m_font_info_list.back().info = Font::Info(var::PathString(path) / entry);
+      m_font_info_list.vector().emplace_back(std::move(
+        FontEntry().set_info(Font::Info(var::PathString(path) / entry))));
     }
   }
 }
@@ -83,9 +83,8 @@ void Assets::find_icons_in_directory(const var::StringView path) {
   m_icon_font_info_list.reserve(m_icon_font_info_list.count() + entry_count);
   for (const auto &entry : file_list) {
     if (fs::Path::suffix(entry) == "sbi") {
-      m_icon_font_info_list.vector().emplace_back(IconFontEntry());
-      m_icon_font_info_list.back().info
-        = Font::Info(var::PathString(path) / entry);
+      m_icon_font_info_list.vector().emplace_back(std::move(
+        IconFontEntry().set_info(Font::Info(var::PathString(path) / entry))));
     }
   }
 }
@@ -119,14 +118,14 @@ sgfx::VectorPath Assets::find_vector_path(const var::StringView name) {
 }
 #endif
 
-const sgfx::IconFont::FontInfo *
+const Assets::IconFontEntry *
 Assets::find_icon_font(const FindIconFont &options) {
 
   initialize();
 
   u32 active_icon_fonts = 0;
   for (const auto &entry : m_icon_font_info_list) {
-    if (entry.info.is_valid()) {
+    if (entry.info().is_valid()) {
       active_icon_fonts++;
     }
   }
@@ -141,15 +140,15 @@ Assets::find_icon_font(const FindIconFont &options) {
 
   // find point size and weight
   for (auto &entry : m_icon_font_info_list) {
-    if (options.name() == entry.info.name()) {
+    if (options.name() == entry.info().name()) {
 
-      if (entry.info.point_size() == options.point_size()) {
+      if (entry.info().point_size() == options.point_size()) {
         return entry.create();
       }
 
-      if (entry.info.point_size() <= options.point_size()) {
-        if (entry.info.point_size() >= closest_point_size) {
-          closest_point_size = entry.info.point_size();
+      if (entry.info().point_size() <= options.point_size()) {
+        if (entry.info().point_size() >= closest_point_size) {
+          closest_point_size = entry.info().point_size();
         }
       }
     }
@@ -163,8 +162,8 @@ Assets::find_icon_font(const FindIconFont &options) {
   // first pass is to find the exact style in a point size that is less than or
   // equal
   for (auto &entry : m_icon_font_info_list) {
-    if (options.name() == entry.info.name()) {
-      if (entry.info.point_size() == closest_point_size) {
+    if (options.name() == entry.info().name()) {
+      if (entry.info().point_size() == closest_point_size) {
         return entry.create();
       }
     }
@@ -172,13 +171,13 @@ Assets::find_icon_font(const FindIconFont &options) {
   return nullptr;
 }
 
-const sgfx::Font::Info *Assets::find_font(const FindFont &options) {
+const Assets::FontEntry *Assets::find_font(const FindFont &options) {
 
   initialize();
 
   u32 active_fonts = 0;
   for (const auto &entry : m_font_info_list) {
-    if (entry.info.is_valid()) {
+    if (entry.info().is_valid()) {
       active_fonts++;
     }
   }
@@ -197,21 +196,22 @@ const sgfx::Font::Info *Assets::find_font(const FindFont &options) {
 
     if (
       ((options.style() == Font::Style::icons)
-       && (entry.info.style() == Font::Style::icons))
-      || ((options.style() != Font::Style::icons) && (entry.info.style() != Font::Style::icons))) {
+       && (entry.info().style() == Font::Style::icons))
+      || ((options.style() != Font::Style::icons) && (entry.info().style() != Font::Style::icons))) {
 
-      if (options.name().is_empty() || (options.name() == entry.info.name())) {
-        if (entry.info.point_size() <= options.point_size()) {
-          if (entry.info.point_size() >= closest_point_size) {
-            closest_point_size = entry.info.point_size();
-            closest_style = entry.info.style();
+      if (
+        options.name().is_empty() || (options.name() == entry.info().name())) {
+        if (entry.info().point_size() <= options.point_size()) {
+          if (entry.info().point_size() >= closest_point_size) {
+            closest_point_size = entry.info().point_size();
+            closest_style = entry.info().style();
           }
         }
 
         if (
-          (entry.info.style() == options.style())
-          && (entry.info.point_size() == options.point_size())
-          && (entry.info.name() == options.name() || options.name().is_empty())) {
+          (entry.info().style() == options.style())
+          && (entry.info().point_size() == options.point_size())
+          && (entry.info().name() == options.name() || options.name().is_empty())) {
           return entry.create();
         }
       }
@@ -229,14 +229,15 @@ const sgfx::Font::Info *Assets::find_font(const FindFont &options) {
 
     if (
       ((options.style() == Font::Style::icons)
-       && (entry.info.style() == Font::Style::icons))
-      || ((options.style() != Font::Style::icons) && (entry.info.style() != Font::Style::icons))) {
+       && (entry.info().style() == Font::Style::icons))
+      || ((options.style() != Font::Style::icons) && (entry.info().style() != Font::Style::icons))) {
 
-      if (options.name().is_empty() || (options.name() == entry.info.name())) {
+      if (
+        options.name().is_empty() || (options.name() == entry.info().name())) {
 
         if (
-          (entry.info.point_size() == closest_point_size)
-          && (entry.info.style() == closest_style)) {
+          (entry.info().point_size() == closest_point_size)
+          && (entry.info().style() == closest_style)) {
           return entry.create();
         }
       }

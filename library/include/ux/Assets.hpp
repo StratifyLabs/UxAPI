@@ -12,6 +12,39 @@ namespace ux {
 
 class Assets {
 public:
+  template <class Font> class Entry {
+    API_AC(Entry<Font>, sgfx::Font::Info, info);
+    API_RAC(Entry<Font>, Font, font);
+    fs::File m_file;
+
+  public:
+    const Entry<Font> *create() {
+      if (m_font.is_valid() == false) {
+        m_file = fs::File(m_info.file_path());
+        m_font = Font(&m_file);
+      }
+      return this;
+    }
+
+    void destroy() {
+      if (m_font.is_valid()) {
+        m_file = fs::File();
+        m_font = Font();
+      }
+    }
+
+    static bool ascending_point_size(const Entry &a, const Entry &b) {
+      return a.info().point_size() < b.info().point_size();
+    }
+
+    static bool ascending_style(const Entry &a, const Entry &b) {
+      return a.info().style() < b.info().style();
+    }
+  };
+
+  using FontEntry = Entry<sgfx::Font>;
+  using IconFontEntry = Entry<sgfx::IconFont>;
+
   static int initialize();
 
   class FindFont {
@@ -21,11 +54,10 @@ public:
     API_AB(FindFont, exact_match, false);
   };
 
-  static const sgfx::Font::Info *find_font(const FindFont &options);
+  static const FontEntry *find_font(const FindFont &options);
 
   using FindIconFont = FindFont;
-  static const sgfx::IconFont::FontInfo *
-  find_icon_font(const FindIconFont &options);
+  static const IconFontEntry *find_icon_font(const FindIconFont &options);
 
   static void find_fonts_in_directory(const var::StringView path);
   static void find_icons_in_directory(const var::StringView path);
@@ -41,38 +73,6 @@ public:
 #endif
 
 private:
-  template <class Font> struct Entry {
-    sgfx::Font::Info info;
-    fs::File file;
-    Font font;
-
-    sgfx::Font::Info *create() {
-      if (font.is_valid() == false) {
-        file = fs::File(info.file_path());
-        font = Font(&file);
-      }
-      return &info;
-    }
-
-    void destroy() {
-      if (font.is_valid()) {
-        file = fs::File();
-        font = Font();
-      }
-    }
-
-    static bool ascending_point_size(const Entry &a, const Entry &b) {
-      return a.info.point_size() < b.info.point_size();
-    }
-
-    static bool ascending_style(const Entry &a, const Entry &b) {
-      return a.info.style() < b.info.style();
-    }
-  };
-
-  using FontEntry = Entry<sgfx::Font>;
-  using IconFontEntry = Entry<sgfx::IconFont>;
-
   static bool m_is_initialized;
   static var::Vector<FontEntry> m_font_info_list;
   static var::Vector<IconFontEntry> m_icon_font_info_list;

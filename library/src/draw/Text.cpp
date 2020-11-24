@@ -10,16 +10,15 @@ using namespace ux::draw;
 
 bool Text::resolve_font(sg_size_t h) {
   if (this->font() == nullptr) {
-    const Font::Info *info = Assets::find_font(Assets::FindFont()
-                                                 .set_name(m_font_name)
-                                                 .set_point_size(h)
-                                                 .set_style(m_font_style)
+    const Assets::FontEntry *entry
+      = Assets::find_font(Assets::FindFont()
+                            .set_name(m_font_name)
+                            .set_point_size(h)
+                            .set_style(m_font_style)
 
-    );
-    if (info) {
-#if defined NOT_BUILDING
-      this->m_font = info->font();
-#endif
+      );
+    if (entry) {
+      this->m_font = &entry->font();
       return true;
     }
     return false;

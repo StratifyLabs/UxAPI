@@ -15,12 +15,10 @@ Icon::Icon() {
 
 bool Icon::resolve_font(sg_size_t h) {
   if (this->icon_font() == nullptr) {
-    const IconFont::FontInfo *info = Assets::find_icon_font(
+    const Assets::IconFontEntry *entry = Assets::find_icon_font(
       Assets::FindIconFont().set_name(m_icon_font_name).set_point_size(h));
-    if (info) {
-#if defined NOT_BUILDING
-      this->m_icon_font = info->icon_font();
-#endif
+    if (entry) {
+      this->m_icon_font = &entry->font();
       return true;
     }
     return false;

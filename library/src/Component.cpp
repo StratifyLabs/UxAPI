@@ -16,6 +16,7 @@ Component::~Component() { set_visible_examine(false); }
 void Component::examine_visibility() {
   if (is_ready_to_draw()) {
     API_ASSERT(is_created());
+    API_RETURN_IF_ERROR();
 
     if (display() == nullptr) {
       set_visible(false);
@@ -27,13 +28,11 @@ void Component::examine_visibility() {
     // local bitmap is a small section of the reference bitmap
     m_reference_drawing_attributes.calculate_area_on_bitmap();
 
-    if (
-      m_local_bitmap_data.resize(
-        m_reference_drawing_attributes.calculate_area_on_bitmap(),
-        m_reference_drawing_attributes.bitmap().bits_per_pixel())
-      < 0) {
-      return;
-    }
+    m_local_bitmap_data.resize(
+      m_reference_drawing_attributes.calculate_area_on_bitmap(),
+      m_reference_drawing_attributes.bitmap().bits_per_pixel());
+
+    API_ASSERT(is_success());
 
     m_local_bitmap = Bitmap(m_local_bitmap_data);
 

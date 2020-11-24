@@ -10,26 +10,23 @@ using namespace ux::draw;
 
 bool RichText::resolve_fonts(sg_size_t h) {
   if (this->text_font() == nullptr) {
-    const Font::Info *info = Assets::find_font(Assets::FindFont()
-                                                 .set_name(text_font_name())
-                                                 .set_point_size(h)
-                                                 .set_style(m_font_style));
-    if (info) {
-#if defined NOT_BUILDING
-      this->m_text_font = info->font();
-#endif
+    const Assets::FontEntry *entry
+      = Assets::find_font(Assets::FindFont()
+                            .set_name(text_font_name())
+                            .set_point_size(h)
+                            .set_style(m_font_style));
+    if (entry) {
+      this->m_text_font = &entry->font();
     } else {
       return false;
     }
   }
 
   if (this->icon_font() == nullptr) {
-    const IconFont::FontInfo *info = Assets::find_icon_font(
+    const Assets::IconFontEntry *entry = Assets::find_icon_font(
       Assets::FindIconFont().set_name(icon_font_name()).set_point_size(h));
-    if (info) {
-#if defined NOT_BUILDING
-      this->m_icon_font = info->icon_font();
-#endif
+    if (entry) {
+      this->m_icon_font = &entry->font();
     } else {
       return false;
     }
