@@ -37,6 +37,7 @@ int Assets::initialize() {
     = var::Array(std::array{"/assets", "/home", "/home/assets"});
 
   for (const auto directory : asset_directories) {
+    printf("look in %s\n", directory);
     find_fonts_in_directory(directory);
     find_icons_in_directory(directory);
 #if NOT_BUILDING
@@ -149,7 +150,7 @@ Assets::find_icon_font(const FindIconFont &options) {
 
   // find point size and weight
   for (auto &entry : m_icon_font_info_list) {
-    if (options.name() == entry.info().name()) {
+    if (options.name() == entry.info().get_name()) {
 
       if (entry.info().point_size() == options.point_size()) {
         return entry.create();
@@ -171,7 +172,7 @@ Assets::find_icon_font(const FindIconFont &options) {
   // first pass is to find the exact style in a point size that is less than or
   // equal
   for (auto &entry : m_icon_font_info_list) {
-    if (options.name() == entry.info().name()) {
+    if (options.name() == entry.info().get_name()) {
       if (entry.info().point_size() == closest_point_size) {
         return entry.create();
       }
@@ -203,13 +204,18 @@ const Assets::FontEntry *Assets::find_font(const FindFont &options) {
   // find point size and weight
   for (auto &entry : font_info_list()) {
 
+    printf("checking entry %s\n", entry.info().file_path().cstring());
+    printf(
+      "checking name %s\n",
+      entry.info().get_name().get_string().cstring());
     if (
       ((options.style() == Font::Style::icons)
        && (entry.info().style() == Font::Style::icons))
       || ((options.style() != Font::Style::icons) && (entry.info().style() != Font::Style::icons))) {
 
       if (
-        options.name().is_empty() || (options.name() == entry.info().name())) {
+        options.name().is_empty()
+        || (options.name() == entry.info().get_name())) {
         if (entry.info().point_size() <= options.point_size()) {
           if (entry.info().point_size() >= closest_point_size) {
             closest_point_size = entry.info().point_size();
@@ -220,7 +226,7 @@ const Assets::FontEntry *Assets::find_font(const FindFont &options) {
         if (
           (entry.info().style() == options.style())
           && (entry.info().point_size() == options.point_size())
-          && (entry.info().name() == options.name() || options.name().is_empty())) {
+          && (entry.info().get_name() == options.name() || options.name().is_empty())) {
           return entry.create();
         }
       }
@@ -242,7 +248,8 @@ const Assets::FontEntry *Assets::find_font(const FindFont &options) {
       || ((options.style() != Font::Style::icons) && (entry.info().style() != Font::Style::icons))) {
 
       if (
-        options.name().is_empty() || (options.name() == entry.info().name())) {
+        options.name().is_empty()
+        || (options.name() == entry.info().get_name())) {
 
         if (
           (entry.info().point_size() == closest_point_size)

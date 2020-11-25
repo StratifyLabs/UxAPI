@@ -13,16 +13,15 @@
 
 using namespace ux::sgfx;
 
-Font::Info::Info(const var::StringView  path) {
+Font::Info::Info(const var::StringView path) {
   m_file_path = path;
 
-  const var::StringViewList tokens = fs::Path::name(path).split("-.");
+  const auto tokens = fs::Path::name(m_file_path).split("-.");
 
   if (tokens.count() != 4) {
     m_point_size = 0;
   } else {
 
-    m_name = tokens.at(0);
     m_point_size = tokens.at(2).to_integer();
     const auto style = tokens.at(1);
 
@@ -78,6 +77,11 @@ Font::Info::Info(const var::StringView  path) {
       m_style = Style::icons;
     }
   }
+}
+
+var::StringView Font::Info::get_name() const {
+  const auto tokens = fs::Path::name(m_file_path).split("-.");
+  return tokens.at(0);
 }
 
 bool Font::Info::ascending_point_size(const Info &a, const Info &b) {

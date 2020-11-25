@@ -59,10 +59,11 @@ public:
 
     bool is_valid() const { return m_style != Style::any; }
 
+    var::StringView get_name() const;
+
   private:
     API_AF(Info, Style, style, Style::any);
     API_AF(Info, sg_size_t, point_size, 0);
-    API_AC(Info, var::StringView, name);
     API_AC(Info, var::PathString, file_path);
   };
 

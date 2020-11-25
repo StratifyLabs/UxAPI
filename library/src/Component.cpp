@@ -25,7 +25,6 @@ void Component::examine_visibility() {
       return;
     }
 
-    printf("display has %d bpp\n", (u8)display()->bitmap().bits_per_pixel());
     m_reference_drawing_attributes.set_bitmap(display()->bitmap());
 
     // local bitmap is a small section of the reference bitmap
@@ -92,14 +91,12 @@ void Component::refresh_drawing() {
     if (window_region.width() * window_region.height() > 0) {
       display()->set_window(window_region);
 
-#if 0
-			printer::Printer p;
-			p.open_object("draw " + name());
-			p << window_region;
-			p.close_object();
+#if 1
+      printer::Printer p;
+      p.object("draw " + name(), window_region);
 #endif
 
-      // display()->write(m_local_bitmap.create_reference(m_refresh_region));
+      display()->write(m_local_bitmap.create_reference(m_refresh_region));
     }
 
     clear_refresh_drawing_pending();

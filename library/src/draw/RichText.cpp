@@ -18,6 +18,11 @@ bool RichText::resolve_fonts(sg_size_t h) {
     if (entry) {
       this->m_text_font = &entry->font();
     } else {
+      printf(
+        "didn't find %s %d %d\n",
+        text_font_name().get_string().cstring(),
+        h,
+        (u8)m_font_style);
       return false;
     }
   }
@@ -28,6 +33,11 @@ bool RichText::resolve_fonts(sg_size_t h) {
     if (entry) {
       this->m_icon_font = &entry->font();
     } else {
+      printf(
+        "didn't find icon %s %d %d\n",
+        text_font_name().get_string().cstring(),
+        h,
+        (u8)m_font_style);
       return false;
     }
   }
@@ -38,8 +48,12 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
   Area d = attr.area();
 
   if (resolve_fonts(d.height()) == false) {
+    printf("no fonts\n");
     return;
   }
+
+  printf("font %p\n", m_text_font);
+  printf("icon font %p\n", m_icon_font);
 
   // search input for an icon :<icon>:
   // parse the text() -- divide into tokens or either text or icons
