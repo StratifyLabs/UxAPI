@@ -71,11 +71,15 @@ public:
 private:
   mutable s32 m_master_canvas_idx = -1;
   sg_font_icon_header_t m_header = {0};
-  BitmapData m_master_canvas;
+  mutable BitmapData m_master_canvas;
   const fs::FileObject *m_file = nullptr;
   var::Vector<sg_font_icon_t> m_list;
 };
 
 } // namespace ux::sgfx
+
+namespace printer {
+Printer &operator<<(Printer &printer, const ux::sgfx::IconFont::IconInfo &info);
+}
 
 #endif // UXAPI_UX_SGFX_ICONFONT_HPP

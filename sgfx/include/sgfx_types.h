@@ -144,6 +144,7 @@ typedef struct MCU_PACK {
   sg_size_t
     columns /*! The number of columns in the bitmap (used internally) */;
   u8 bits_per_pixel /*! The number of bits in each pixel */;
+  sg_point_t offset;
   const sg_palette_t
     *palette /*! palette for importing bitmaps with fewer bits per pixel */;
 } sg_bmap_t;

@@ -52,9 +52,7 @@ public:
     Info() {}
     Info(const var::StringView path);
 
-    /*! \details Enables sorting Info objects by point size. */
     static bool ascending_point_size(const Info &a, const Info &b);
-    /*! \details Enables sorting Info objects by style. */
     static bool ascending_style(const Info &a, const Info &b);
 
     bool is_valid() const { return m_style != Style::any; }
@@ -72,73 +70,38 @@ public:
 
   bool is_valid() const { return m_file != nullptr; }
 
-  /*! \details Returns a string of the available character set */
   static const var::StringView  ascii_character_set();
 
-  /*! \details Returns the maximum height of any character in the font. */
   sg_size_t get_height() const;
-
-  /*! \details Returns the maximum width of any character in the font. */
   sg_size_t get_width() const;
 
-  // Attribute access methods
   int offset_x() const { return m_char.offset_x; }
   int offset_y() const { return m_char.offset_y; }
 
-  /*! \details Calculates the length (pixels on x-axis) of the specified string.
-   */
-  int get_width(const var::StringView  str) const;
+  int get_width(const var::StringView str) const;
 
-  /*! \details Returns the number of characters in the font. */
   int size() const { return m_header.character_count; }
-
-  /*! \details Sets the spacing between letters within a word. */
   void set_letter_spacing(sg_size_t spacing) { m_letter_spacing = spacing; }
-
-  /*! \details Returns the spacing of the letters within a word. */
   sg_size_t letter_spacing() const { return m_letter_spacing; }
-
-  /*! \details Sets the number of pixels in a space between words. */
   void set_space_size(int s) { m_space_size = s; }
-
-  /*! \details Returns the number of pixels between words. */
   int space_size() const { return m_space_size; }
 
-  /*! \details Draws the string on the specified bitmap.
-   *
-   * @param str The string to draw (or set)
-   * @param dest The bitmap to draw the string on
-   * @param point The top left corner to start drawing the string
-   * @return Zero on success
-   */
   int draw(const var::StringView const_string, Bitmap &dest, const Point &point)
     const;
 
-  /*! \details Draws a character on the bitmap.
-   *
-   * @param c The character to draw
-   * @param dest The destination bitmap
-   * @param point The top-left corner where to draw on \a dest
-   * @return Zero on success (-1 if character fails to load)
-   */
   int draw(char c, Bitmap &dest, const Point &point) const;
 
   const sg_font_char_t &character() const { return m_char; }
 
-  /*! \details Accesses the number of characters in the font. */
   u16 character_count() const { return m_header.character_count; }
-  /*! \details Accesses the number of bits per pixel in the font. */
   u16 bits_per_pixel() const { return m_header.bits_per_pixel; }
-  /*! \details Accesses the number of kerning pairs in the font. */
   u16 kerning_pair_count() const { return m_header.kerning_pair_count; }
 
-  /*! \details Enables (or disables) kerning. */
   Font &set_kerning_enabled(bool value = true) {
     m_is_kerning_enabled = value;
     return *this;
   }
 
-  /*! \details Returns true if kerning is enabled. */
   bool is_kerning_enabled() const { return m_is_kerning_enabled; }
 
   sg_font_kerning_pair_t kerning_pair(u32 offset) {

@@ -49,7 +49,7 @@ protected:
     API_ACCESS_FUNDAMENTAL(RichToken, sg_size_t, height, 0);
     API_ACCESS_FUNDAMENTAL(RichToken, Type, type, Type::text);
     API_ACCESS_FUNDAMENTAL(RichToken, u32, icon_index, 0);
-    API_ACCESS_COMPOUND(RichToken, var::String, value);
+    API_ACCESS_COMPOUND(RichToken, var::StringView, value);
   };
 
   /*! \endcond */

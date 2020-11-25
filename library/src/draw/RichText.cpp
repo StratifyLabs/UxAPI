@@ -1,5 +1,7 @@
-/*! \file */ // Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see
-             // LICENSE.md for rights.
+// Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md for
+// rights.
+
+#include <printer/Printer.hpp>
 
 #include "ux/draw/RichText.hpp"
 #include "ux/Assets.hpp"
@@ -18,11 +20,6 @@ bool RichText::resolve_fonts(sg_size_t h) {
     if (entry) {
       this->m_text_font = &entry->font();
     } else {
-      printf(
-        "didn't find %s %d %d\n",
-        text_font_name().get_string().cstring(),
-        h,
-        (u8)m_font_style);
       return false;
     }
   }
@@ -33,11 +30,6 @@ bool RichText::resolve_fonts(sg_size_t h) {
     if (entry) {
       this->m_icon_font = &entry->font();
     } else {
-      printf(
-        "didn't find icon %s %d %d\n",
-        text_font_name().get_string().cstring(),
-        h,
-        (u8)m_font_style);
       return false;
     }
   }
@@ -48,31 +40,28 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
   Area d = attr.area();
 
   if (resolve_fonts(d.height()) == false) {
-    printf("no fonts\n");
     return;
   }
 
-  printf("font %p\n", m_text_font);
-  printf("icon font %p\n", m_icon_font);
-
+  API_PRINTF_TRACE_LINE();
   // search input for an icon :<icon>:
   // parse the text() -- divide into tokens or either text or icons
-  StringViewList raw_token_list = value().split(" ");
+  auto raw_token_list = value().split(" ");
   var::Vector<RichToken> rich_token_list;
 
   rich_token_list.reserve(raw_token_list.count());
 
-  for (const StringView raw_token : raw_token_list) {
+  for (const auto raw_token : raw_token_list) {
     RichToken entry;
     if (
       (raw_token.length() > 2) && (raw_token.front() == ':')
       && (raw_token.back() == ':')) {
       entry.set_type(RichToken::Type::icon)
-        .set_value(String(
+        .set_value(
           raw_token(StringView::GetSubstring().set_position(1).set_length(
-            raw_token.length() - 2))));
+            raw_token.length() - 2)));
     } else {
-      entry.set_value(String(raw_token));
+      entry.set_value(raw_token);
     }
     rich_token_list.push_back(entry);
   }
@@ -82,6 +71,11 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
   sg_size_t total_width = 0;
 
   for (RichToken &rich_token : rich_token_list) {
+    printf(
+      "process token '%s' %d\n",
+      rich_token.value().get_string().cstring(),
+      (u8)rich_token.type());
+
     sg_size_t width;
     sg_size_t height;
     if (rich_token.type() == RichToken::Type::text) {
@@ -91,6 +85,8 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
       width = 0;
       rich_token.set_icon_index(icon_font()->find(rich_token.value()));
       IconFont::IconInfo info = icon_font()->get_info(rich_token.icon_index());
+      printer::Printer p;
+      p.object("iconInfo", info);
       height = info.height();
       width = info.width();
       if (info.height() > max_height) {

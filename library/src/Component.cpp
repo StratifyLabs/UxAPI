@@ -16,8 +16,6 @@ Component::~Component() { set_visible_examine(false); }
 void Component::examine_visibility() {
   if (is_ready_to_draw()) {
     API_ASSERT(is_created());
-    printf("create bitmap for %s\n", name().get_string().cstring());
-    API_PRINTF_TRACE_LINE();
     API_RETURN_IF_ERROR();
 
     if (display() == nullptr) {
@@ -29,7 +27,6 @@ void Component::examine_visibility() {
 
     // local bitmap is a small section of the reference bitmap
     m_reference_drawing_attributes.calculate_area_on_bitmap();
-    printer::Printer p;
 
     m_local_bitmap_data.resize(
       m_reference_drawing_attributes.calculate_area_on_bitmap(),
@@ -46,6 +43,7 @@ void Component::examine_visibility() {
     set_refresh_region(m_local_bitmap.region());
 
     redraw();
+    printer::Printer p;
     p << m_local_bitmap;
     handle_event(SystemEvent(SystemEvent::event_id_enter));
   } else {
@@ -91,12 +89,14 @@ void Component::refresh_drawing() {
     if (window_region.width() * window_region.height() > 0) {
       display()->set_window(window_region);
 
-#if 1
+#if 0
       printer::Printer p;
       p.object("draw " + name(), window_region);
+      p.object("refreshRegion " + name(), m_refresh_region);
 #endif
 
-      display()->write(m_local_bitmap.create_reference(m_refresh_region));
+      display()->write_bitmap(
+        Bitmap(m_local_bitmap).set_offset(m_refresh_region.point()));
     }
 
     clear_refresh_drawing_pending();
@@ -119,10 +119,8 @@ void Component::erase() {
     theme()->set_display_palette(*display(), m_theme_style, m_theme_state);
 
 #if 0
-		printer::Printer p;
-		p.open_object("erase " + name());
-		p << window_region;
-		p.close_object();
+    printer::Printer p;
+    p.object("erase " + name(), window_region);
 #endif
     if ((window_region.width() * window_region.height()) > 0) {
       display()->set_window(window_region);

@@ -37,7 +37,6 @@ int Assets::initialize() {
     = var::Array(std::array{"/assets", "/home", "/home/assets"});
 
   for (const auto directory : asset_directories) {
-    printf("look in %s\n", directory);
     find_fonts_in_directory(directory);
     find_icons_in_directory(directory);
 #if NOT_BUILDING
@@ -203,11 +202,6 @@ const Assets::FontEntry *Assets::find_font(const FindFont &options) {
 
   // find point size and weight
   for (auto &entry : font_info_list()) {
-
-    printf("checking entry %s\n", entry.info().file_path().cstring());
-    printf(
-      "checking name %s\n",
-      entry.info().get_name().get_string().cstring());
     if (
       ((options.style() == Font::Style::icons)
        && (entry.info().style() == Font::Style::icons))

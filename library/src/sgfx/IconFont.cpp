@@ -1,6 +1,17 @@
+#include <printer/Printer.hpp>
 #include <var.hpp>
 
 #include "ux/sgfx/IconFont.hpp"
+
+namespace printer {
+Printer &
+operator<<(Printer &printer, const ux::sgfx::IconFont::IconInfo &info) {
+  printer.object("area", info.area());
+  printer.object("point", info.canvas_point());
+  printer.key("canvasIdx", info.canvas_idx());
+  return printer;
+}
+} // namespace printer
 
 using namespace ux::sgfx;
 
@@ -35,7 +46,6 @@ size_t IconFont::find(const var::StringView  name) const {
 
 IconFont &IconFont::refresh() {
   m_list.clear();
-
   m_file->seek(0).read(var::View(m_header));
 
   for (u32 i = 0; i < m_header.icon_count; i++) {
@@ -58,9 +68,7 @@ IconFont &IconFont::refresh() {
 
 const IconFont &
 IconFont::draw(size_t offset, Bitmap &dest, const Point &point) const {
-
   API_ASSERT(offset < m_list.count());
-
   const sg_font_icon_t &icon = m_list.at(offset);
 
   if (icon.canvas_idx != m_master_canvas_idx) {

@@ -56,6 +56,11 @@ public:
 
   Display::Info get_info() const;
 
+  const Display &write_bitmap(const sgfx::Bitmap &bitmap) const;
+  Display &write_bitmap(const sgfx::Bitmap &bitmap) {
+    return API_CONST_CAST_SELF(Display, write_bitmap, bitmap);
+  }
+
   // const Display &write(const sgfx::Bitmap &bitmap) const;
   sgfx::Region region() const { return sgfx::Region(); }
   const Display &set_window(const sgfx::Region &region) const;

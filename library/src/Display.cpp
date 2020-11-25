@@ -18,7 +18,13 @@ Display::Display(fs::FileObject &device)
       info.height() - info.margin_top() - info.margin_bottom()),
     info.bits_per_pixel()));
 
-  printf("display is %d bpp\n", static_cast<u8>(info.bits_per_pixel()));
+  display_attr_t attr;
+  attr.o_flags = DISPLAY_FLAG_INIT;
+  ioctl(I_DISPLAY_SETATTR, &attr);
+}
+
+const Display &Display::write_bitmap(const sgfx::Bitmap &bitmap) const {
+  return write(bitmap.bmap(), sizeof(*bitmap.bmap()));
 }
 
 Display::Info Display::get_info() const {
