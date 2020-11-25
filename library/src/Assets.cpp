@@ -48,6 +48,8 @@ int Assets::initialize() {
   m_font_info_list.sort(FontEntry::ascending_style);
   m_font_info_list.sort(FontEntry::ascending_point_size);
 
+  m_icon_font_info_list.sort(IconFontEntry::ascending_point_size);
+
   m_is_initialized = true;
   return 0;
 }

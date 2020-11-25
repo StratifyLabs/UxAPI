@@ -43,7 +43,6 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
     return;
   }
 
-  API_PRINTF_TRACE_LINE();
   // search input for an icon :<icon>:
   // parse the text() -- divide into tokens or either text or icons
   auto raw_token_list = value().split(" ");
@@ -71,11 +70,6 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
   sg_size_t total_width = 0;
 
   for (RichToken &rich_token : rich_token_list) {
-    printf(
-      "process token '%s' %d\n",
-      rich_token.value().get_string().cstring(),
-      (u8)rich_token.type());
-
     sg_size_t width;
     sg_size_t height;
     if (rich_token.type() == RichToken::Type::text) {
@@ -85,8 +79,6 @@ void RichText::draw(const DrawingScaledAttributes &attr) {
       width = 0;
       rich_token.set_icon_index(icon_font()->find(rich_token.value()));
       IconFont::IconInfo info = icon_font()->get_info(rich_token.icon_index());
-      printer::Printer p;
-      p.object("iconInfo", info);
       height = info.height();
       width = info.width();
       if (info.height() > max_height) {

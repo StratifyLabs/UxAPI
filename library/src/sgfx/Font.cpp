@@ -18,10 +18,11 @@ Font::Info::Info(const var::StringView path) {
 
   const auto tokens = fs::Path::name(m_file_path).split("-.");
 
-  if (tokens.count() != 4) {
-    m_point_size = 0;
-  } else {
-
+  if (tokens.count() == 3) {
+    // icon font
+    m_point_size = tokens.at(1).to_integer();
+    m_style = Style::icons;
+  } else if (tokens.count() == 4) {
     m_point_size = tokens.at(2).to_integer();
     const auto style = tokens.at(1);
 
@@ -76,6 +77,8 @@ Font::Info::Info(const var::StringView path) {
     if (style == "ico") {
       m_style = Style::icons;
     }
+  } else {
+    m_point_size = 0;
   }
 }
 

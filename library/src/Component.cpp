@@ -41,10 +41,7 @@ void Component::examine_visibility() {
       .set_bitmap(m_local_bitmap);
 
     set_refresh_region(m_local_bitmap.region());
-
     redraw();
-    printer::Printer p;
-    p << m_local_bitmap;
     handle_event(SystemEvent(SystemEvent::event_id_enter));
   } else {
     handle_event(SystemEvent(SystemEvent::event_id_exit));
