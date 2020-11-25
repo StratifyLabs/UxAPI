@@ -23,7 +23,7 @@ public:
 
 private:
   API_ACCESS_COMPOUND(ListItem, var::KeyString, label);
-  API_ACCESS_COMPOUND(ListItem, var::StringView, value);
+  API_ACCESS_COMPOUND(ListItem, var::KeyString, value);
   API_ACCESS_BOOL(ListItem, interactive, true);
 };
 
@@ -32,7 +32,7 @@ public:
   ListItemAccess(const var::StringView name) : ListItem(name) {}
 
   API_ACCESS_DERIVED_COMPOUND(ListItem, T, var::KeyString, label)
-  API_ACCESS_DERIVED_COMPOUND(ListItem, T, var::StringView, value)
+  API_ACCESS_DERIVED_COMPOUND(ListItem, T, var::KeyString, value)
   API_ACCESS_DERIVED_BOOL(ListItem, T, interactive)
 
   COMPONENT_ACCESS_DERIVED(Component, T)
