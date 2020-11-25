@@ -53,8 +53,12 @@ int Assets::initialize() {
 }
 
 void Assets::find_fonts_in_directory(const var::StringView path) {
-
+  API_RETURN_IF_ERROR();
   auto file_list = fs::FileSystem().read_directory(path);
+  if (api::ExecutionContext::is_error()) {
+    API_RESET_ERROR();
+    return;
+  }
   size_t entry_count = 0;
   for (const auto &entry : file_list) {
     if (fs::Path::suffix(entry) == "sbf") {
@@ -72,7 +76,12 @@ void Assets::find_fonts_in_directory(const var::StringView path) {
 }
 
 void Assets::find_icons_in_directory(const var::StringView path) {
+  API_RETURN_IF_ERROR();
   auto file_list = fs::FileSystem().read_directory(path);
+  if (api::ExecutionContext::is_error()) {
+    API_RESET_ERROR();
+    return;
+  }
   size_t entry_count = 0;
   for (const auto &entry : file_list) {
     if (fs::Path::suffix(entry) == "sbi") {

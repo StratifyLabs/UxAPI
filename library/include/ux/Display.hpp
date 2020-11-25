@@ -27,7 +27,7 @@ public:
     bool is_valid() const { return memory_size() != 0; }
 
     sg_size_t width() const { return m_info.width; }
-    sg_size_t height() const { return m_info.width; }
+    sg_size_t height() const { return m_info.height; }
 
     sg_size_t margin_right() const { return m_info.margin_right; }
     sg_size_t margin_left() const { return m_info.margin_left; }
@@ -52,7 +52,7 @@ public:
     display_info_t m_info;
   };
 
-  Display(fs::FileObject &device) : fs::FileMemberAccess<Display>(device) {}
+  Display(fs::FileObject &device);
 
   Display::Info get_info() const;
 

@@ -133,8 +133,14 @@ BitmapData &BitmapData::resize(const Area &area, BitsPerPixel bits_per_pixel) {
   bmap.bits_per_pixel = static_cast<u8>(bits_per_pixel);
 
   // use sgfx to get the size of the bitmap
-  size_t size = api()->calc_bmap_size(&bmap, area.area());
+  const size_t size = api()->calc_bmap_size(&bmap, area.area());
   m_data.resize(size);
+
+  if (is_success()) {
+    m_area = area;
+    m_bits_per_pixel = bits_per_pixel;
+  }
+
   return *this;
 }
 
@@ -162,17 +168,17 @@ Region Bitmap::get_viewable_region() const {
   return Region(point, area);
 }
 
-int Bitmap::set_internal_bits_per_pixel(u8 bpp) {
+int Bitmap::set_internal_bits_per_pixel(BitsPerPixel bpp) {
   // api bpp of zero means the api supports variable bpp values
   if (api()->bits_per_pixel == 0) {
     switch (bpp) {
-    case 1:
-    case 2:
-    case 4:
-    case 8:
-    case 16:
-    case 32:
-      m_bmap.bits_per_pixel = bpp;
+    case BitsPerPixel::one:
+    case BitsPerPixel::two:
+    case BitsPerPixel::four:
+    case BitsPerPixel::eight:
+    case BitsPerPixel::sixteen:
+    case BitsPerPixel::thirty_two:
+      m_bmap.bits_per_pixel = static_cast<u8>(bpp);
       return 0;
     }
   } else {
@@ -207,11 +213,14 @@ void Bitmap::initialize_members(
 }
 
 Bitmap::Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel) {
+
+  set_internal_bits_per_pixel(bits_per_pixel);
+
   api()->bmap_set_data(
     &m_bmap,
     view.to<sg_bmap_data_t>(),
     area,
-    static_cast<u8>(bits_per_pixel));
+    m_bmap.bits_per_pixel);
 
   // verify the view size is acceptable for the bitmap
   if (view.to_void() != nullptr) {
@@ -221,11 +230,25 @@ Bitmap::Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel) {
 }
 
 Bitmap::Bitmap(const BitmapData &data) {
+
+  set_internal_bits_per_pixel(data.bits_per_pixel());
+
+  api()->bmap_set_data(
+    &m_bmap,
+    (sg_bmap_data_t *)(data.view().to_const_void()),
+    data.area(),
+    m_bmap.bits_per_pixel);
+}
+
+Bitmap::Bitmap(BitmapData &data) {
+
+  set_internal_bits_per_pixel(data.bits_per_pixel());
+
   api()->bmap_set_data(
     &m_bmap,
     data.view().to<sg_bmap_data_t>(),
     data.area(),
-    static_cast<u8>(data.bits_per_pixel()));
+    m_bmap.bits_per_pixel);
 }
 
 Bitmap::Bitmap() { m_bmap = {0}; }

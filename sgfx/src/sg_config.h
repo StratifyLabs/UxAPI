@@ -8,8 +8,18 @@
 
 #include "sgfx_types.h"
 
-#if !defined SG_BITS_PER_PIXEL
+#if defined __1bpp
 #define SG_BITS_PER_PIXEL 1
+#elif defined __2bpp
+#define SG_BITS_PER_PIXEL 2
+#elif defined __4bpp
+#define SG_BITS_PER_PIXEL 4
+#elif defined __8bpp
+#define SG_BITS_PER_PIXEL 8
+#elif defined __16bpp
+#define SG_BITS_PER_PIXEL 16
+#else
+#define SG_BITS_PER_PIXEL 0
 #endif
 
 #if SG_BITS_PER_PIXEL == 0

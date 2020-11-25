@@ -60,8 +60,8 @@ public:
   BitmapData &load(const fs::FileObject &file);
   Area load_area(const fs::FileObject &file);
 
-  var::View view() { return m_data; }
-  const var::View view() const { return m_data; }
+  var::View view() { return var::View(m_data); }
+  const var::View view() const { return var::View(m_data); }
 
 private:
   API_RAF(BitmapData, BitsPerPixel, bits_per_pixel, BitsPerPixel::one);
@@ -79,6 +79,7 @@ public:
 
   Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel);
 
+  Bitmap(BitmapData &data);
   Bitmap(const BitmapData &data);
 
   BitsPerPixel bits_per_pixel() const {
@@ -407,7 +408,7 @@ private:
   sg_bmap_t m_bmap = {0};
 
   sg_color_t calculate_color_sum();
-  int set_internal_bits_per_pixel(u8 bpp);
+  int set_internal_bits_per_pixel(BitsPerPixel bpp);
   void initialize_members(
     var::View view,
     const Area &area,

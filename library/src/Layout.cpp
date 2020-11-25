@@ -33,10 +33,15 @@ void Layout::examine_visibility() {
     }
 
     if (display() == nullptr) {
+      printf("no display\n");
       set_visible_examine(false);
       return;
     }
 
+    printf(
+      "disp %dx%d\n",
+      display()->bitmap().area().width(),
+      display()->bitmap().area().height());
     m_reference_drawing_attributes.set_bitmap(display()->bitmap());
 
     m_refresh_region = Region(
@@ -87,6 +92,10 @@ Layout &Layout::add_component(Component &component) {
 
   component.set_parent(this);
 
+  printf(
+    "add %s to %s\n",
+    name().get_string().cstring(),
+    component.name().get_string().cstring());
   // check to see if a cp has been deleting -- insert the new component there
   for (Item &cp : m_component_list) {
     if (cp.component() == nullptr) {

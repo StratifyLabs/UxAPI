@@ -7,6 +7,26 @@ using namespace ux;
 
 // const Display &Display::write(const sgfx::Bitmap &bitmap) const {}
 
+Display::Display(fs::FileObject &device)
+  : fs::FileMemberAccess<Display>(device) {
+  Info info = get_info();
+
+  set_bitmap(sgfx::Bitmap(
+    var::View(),
+    sgfx::Area(
+      info.width() - info.margin_left() - info.margin_right(),
+      info.height() - info.margin_top() - info.margin_bottom()),
+    info.bits_per_pixel()));
+
+  printf("display is %d bpp\n", static_cast<u8>(info.bits_per_pixel()));
+}
+
+Display::Info Display::get_info() const {
+  display_info_t info;
+  ioctl(I_DISPLAY_GETINFO, &info);
+  return Display::Info(info);
+}
+
 const Display &Display::set_window(const sgfx::Region &region) const {
   display_attr_t attr;
   attr.o_flags = DISPLAY_FLAG_SET_WINDOW;

@@ -16,6 +16,8 @@ Component::~Component() { set_visible_examine(false); }
 void Component::examine_visibility() {
   if (is_ready_to_draw()) {
     API_ASSERT(is_created());
+    printf("create bitmap for %s\n", name().get_string().cstring());
+    API_PRINTF_TRACE_LINE();
     API_RETURN_IF_ERROR();
 
     if (display() == nullptr) {
@@ -23,10 +25,12 @@ void Component::examine_visibility() {
       return;
     }
 
+    printf("display has %d bpp\n", (u8)display()->bitmap().bits_per_pixel());
     m_reference_drawing_attributes.set_bitmap(display()->bitmap());
 
     // local bitmap is a small section of the reference bitmap
     m_reference_drawing_attributes.calculate_area_on_bitmap();
+    printer::Printer p;
 
     m_local_bitmap_data.resize(
       m_reference_drawing_attributes.calculate_area_on_bitmap(),
@@ -43,6 +47,7 @@ void Component::examine_visibility() {
     set_refresh_region(m_local_bitmap.region());
 
     redraw();
+    p << m_local_bitmap;
     handle_event(SystemEvent(SystemEvent::event_id_enter));
   } else {
     handle_event(SystemEvent(SystemEvent::event_id_exit));
