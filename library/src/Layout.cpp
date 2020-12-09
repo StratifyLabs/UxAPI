@@ -270,12 +270,25 @@ void Layout::distribute_event(const ux::Event &event) {
   if (is_focus()) {
 
     TouchContext *touch_context = event.is_trigger<TouchContext>();
-    if (touch_context && event.id() == TouchContext::event_id_dragged_point) {
+
+    if (
+      touch_context && event.id() == TouchContext::event_id_pressed
+      && contains(touch_context->point())) {
+      set_touch_focus(true);
+    }
+
+    if (touch_context && event.id() == TouchContext::event_id_released) {
+      set_touch_focus(false);
+    }
+
+    if (
+      touch_context && event.id() == TouchContext::event_id_dragged_point
+      && is_touch_focus()) {
 
       drawing_int_t vertical_drawing_scroll;
       drawing_int_t horizontal_drawing_scroll;
       horizontal_drawing_scroll
-        = handle_vertical_scroll(touch_context->drag().x());
+        = handle_horizontal_scroll(touch_context->drag().x());
 
       vertical_drawing_scroll
         = handle_vertical_scroll(touch_context->drag().y());

@@ -156,6 +156,10 @@ const var::StringView Component::get_model() const {
   return event_loop()->model().get(name());
 }
 
+const var::StringView Component::get_model(const var::StringView key) const {
+  return event_loop()->model().get(key);
+}
+
 void Component::trigger_event(u32 event_type, u32 event_id) {
   event_loop()->trigger_event(
     Event().set_type(event_type).set_id(event_id).set_context(this));

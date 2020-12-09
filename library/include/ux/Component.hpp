@@ -39,7 +39,8 @@ class Component : public Drawing {
     flag_antialias = (1 << 6),
     flag_focus = (1 << 7),
     flag_horizontal_scroll_enabled = (1 << 8),
-    flag_vertical_scroll_enabled = (1 << 9)
+    flag_vertical_scroll_enabled = (1 << 9),
+    flag_touch_focus = (1 << 10)
   };
 
 public:
@@ -67,6 +68,7 @@ public:
   bool is_busy() const { return m_flags & (flag_busy); }
   bool is_enabled() const { return m_flags & (flag_enabled); }
   bool is_focus() const { return m_flags & (flag_focus); }
+  bool is_touch_focus() const { return m_flags & (flag_touch_focus); }
   bool is_layout() const { return m_flags & (flag_layout); }
   bool is_antialias() const { return m_flags & (flag_antialias); }
   bool is_vertical_scroll_enabled() const {
@@ -116,6 +118,7 @@ public:
   const Layout *parent() const { return m_parent; }
 
   const var::StringView get_model() const;
+  const var::StringView get_model(const var::StringView key) const;
 
   void set_model(const var::StringView value);
   void set_model_bool(bool value);
@@ -177,6 +180,9 @@ protected:
     value ? m_flags |= (flag_focus) : m_flags &= ~(flag_focus);
   }
 
+  void set_touch_focus(bool value = true) {
+    value ? m_flags |= (flag_touch_focus) : m_flags &= ~(flag_touch_focus);
+  }
   void clear_refresh_drawing_pending() {
     m_flags &= ~(flag_refresh_drawing_pending);
   }
