@@ -8,7 +8,7 @@ Printer &
 operator<<(Printer &printer, const ux::sgfx::IconFont::IconInfo &info) {
   printer.object("area", info.area());
   printer.object("point", info.canvas_point());
-  printer.key("canvasIdx", info.canvas_idx());
+  printer.key("canvasIdx", var::NumberString(info.canvas_idx()));
   return printer;
 }
 } // namespace printer

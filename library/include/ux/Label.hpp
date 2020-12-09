@@ -11,12 +11,11 @@ namespace ux {
 
 class Label : public ComponentAccess<Label> {
 public:
-  Label(const var::StringView name) : ComponentAccess(name) { set_value(name); }
+  Label(const var::StringView name) : ComponentAccess(name) { set_model(name); }
 
   void draw(const DrawingScaledAttributes &attributes);
 
 private:
-  API_ACCESS_COMPOUND(Label, var::KeyString, value);
 };
 
 } // namespace ux

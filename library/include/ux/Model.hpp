@@ -36,6 +36,11 @@ public:
     return *this;
   }
 
+  Model &set_bool(const var::StringView key, bool value) {
+    interface_set(key, value ? "true" : "false");
+    return *this;
+  }
+
   var::StringView get(const var::StringView key) const {
     return interface_get(key);
   }

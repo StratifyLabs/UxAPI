@@ -20,7 +20,7 @@ public:
   };
 
   Button(const var::StringView name) : ComponentAccess(name) {
-    set_value(name);
+    set_model(name);
   }
 
   Button &toggle() {
@@ -31,8 +31,9 @@ public:
   void draw(const DrawingScaledAttributes &attributes);
   void handle_event(const ux::Event &event);
 
+  var::StringView value() const { return get_model(); }
+
 private:
-  API_ACCESS_COMPOUND(Button, var::KeyString, value);
   API_ACCESS_BOOL(Button, state, false);
   chrono::ClockTimer m_hold_timer;
 };

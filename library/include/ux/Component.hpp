@@ -292,6 +292,13 @@ public:
 
   COMPONENT_ACCESS_DERIVED(Component, T)
 
+  T &set_value(const var::StringView value) {
+    set_model(value);
+    return reinterpret_cast<T &>(*this);
+  }
+
+  var::StringView value() const { return get_model(); }
+
   bool contains(const sgfx::Point &point) {
     return DrawingComponentProperties<T>::calculate_region_inside_margin(
              reference_drawing_attributes().calculate_region_on_bitmap())

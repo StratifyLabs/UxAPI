@@ -170,5 +170,5 @@ void Component::set_model(const var::StringView value) {
 }
 
 void Component::set_model_bool(bool value) {
-  set_model(value ? "true" : "false");
+  event_loop()->model().set_bool(name(), value);
 }

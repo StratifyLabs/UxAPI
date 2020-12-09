@@ -18,7 +18,7 @@ void Label::draw(const DrawingScaledAttributes &attributes) {
   draw::RichText()
     .set_icon_font_name(theme()->primary_icon_font_name())
     .set_text_font_name(theme()->primary_font_name())
-    .set_value(value().string_view().get_string())
+    .set_value(get_model())
     .set_color(theme()->text_color())
     .set_alignment(alignment())
     .draw(
