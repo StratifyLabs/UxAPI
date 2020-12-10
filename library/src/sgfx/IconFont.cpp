@@ -81,7 +81,7 @@ IconFont::draw(size_t offset, Bitmap &dest, const Point &point) const {
 
   dest.draw_sub_bitmap(
     point,
-    Bitmap(m_master_canvas),
+    m_master_canvas,
     Region(Point(icon.canvas_x, icon.canvas_y), Area(icon.width, icon.height)));
 
   return *this;
