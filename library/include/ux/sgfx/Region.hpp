@@ -18,11 +18,9 @@ namespace ux::sgfx {
  */
 class Region {
 public:
-  Region() { memset(&m_region, 0, sizeof(m_region)); }
+  Region() { m_region = {0}; }
 
-  bool is_valid() const {
-    return (m_region.area.width != 0) && (m_region.area.height != 0);
-  }
+  bool is_valid() const { return m_region.area.width * m_region.area.height; }
 
   Region(const sg_region_t &region) : m_region(region) {}
 

@@ -2,11 +2,44 @@
              // LICENSE.md for rights.
 
 #include <json/Json.hpp>
+#include <printer/Printer.hpp>
 
 #include "fs/File.hpp"
 #include "ux/sgfx/Theme.hpp"
 
 #define VERSION 0x0308
+
+namespace printer {
+class Printer;
+Printer &operator<<(Printer &printer, const ux::sgfx::Theme &theme) {
+
+  printer.key("primaryFont", theme.primary_font_name())
+    .key("primaryIconFont", theme.primary_icon_font_name())
+    .key(
+      "bitsPerPixel",
+      var::NumberString(static_cast<int>(theme.bits_per_pixel())));
+
+  const size_t style_count
+    = static_cast<size_t>(ux::sgfx::Theme::Style::last_style) + 1;
+  const size_t state_count
+    = static_cast<size_t>(ux::sgfx::Theme::State::last_state) + 1;
+
+  printer::Printer::Object po(printer, "colors");
+  for (size_t style = 0; style < style_count; style++) {
+    for (size_t state = 0; state < state_count; state++) {
+      ux::sgfx::Theme::Style theme_style = ux::sgfx::Theme::Style(style);
+      ux::sgfx::Theme::State theme_state = ux::sgfx::Theme::State(state);
+      var::KeyString key;
+      key.append(ux::sgfx::Theme::get_style_name(theme_style))
+        .append("-")
+        .append(ux::sgfx::Theme::get_state_name(theme_state));
+      printer.object(key, theme.read_palette(theme_style, theme_state));
+    }
+  }
+
+  return printer;
+}
+} // namespace printer
 
 using namespace ux::sgfx;
 

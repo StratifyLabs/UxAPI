@@ -402,6 +402,17 @@ public:
     resize(area, bits_per_pixel);
   }
 
+  BitmapData(const BitmapData &a) {
+    m_data = a.m_data;
+    resize(a.area(), a.bits_per_pixel());
+  }
+
+  BitmapData &operator=(const BitmapData &a) {
+    m_data = a.m_data;
+    resize(a.area(), a.bits_per_pixel());
+    return *this;
+  }
+
   BitmapData &resize(const Area &area, BitsPerPixel bits_per_pixel);
 
   BitmapData &load(const fs::FileObject &file);

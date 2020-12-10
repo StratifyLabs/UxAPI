@@ -48,9 +48,6 @@ printer::operator<<(printer::Printer &printer, const ux::sgfx::Bitmap &a) {
       color = ux::sgfx::Bitmap::api()->cursor_get_pixel(&x_cursor);
       line
         += Printer::get_bitmap_pixel_character(color, a.bmap()->bits_per_pixel);
-      if ((j < a.bmap()->area.width - 1) && (a.bmap()->bits_per_pixel > 4)) {
-        line += (" ");
-      }
     }
     line += ("|");
     printer.key(var::String().format("line-%04d", i), line);

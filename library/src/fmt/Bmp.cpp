@@ -18,6 +18,7 @@ Bmp::Bmp() {
 
 Bmp::Bmp(const fs::FileObject *file_object) : m_file_object(file_object) {
   API_ASSERT(file_object != nullptr);
+  load();
 }
 
 void Bmp::load() {
@@ -119,14 +120,13 @@ void Bmp::save(
   }
 }
 
-ux::sgfx::Bitmap Bmp::convert_to_bitmap(BitsPerPixel bpp) {
+ux::sgfx::BitmapData Bmp::convert_to_bitmap(BitsPerPixel bpp) {
   s32 i, j;
   int avg;
   u8 pixel[3];
   var::View view_pixel(pixel);
 
-  BitmapData bitmap_data(Area(width(), height()), bpp);
-  sgfx::Bitmap result(bitmap_data);
+  sgfx::BitmapData result(Area(width(), height()), bpp);
 
   for (j = 0; j < height(); j++) {
     seek_row(j);

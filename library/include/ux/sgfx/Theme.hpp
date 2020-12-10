@@ -124,4 +124,9 @@ private:
 
 } // namespace ux::sgfx
 
+namespace printer {
+class Printer;
+Printer &operator<<(Printer &printer, const ux::sgfx::Theme &theme);
+} // namespace printer
+
 #endif // UXAPI_UX_SGFX_THEME_HPP

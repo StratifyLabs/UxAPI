@@ -39,7 +39,7 @@ public:
     const ux::sgfx::Bitmap &bitmap,
     const ux::sgfx::Palette &pallete);
 
-  ux::sgfx::Bitmap convert_to_bitmap(BitsPerPixel bpp);
+  sgfx::BitmapData convert_to_bitmap(BitsPerPixel bpp);
 
   /*! \details Returns the bitmap width (after bitmap has been opened). */
   s32 width() const { return m_dib.width; }
