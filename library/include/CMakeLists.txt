@@ -29,6 +29,10 @@ set(SOURCES
 	ux/draw/Text.hpp
 	ux/draw/TextBox.hpp
 
+	ux/fmt.hpp
+	ux/fmt/Bmp.hpp
+	ux/fmt/Svic.hpp
+
 	ux/sgfx.hpp
 	ux/sgfx/Api.hpp
 	ux/sgfx/Area.hpp

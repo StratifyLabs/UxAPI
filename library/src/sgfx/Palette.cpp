@@ -203,40 +203,42 @@ var::Vector<PaletteColor> PaletteColor::calculate_gradient(
 
 Palette::Palette() { m_pixel_format = PixelFormat::null; }
 
-PaletteFlags::ColorCount Palette::get_color_count(u8 bits_per_pixel) {
-  if (bits_per_pixel == 1) {
+PaletteFlags::ColorCount Palette::get_color_count(BitsPerPixel bits_per_pixel) {
+  switch (bits_per_pixel) {
+  case BitsPerPixel::x1:
     return ColorCount::x1bpp;
-  }
-  if (bits_per_pixel == 2) {
+  case BitsPerPixel::x2:
     return ColorCount::x2bpp;
-  }
-  if (bits_per_pixel == 4) {
+  case BitsPerPixel::x4:
     return ColorCount::x4bpp;
-  }
-  if (bits_per_pixel == 8) {
+  case BitsPerPixel::x8:
     return ColorCount::x8bpp;
+  case BitsPerPixel::x16:
+    return ColorCount::x16bpp;
+  default:
+    break;
   }
   return ColorCount::null;
 }
 
-u8 Palette::get_bits_per_pixel() const {
+Palette::BitsPerPixel Palette::get_bits_per_pixel() const {
   u32 count = colors().count();
   if (count == 2) {
-    return 1;
+    return BitsPerPixel::x1;
   }
   if (count == 4) {
-    return 2;
-  }
-  if (count == 8) {
-    return 4;
+    return BitsPerPixel::x2;
   }
   if (count == 16) {
-    return 8;
+    return BitsPerPixel::x4;
   }
   if (count == 256) {
-    return 16;
+    return BitsPerPixel::x8;
   }
-  return 1;
+  if (count == 65536) {
+    return BitsPerPixel::x16;
+  }
+  return BitsPerPixel::x1;
 }
 
 Palette &Palette::set_color_count(ColorCount color_count) {
@@ -298,4 +300,19 @@ Palette::create_gradient(const PaletteColor &color, IsAscending is_ascending) {
   }
 
   return *this;
+}
+
+bool Palette::is_valid(BitsPerPixel bits_per_pixel) {
+  switch (bits_per_pixel) {
+  case BitsPerPixel::x1:
+  case BitsPerPixel::x2:
+  case BitsPerPixel::x4:
+  case BitsPerPixel::x8:
+  case BitsPerPixel::x16:
+  case BitsPerPixel::x24:
+  case BitsPerPixel::x32:
+    return true;
+  default:
+    return false;
+  }
 }

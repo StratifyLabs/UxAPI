@@ -5,7 +5,7 @@
 #define SG_TYPES_H_
 
 #if defined __StratifyOS__ || defined __link
-#include <mcu/types.h>
+#include <sdk/types.h>
 #else
 // need to define u32, s32, u16, s16, etc
 #include <stdint.h>

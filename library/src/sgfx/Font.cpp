@@ -95,7 +95,7 @@ bool Font::Info::ascending_style(const Info &a, const Info &b) {
   return a.style() < b.style();
 }
 
-const var::StringView  Font::ascii_character_set() {
+var::StringView Font::ascii_character_set() {
   return " !\"#$%&'()*+,-./"
          "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
          "abcdefghijklmnopqrstuvwxyz{|}~";
@@ -138,7 +138,7 @@ void Font::refresh() {
   return;
 }
 
-int Font::get_width(const var::StringView  str) const {
+int Font::get_width(const var::StringView str) const {
   u32 length = 0;
   for (auto c : str) {
     if (c == ' ') {
@@ -152,17 +152,14 @@ int Font::get_width(const var::StringView  str) const {
   return length;
 }
 
-int Font::draw(char c, Bitmap &dest, const Point &point) const {
-
+const Font &Font::draw(char c, Bitmap &dest, const Point &point) const {
   if (load_char(m_char, c, true) < 0) {
-    return -1;
+    return *this;
   }
 
   Point p = point + Point(m_char.offset_x, m_char.offset_y);
-
   draw_char_on_bitmap(m_char, dest, p);
-
-  return m_char.advance_x;
+  return *this;
 }
 
 sg_font_char_t Font::character(u32 offset) {
@@ -184,7 +181,7 @@ Bitmap Font::character_bitmap(u32 offset) {
 }
 #endif
 
-int Font::draw(
+const Font &Font::draw(
   const var::StringView const_string,
   Bitmap &bitmap,
   const Point &point) const {
@@ -216,7 +213,7 @@ int Font::draw(
     p += Point(w, 0);
   }
 
-  return 0;
+  return *this;
 }
 
 sg_size_t Font::get_height() const { return m_header.max_height; }
@@ -279,6 +276,6 @@ void Font::draw_char_on_bitmap(
 
   dest.draw_sub_bitmap(
     point,
-    Bitmap(m_canvas),
+    m_canvas,
     Region(Point(ch.canvas_x, ch.canvas_y), Area(ch.width, ch.height)));
 }

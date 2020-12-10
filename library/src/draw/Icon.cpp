@@ -15,7 +15,7 @@ Icon::Icon() {
 
 bool Icon::resolve_font(sg_size_t h) {
   if (this->icon_font() == nullptr) {
-    const Assets::IconFontEntry *entry = Assets::find_icon_font(
+    const Assets::IconFontAsset *entry = Assets::find_icon_font(
       Assets::FindIconFont().set_name(m_icon_font_name).set_point_size(h));
     if (entry) {
       this->m_icon_font = &entry->font();

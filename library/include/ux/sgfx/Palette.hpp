@@ -10,6 +10,16 @@ namespace ux::sgfx {
 
 class PaletteFlags {
 public:
+  enum class BitsPerPixel {
+    x1 = 1,
+    x2 = 2,
+    x4 = 4,
+    x8 = 8,
+    x16 = 16,
+    x24 = 24,
+    x32 = 32
+  };
+
   enum class IsAscending { no, yes };
 
   enum class ColorCount {
@@ -17,7 +27,8 @@ public:
     x1bpp = 2,
     x2bpp = 4,
     x4bpp = 16,
-    x8bpp = 256
+    x8bpp = 256,
+    x16bpp = 65536
   };
 
   enum class PixelFormat {
@@ -200,12 +211,14 @@ public:
     return *this;
   }
 
+  static bool is_valid(BitsPerPixel bits_per_pixel);
+
   bool is_valid() const {
     return (colors().count() > 0) && (pixel_format() != PixelFormat::null);
   }
 
-  static ColorCount get_color_count(u8 bits_per_pixel);
-  u8 get_bits_per_pixel() const;
+  static ColorCount get_color_count(BitsPerPixel bits_per_pixel);
+  BitsPerPixel get_bits_per_pixel() const;
 
   Palette &set_color_count(ColorCount color_count);
 

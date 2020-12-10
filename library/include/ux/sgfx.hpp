@@ -5,17 +5,17 @@
 
 namespace ux::sgfx {}
 
-#include "ux/sgfx/Api.hpp"
-#include "ux/sgfx/Area.hpp"
-#include "ux/sgfx/Cursor.hpp"
-#include "ux/sgfx/Font.hpp"
-#include "ux/sgfx/IconFont.hpp"
-#include "ux/sgfx/Palette.hpp"
-#include "ux/sgfx/Pen.hpp"
-#include "ux/sgfx/Point.hpp"
-#include "ux/sgfx/Region.hpp"
-#include "ux/sgfx/Theme.hpp"
-#include "ux/sgfx/Vector.hpp"
+#include "sgfx/Api.hpp"
+#include "sgfx/Area.hpp"
+#include "sgfx/Cursor.hpp"
+#include "sgfx/Font.hpp"
+#include "sgfx/IconFont.hpp"
+#include "sgfx/Palette.hpp"
+#include "sgfx/Pen.hpp"
+#include "sgfx/Point.hpp"
+#include "sgfx/Region.hpp"
+#include "sgfx/Theme.hpp"
+#include "sgfx/Vector.hpp"
 
 using namespace ux::sgfx;
 

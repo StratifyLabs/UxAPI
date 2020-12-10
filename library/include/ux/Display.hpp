@@ -4,7 +4,7 @@
 #ifndef UXAPI_UX_DISPLAY_HPP_
 #define UXAPI_UX_DISPLAY_HPP_
 
-#include <mcu/types.h>
+#include <sdk/types.h>
 #include <sos/dev/display.h>
 
 #include <var/View.hpp>

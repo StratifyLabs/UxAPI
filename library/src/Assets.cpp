@@ -18,8 +18,8 @@
 using namespace ux;
 using namespace ux::sgfx;
 
-var::Vector<Assets::FontEntry> Assets::m_font_info_list;
-var::Vector<Assets::IconFontEntry> Assets::m_icon_font_info_list;
+var::Vector<Assets::FontAsset> Assets::m_font_info_list;
+var::Vector<Assets::IconFontAsset> Assets::m_icon_font_info_list;
 
 #if defined NOT_BUILDING
 var::Vector<fmt::Svic> Assets::m_vector_path_list;
@@ -45,10 +45,10 @@ int Assets::initialize() {
   }
 
   // sort fonts to find a proper match
-  m_font_info_list.sort(FontEntry::ascending_style);
-  m_font_info_list.sort(FontEntry::ascending_point_size);
+  m_font_info_list.sort(FontAsset::ascending_style);
+  m_font_info_list.sort(FontAsset::ascending_point_size);
 
-  m_icon_font_info_list.sort(IconFontEntry::ascending_point_size);
+  m_icon_font_info_list.sort(IconFontAsset::ascending_point_size);
 
   m_is_initialized = true;
   return 0;
@@ -72,7 +72,7 @@ void Assets::find_fonts_in_directory(const var::StringView path) {
   for (const auto &entry : file_list) {
     if (fs::Path::suffix(entry) == "sbf") {
       m_font_info_list.vector().emplace_back(std::move(
-        FontEntry().set_info(Font::Info(var::PathString(path) / entry))));
+        FontAsset().set_info(Font::Info(var::PathString(path) / entry))));
     }
   }
 }
@@ -95,7 +95,7 @@ void Assets::find_icons_in_directory(const var::StringView path) {
   for (const auto &entry : file_list) {
     if (fs::Path::suffix(entry) == "sbi") {
       m_icon_font_info_list.vector().emplace_back(std::move(
-        IconFontEntry().set_info(Font::Info(var::PathString(path) / entry))));
+        IconFontAsset().set_info(Font::Info(var::PathString(path) / entry))));
     }
   }
 }
@@ -129,7 +129,7 @@ sgfx::VectorPath Assets::find_vector_path(const var::StringView name) {
 }
 #endif
 
-const Assets::IconFontEntry *
+const Assets::IconFontAsset *
 Assets::find_icon_font(const FindIconFont &options) {
 
   initialize();
@@ -182,7 +182,7 @@ Assets::find_icon_font(const FindIconFont &options) {
   return nullptr;
 }
 
-const Assets::FontEntry *Assets::find_font(const FindFont &options) {
+const Assets::FontAsset *Assets::find_font(const FindFont &options) {
 
   initialize();
 

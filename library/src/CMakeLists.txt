@@ -33,6 +33,8 @@ set(SOURCES
 	draw/TextBox.cpp
 	draw/Rectangle.cpp
 
+
+	# stratify graphics
 	sgfx/Api.cpp
 	sgfx/Area.cpp
 	sgfx/Cursor.cpp
@@ -44,6 +46,10 @@ set(SOURCES
 	sgfx/Theme.cpp
 	sgfx/Palette.cpp
 	sgfx/Vector.cpp
+
+	# file formats
+	fmt/Bmp.cpp
+	fmt/Svic.cpp
 
 	PARENT_SCOPE
 

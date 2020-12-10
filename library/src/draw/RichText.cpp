@@ -12,7 +12,7 @@ using namespace ux::draw;
 
 bool RichText::resolve_fonts(sg_size_t h) {
   if (this->text_font() == nullptr) {
-    const Assets::FontEntry *entry
+    const Assets::FontAsset *entry
       = Assets::find_font(Assets::FindFont()
                             .set_name(text_font_name())
                             .set_point_size(h)
@@ -25,7 +25,7 @@ bool RichText::resolve_fonts(sg_size_t h) {
   }
 
   if (this->icon_font() == nullptr) {
-    const Assets::IconFontEntry *entry = Assets::find_icon_font(
+    const Assets::IconFontAsset *entry = Assets::find_icon_font(
       Assets::FindIconFont().set_name(icon_font_name()).set_point_size(h));
     if (entry) {
       this->m_icon_font = &entry->font();

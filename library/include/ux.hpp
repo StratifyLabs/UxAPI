@@ -2,10 +2,12 @@
 #ifndef UXAPI_UX_HPP
 #define UXAPI_UX_HPP
 
+#include "ux/fmt.hpp"
 #include "ux/sgfx.hpp"
 
 namespace ux {}
 
+#include "ux/Assets.hpp"
 #include "ux/Button.hpp"
 #include "ux/Component.hpp"
 #include "ux/Controller.hpp"

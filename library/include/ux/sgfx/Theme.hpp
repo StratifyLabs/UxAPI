@@ -45,7 +45,9 @@ public:
   };
 
   Theme &set_bits_per_pixel(u8 bits_per_pixel);
-  u8 bits_per_pixel() const { return m_header.bits_per_pixel; }
+  BitsPerPixel bits_per_pixel() const {
+    return static_cast<BitsPerPixel>(m_header.bits_per_pixel);
+  }
 
   Theme &set_primary_font_name(const var::StringView  name) {
     m_primary_font_name = name;

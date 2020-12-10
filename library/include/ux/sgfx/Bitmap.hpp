@@ -19,15 +19,7 @@ namespace ux::sgfx {
 
 class BitmapFlags {
 public:
-  enum class BitsPerPixel {
-    one = 1,
-    two = 2,
-    four = 4,
-    eight = 8,
-    sixteen = 16,
-    twenty_four = 24,
-    thirty_two = 32
-  };
+  using BitsPerPixel = PaletteFlags::BitsPerPixel;
 };
 
 class AntiAliasFilter {
@@ -46,29 +38,6 @@ private:
     ;
 };
 
-class BitmapData : public Api, public BitmapFlags {
-public:
-  BitmapData() {}
-  BitmapData(const Area &area, BitsPerPixel bits_per_pixel)
-    : m_area(area), m_bits_per_pixel(bits_per_pixel) {
-    // calculate size need for new bitmap and allocate the memory
-    resize(area, bits_per_pixel);
-  }
-
-  BitmapData &resize(const Area &area, BitsPerPixel bits_per_pixel);
-
-  BitmapData &load(const fs::FileObject &file);
-  Area load_area(const fs::FileObject &file);
-
-  var::View view() { return var::View(m_data); }
-  const var::View view() const { return var::View(m_data); }
-
-private:
-  API_RAF(BitmapData, BitsPerPixel, bits_per_pixel, BitsPerPixel::one);
-  API_RAC(BitmapData, Area, area);
-  var::Data m_data;
-};
-
 /*! \brief Bitmap Class
  * \details This class implements a bitmap and is
  * powered by the sgfx library.
@@ -78,9 +47,6 @@ public:
   Bitmap();
 
   Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel);
-
-  Bitmap(BitmapData &data);
-  Bitmap(const BitmapData &data);
 
   BitsPerPixel bits_per_pixel() const {
     return static_cast<BitsPerPixel>(m_bmap.bits_per_pixel);
@@ -332,25 +298,25 @@ public:
 
   Region calculate_active_region() const;
 
-  // these are deprecated and shouldn't be documented?
-  Bitmap &invert() {
-    invert_rectangle(sg_point(0, 0), area());
-    return *this;
-  }
-
-  Bitmap &invert_rectangle(const Point &p, const Area &d) {
-    sg_region_t region = sg_region(p, d);
+  Bitmap &invert_rectangle(const Region &region) {
     m_bmap.pen.o_flags = SG_PEN_FLAG_IS_INVERT;
-    api()->draw_rectangle(bmap(), &region);
+    m_bmap.pen.color = 0xffffffff;
+    api()->draw_rectangle(bmap(), &region.region());
+    return *this;
+  }
+  Bitmap &invert() { return invert_rectangle(region()); }
+
+  Region fill_empty_region(Area area);
+
+  Bitmap &clear_rectangle(const Region &region) {
+    m_bmap.pen.o_flags = SG_PEN_FLAG_IS_ERASE;
+    m_bmap.pen.color = 0xffffffff;
+    api()->draw_rectangle(bmap(), &region.region());
     return *this;
   }
 
-  Bitmap &clear_rectangle(const Point &p, const Area &d) {
-    sg_region_t region = sg_region(p, d);
-    m_bmap.pen.o_flags = SG_PEN_FLAG_IS_ERASE;
-    api()->draw_rectangle(bmap(), &region);
-    return *this;
-  }
+  Bitmap &clear() { return clear_rectangle(region()); }
+
   bool is_empty(const Region &region) const;
 
   sg_size_t height() const { return m_bmap.area.height; }
@@ -403,6 +369,9 @@ public:
     return *this;
   }
 
+  var::View to_view();
+  const var::View to_view() const;
+
   const sg_bmap_data_t *bmap_data(const Point &p) const;
   sg_bmap_data_t *bmap_data(const Point &p);
 
@@ -413,8 +382,9 @@ public:
 
 protected:
 private:
-  sg_bmap_t m_bmap = {0};
+  friend class BitmapData;
 
+  sg_bmap_t m_bmap = {0};
   sg_color_t calculate_color_sum();
   int set_internal_bits_per_pixel(BitsPerPixel bpp);
   void initialize_members(
@@ -422,6 +392,26 @@ private:
     const Area &area,
     BitsPerPixel bits_per_pixel);
   void calculate_members(const Area &dim);
+};
+
+class BitmapData : public Bitmap {
+public:
+  BitmapData() {}
+  BitmapData(const Area &area, BitsPerPixel bits_per_pixel) {
+    // calculate size need for new bitmap and allocate the memory
+    resize(area, bits_per_pixel);
+  }
+
+  BitmapData &resize(const Area &area, BitsPerPixel bits_per_pixel);
+
+  BitmapData &load(const fs::FileObject &file);
+  Area load_area(const fs::FileObject &file);
+
+  var::View view() { return var::View(m_data); }
+  const var::View view() const { return var::View(m_data); }
+
+private:
+  var::Data m_data;
 };
 
 } // namespace ux::sgfx

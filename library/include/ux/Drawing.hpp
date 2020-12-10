@@ -5,7 +5,7 @@
 #ifndef UXAPI_UX_DRAWING_HPP_
 #define UXAPI_UX_DRAWING_HPP_
 
-#include <mcu/types.h>
+#include <sdk/types.h>
 
 #include "sgfx/Bitmap.hpp"
 #include "sgfx/Pen.hpp"

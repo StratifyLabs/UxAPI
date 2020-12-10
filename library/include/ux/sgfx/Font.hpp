@@ -70,26 +70,33 @@ public:
 
   bool is_valid() const { return m_file != nullptr; }
 
-  static const var::StringView  ascii_character_set();
+  static var::StringView ascii_character_set();
 
   sg_size_t get_height() const;
   sg_size_t get_width() const;
 
   int offset_x() const { return m_char.offset_x; }
   int offset_y() const { return m_char.offset_y; }
-
   int get_width(const var::StringView str) const;
-
   int size() const { return m_header.character_count; }
-  void set_letter_spacing(sg_size_t spacing) { m_letter_spacing = spacing; }
+
+  Font &set_letter_spacing(sg_size_t spacing) {
+    m_letter_spacing = spacing;
+    return *this;
+  }
   sg_size_t letter_spacing() const { return m_letter_spacing; }
-  void set_space_size(int s) { m_space_size = s; }
+  Font &set_space_size(int s) {
+    m_space_size = s;
+    return *this;
+  }
+
   int space_size() const { return m_space_size; }
+  const Font &draw(
+    const var::StringView const_string,
+    Bitmap &dest,
+    const Point &point) const;
 
-  int draw(const var::StringView const_string, Bitmap &dest, const Point &point)
-    const;
-
-  int draw(char c, Bitmap &dest, const Point &point) const;
+  const Font &draw(char c, Bitmap &dest, const Point &point) const;
 
   const sg_font_char_t &character() const { return m_char; }
 

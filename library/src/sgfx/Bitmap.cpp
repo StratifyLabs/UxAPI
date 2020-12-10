@@ -137,8 +137,7 @@ BitmapData &BitmapData::resize(const Area &area, BitsPerPixel bits_per_pixel) {
   m_data.resize(size);
 
   if (is_success()) {
-    m_area = area;
-    m_bits_per_pixel = bits_per_pixel;
+    initialize_members(view(), area, bits_per_pixel);
   }
 
   return *this;
@@ -172,12 +171,13 @@ int Bitmap::set_internal_bits_per_pixel(BitsPerPixel bpp) {
   // api bpp of zero means the api supports variable bpp values
   if (api()->bits_per_pixel == 0) {
     switch (bpp) {
-    case BitsPerPixel::one:
-    case BitsPerPixel::two:
-    case BitsPerPixel::four:
-    case BitsPerPixel::eight:
-    case BitsPerPixel::sixteen:
-    case BitsPerPixel::thirty_two:
+    case BitsPerPixel::x1:
+    case BitsPerPixel::x2:
+    case BitsPerPixel::x4:
+    case BitsPerPixel::x8:
+    case BitsPerPixel::x16:
+    case BitsPerPixel::x24:
+    case BitsPerPixel::x32:
       m_bmap.bits_per_pixel = static_cast<u8>(bpp);
       return 0;
     }
@@ -198,18 +198,33 @@ void Bitmap::initialize_members(
     exit_fatal("sgfx api not available");
   }
 
-  m_bmap.data = view.to<sg_bmap_data_t>();
+  set_internal_bits_per_pixel(bits_per_pixel);
 
-  if (api()->bits_per_pixel == 0) {
-    m_bmap.bits_per_pixel = 1; // use 1 as the default others are supported
-  } else {
-    m_bmap.bits_per_pixel = api()->bits_per_pixel;
+  api()->bmap_set_data(
+    &m_bmap,
+    view.to<sg_bmap_data_t>(),
+    area,
+    m_bmap.bits_per_pixel);
+
+  // verify the view size is acceptable for the bitmap
+  if (view.to_void() != nullptr) {
+    const size_t minimum_size = api()->calc_bmap_size(&m_bmap, area.area());
+    API_ASSERT(view.size() >= minimum_size);
   }
+
   m_bmap.margin_bottom_right.area = 0;
   m_bmap.margin_top_left.area = 0;
   m_bmap.pen.thickness = 1;
   m_bmap.pen.o_flags = 0;
   m_bmap.pen.color = 65535;
+}
+
+var::View Bitmap::to_view() {
+  return var::View(m_bmap.data, api()->calc_bmap_size(&m_bmap, m_bmap.area));
+}
+
+const var::View Bitmap::to_view() const {
+  return var::View(m_bmap.data, api()->calc_bmap_size(&m_bmap, m_bmap.area));
 }
 
 Bitmap::Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel) {
@@ -227,28 +242,6 @@ Bitmap::Bitmap(var::View view, const Area &area, BitsPerPixel bits_per_pixel) {
     const size_t minimum_size = api()->calc_bmap_size(&m_bmap, area.area());
     API_ASSERT(view.size() >= minimum_size);
   }
-}
-
-Bitmap::Bitmap(const BitmapData &data) {
-
-  set_internal_bits_per_pixel(data.bits_per_pixel());
-
-  api()->bmap_set_data(
-    &m_bmap,
-    (sg_bmap_data_t *)(data.view().to_const_void()),
-    data.area(),
-    m_bmap.bits_per_pixel);
-}
-
-Bitmap::Bitmap(BitmapData &data) {
-
-  set_internal_bits_per_pixel(data.bits_per_pixel());
-
-  api()->bmap_set_data(
-    &m_bmap,
-    data.view().to<sg_bmap_data_t>(),
-    data.area(),
-    m_bmap.bits_per_pixel);
 }
 
 Bitmap::Bitmap() { m_bmap = {0}; }
@@ -392,4 +385,21 @@ sg_color_t Bitmap::calculate_color_sum() {
     cursor_y.increment_y();
   }
   return color;
+}
+
+Region Bitmap::fill_empty_region(Area area) {
+  sg_point_t point;
+  Region region(Point(0, 0), area);
+
+  for (point.y = 0; point.y < height() - area.height(); point.y++) {
+    for (point.x = 0; point.x < width() - area.width(); point.x++) {
+      region.set_point(point);
+      if (is_empty(region)) {
+        draw_rectangle(region);
+        return region;
+      }
+    }
+  }
+
+  return Region();
 }

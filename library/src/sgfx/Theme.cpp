@@ -51,17 +51,19 @@ var::StringView Theme::get_style_name(Style value) {
 }
 
 sg_color_t Theme::text_color() const {
-  if (bits_per_pixel() == 1) {
+  if (bits_per_pixel() == BitsPerPixel::x1) {
     return 1;
   }
-  return (1 << bits_per_pixel()) - 2;
+  const u8 bits_per_pixel_int = static_cast<u8>(bits_per_pixel());
+  return (1 << bits_per_pixel_int) - 2;
 }
 
 sg_color_t Theme::border_color() const {
-  if (bits_per_pixel() == 1) {
+  if (bits_per_pixel() == BitsPerPixel::x1) {
     return 0;
   }
-  return (1 << bits_per_pixel()) - 1;
+  const u8 bits_per_pixel_int = static_cast<u8>(bits_per_pixel());
+  return (1 << bits_per_pixel_int) - 1;
 }
 
 var::StringView Theme::get_state_name(State value) {

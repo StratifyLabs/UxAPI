@@ -10,7 +10,7 @@ using namespace ux::draw;
 
 bool Text::resolve_font(sg_size_t h) {
   if (this->font() == nullptr) {
-    const Assets::FontEntry *entry
+    const Assets::FontAsset *entry
       = Assets::find_font(Assets::FindFont()
                             .set_name(m_font_name)
                             .set_point_size(h)

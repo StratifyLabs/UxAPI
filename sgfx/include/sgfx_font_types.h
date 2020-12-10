@@ -4,7 +4,7 @@
 #ifndef SGFX_FONT_H_
 #define SGFX_FONT_H_
 
-#include <mcu/types.h>
+#include <sdk/types.h>
 
 #define SG_FONT_VERSION 0x0301
 #define SG_FONT_ICON_MAX_NAME_LENGTH 47
