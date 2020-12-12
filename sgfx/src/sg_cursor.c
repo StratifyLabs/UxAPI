@@ -629,11 +629,9 @@ void sg_cursor_shift_left(
 }
 
 sg_color_t get_pixel(const sg_cursor_t *cursor) {
-  sg_color_t color = (u32)-1;
   sg_bmap_data_t value;
   value = *(cursor->target) >> cursor->shift;
-  color = value & SG_PIXEL_MASK(cursor->bmap);
-  return color;
+  return value & SG_PIXEL_MASK(cursor->bmap);
 }
 
 void sg_cursor_inc_x(sg_cursor_t *cursor) {

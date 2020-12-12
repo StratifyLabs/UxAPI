@@ -271,15 +271,13 @@ void sg_draw_quadratic_bezier(
   for (i = 0; i < steps; i++) {
     //(1-t)^2*P0 + 2*(1-t)*t*P2 + t^2*P2
 
-    if (i < steps) {
-      x = (steps - i) * (steps - i) * p0.x + 2 * (steps - i) * i * p1.x
-          + i * i * p2.x;
-      y = (steps - i) * (steps - i) * p0.y + 2 * (steps - i) * i * p1.y
-          + i * i * p2.y;
+    x = (steps - i) * (steps - i) * p0.x + 2 * (steps - i) * i * p1.x
+        + i * i * p2.x;
+    y = (steps - i) * (steps - i) * p0.y + 2 * (steps - i) * i * p1.y
+        + i * i * p2.y;
 
-      current.x = x / (steps2);
-      current.y = y / (steps2);
-    }
+    current.x = x / (steps2);
+    current.y = y / (steps2);
 
     if (corners) {
       if (current.x < min.x) {
@@ -347,18 +345,16 @@ void sg_draw_cubic_bezier(
   // t goes from zero to one
   for (i = 0; i < steps; i++) {
 
-    if (i < steps) {
-      x = (steps - i) * (steps - i) * (steps - i) * p0.x
-          + 3 * (steps - i) * (steps - i) * i * p1.x
-          + 3 * (steps - i) * i * i * p2.x + i * i * i * p3.x;
+    x = (steps - i) * (steps - i) * (steps - i) * p0.x
+        + 3 * (steps - i) * (steps - i) * i * p1.x
+        + 3 * (steps - i) * i * i * p2.x + i * i * i * p3.x;
 
-      y = (steps - i) * (steps - i) * (steps - i) * p0.y
-          + 3 * (steps - i) * (steps - i) * i * p1.y
-          + 3 * (steps - i) * i * i * p2.y + i * i * i * p3.y;
+    y = (steps - i) * (steps - i) * (steps - i) * p0.y
+        + 3 * (steps - i) * (steps - i) * i * p1.y
+        + 3 * (steps - i) * i * i * p2.y + i * i * i * p3.y;
 
-      current.x = x / (steps3);
-      current.y = y / (steps3);
-    }
+    current.x = x / (steps3);
+    current.y = y / (steps3);
 
     if (corners) {
       if (current.x < min.x) {
@@ -600,11 +596,9 @@ int draw_pour_recursive(
     sg_point_t draw_point;
     sg_int_t xmin, xmax;
     sg_int_t x;
-    sg_int_t x_max_bound = region->point.x + region->area.width;
-    sg_int_t y_max_bound = region->point.y + region->area.height;
+    const sg_int_t x_max_bound = region->point.x + region->area.width;
+    const sg_int_t y_max_bound = region->point.y + region->area.height;
     draw_point = p;
-    xmin = p.x;
-    xmax = p.y;
 
     while (is_not_active_color(
              sg_cursor_get_pixel_no_increment(&cursor),

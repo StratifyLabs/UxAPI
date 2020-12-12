@@ -37,8 +37,8 @@ int TextBox::count_lines(
     u32 i;
     i = 0;
     do {
-      String line;
-      build_line(font, i, line, tokens, len, w);
+      String line_to_build;
+      build_line(font, i, line_to_build, tokens, len, w);
       num_lines++;
     } while (i < tokens.count());
   }
@@ -60,7 +60,6 @@ void TextBox::draw(const DrawingScaledAttributes &attr) {
   sg_size_t visible_lines;
   sg_size_t line_spacing;
   int len;
-  const Font *font;
 
   // draw the message and wrap the text
   if (
@@ -69,9 +68,7 @@ void TextBox::draw(const DrawingScaledAttributes &attr) {
     return;
   }
 
-  font = this->font();
-  API_ASSERT(font != nullptr);
-
+  const Font *font = this->font();
   font_height = font->get_height();
   line_spacing = font_height / 10;
 
@@ -132,15 +129,13 @@ void TextBox::build_line(
   const StringViewList &tokens,
   int &build_len,
   sg_size_t w) {
-  int len;
-  int line_len;
   u32 j;
   u32 count = tokens.count();
   build_len = 0;
 
   for (j = i; j < count; j++) {
-    line_len = font->get_width(line.cstring());
-    len = font->get_width(tokens.at(i));
+    const int line_len = font->get_width(line.cstring());
+    const int len = font->get_width(tokens.at(i));
     if (line_len + len <= w) {
       line += tokens.at(j);
       i++;

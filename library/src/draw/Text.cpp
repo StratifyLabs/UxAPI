@@ -28,8 +28,6 @@ bool Text::resolve_font(sg_size_t h) {
 
 void Text::draw(const DrawingScaledAttributes &attr) {
   sg_point_t top_left;
-  int len;
-  int h;
   Area d = attr.area();
   sg_point_t p = attr.point();
   const Font *font;
@@ -46,8 +44,8 @@ void Text::draw(const DrawingScaledAttributes &attr) {
 
     font = this->font();
 
-    h = font->get_height();
-    len = font->get_width(string());
+    const int h = font->get_height();
+    const int len = font->get_width(string());
     top_left.y = p.y;
     if (is_align_left()) {
       top_left.x = p.x;
