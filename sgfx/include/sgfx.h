@@ -1,10 +1,10 @@
 // COPYING: Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see
 // LICENSE.md for rights.
 
-#ifndef SG_H_
-#define SG_H_
+#ifndef SGFX_H_
+#define SGFX_H_
 
-#include <sos/api/sos_api.h>
+#include <sdk/api.h>
 #include <string.h>
 
 #include "sgfx_types.h"
@@ -635,7 +635,7 @@ int sg_antialias_filter_apply(
 #define SG_API_T 1
 
 typedef struct MCU_PACK {
-  sos_api_t sos_api;
+  api_t sos_api;
   sg_size_t bits_per_pixel;
   void (*bmap_set_data)(
     sg_bmap_t *bmap,
@@ -785,4 +785,4 @@ extern const sg_api_t sg_api;
 }
 #endif
 
-#endif /* SG_H_ */
+#endif /* SGFX_H_ */

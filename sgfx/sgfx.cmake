@@ -1,5 +1,5 @@
 
-if(NOT DEFINED IS_SDK)
+if(NOT DEFINED API_IS_SDK)
 	include(API)
 	sos_sdk_include_target(sgfx "${API_CONFIG_LIST}")
 	sos_sdk_include_target(sgfx_1bpp "${API_CONFIG_LIST}")
