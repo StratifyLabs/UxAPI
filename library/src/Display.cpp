@@ -1,6 +1,7 @@
 // Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md for
 // rights.
 
+#if !defined __link
 #include "ux/Display.hpp"
 
 using namespace ux;
@@ -116,3 +117,7 @@ sgfx::Palette Display::get_palette() const {
 
   return sgfx::Palette(result);
 }
+
+#else
+int ux_display_unused = 0;
+#endif
