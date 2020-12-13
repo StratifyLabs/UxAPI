@@ -1,5 +1,8 @@
 
 set(LIBRARIES	JsonAPI FsAPI ChronoAPI VarAPI)
+if(SOS_IS_LINK)
+	list(APPEND LIBRARIES StratifyOS)
+endif()
 
 api_add_api_library(${PROJECT_NAME} "${LIBRARIES}")
 

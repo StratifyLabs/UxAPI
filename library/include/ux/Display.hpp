@@ -4,8 +4,6 @@
 #ifndef UXAPI_UX_DISPLAY_HPP_
 #define UXAPI_UX_DISPLAY_HPP_
 
-#if !defined __link
-
 #include <sdk/types.h>
 #include <sos/dev/display.h>
 
@@ -83,7 +81,5 @@ private:
 };
 
 } // namespace ux
-
-#endif
 
 #endif /* UXAPI_UX_DISPLAY_HPP_ */
