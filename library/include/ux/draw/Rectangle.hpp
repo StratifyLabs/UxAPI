@@ -1,5 +1,4 @@
-/*! \file */ // Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see
-             // LICENSE.md for rights.
+// Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
 
 #ifndef UXAPI_UX_DRAW_RECTANGLE_HPP_
 #define UXAPI_UX_DRAW_RECTANGLE_HPP_

@@ -1,4 +1,6 @@
-﻿#ifndef UXAPI_UX_SGFX_PALETTE_HPP
+﻿// Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
+
+#ifndef UXAPI_UX_SGFX_PALETTE_HPP
 #define UXAPI_UX_SGFX_PALETTE_HPP
 
 #include <var/Data.hpp>

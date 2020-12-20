@@ -1,8 +1,5 @@
-/*! \file */ // Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see
-             // LICENSE.md for rights.
-/* Copyright 2014-2018 Tyler Gilbert, Inc; All Rights Reserved
- *
- */
+// Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
+
 #ifndef UXAPI_UX_EVENT_HPP_
 #define UXAPI_UX_EVENT_HPP_
 

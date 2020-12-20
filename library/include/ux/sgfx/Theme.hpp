@@ -1,5 +1,5 @@
-/*! \file */ // Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see
-             // LICENSE.md for rights.
+// Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
+
 #ifndef UXAPI_UX_SGFX_THEME_HPP
 #define UXAPI_UX_SGFX_THEME_HPP
 
@@ -112,8 +112,8 @@ private:
 
   fs::File &m_color_file;
   AntiAliasFilter m_antialias_filter;
-  var::NameString m_primary_font_name;
-  var::NameString m_primary_icon_font_name;
+  var::KeyString m_primary_font_name;
+  var::KeyString m_primary_icon_font_name;
   chrono::MicroTime m_button_hold_duration = 750_milliseconds;
 
   header_t m_header = {0};

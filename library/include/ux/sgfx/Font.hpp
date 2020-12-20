@@ -1,7 +1,4 @@
-/*! \file */ // Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc; see
-             // LICENSE.md for rights.
-
-/*! \file */ // Copyright 2011-2020 Tyler Gilbert and Stratify Labs, Inc
+// Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
 
 #ifndef UXAPI_UX_SGFX_FONT_HPP_
 #define UXAPI_UX_SGFX_FONT_HPP_
