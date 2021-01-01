@@ -240,8 +240,7 @@ private:
   // needs to know where on the display it is drawn
   DrawingAttributes m_reference_drawing_attributes;
   DrawingAttributes m_local_drawing_attributes;
-  sgfx::Bitmap m_local_bitmap;
-  sgfx::BitmapData m_local_bitmap_data;
+  sgfx::BitmapData m_local_bitmap;
   sgfx::Theme::Style m_theme_style = sgfx::Theme::Style::brand_primary;
   sgfx::Theme::State m_theme_state = sgfx::Theme::State::default_;
   sgfx::Region m_refresh_region;

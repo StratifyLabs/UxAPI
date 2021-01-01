@@ -170,9 +170,6 @@ private:
   drawing_int_t handle_vertical_scroll(sg_int_t scroll);
   drawing_int_t handle_horizontal_scroll(sg_int_t scroll);
 
-  DrawingPoint
-  calculate_next_point(const DrawingPoint &point, const DrawingArea &area);
-
   void generate_layout_positions();
   void generate_vertical_layout_positions();
   void generate_horizontal_layout_positions();

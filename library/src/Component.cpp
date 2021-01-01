@@ -27,13 +27,11 @@ void Component::examine_visibility() {
     // local bitmap is a small section of the reference bitmap
     m_reference_drawing_attributes.calculate_area_on_bitmap();
 
-    m_local_bitmap_data.resize(
+    m_local_bitmap.resize(
       m_reference_drawing_attributes.calculate_area_on_bitmap(),
       m_reference_drawing_attributes.bitmap().bits_per_pixel());
 
     API_ASSERT(is_success());
-
-    m_local_bitmap = Bitmap(m_local_bitmap_data);
 
     // local attributes fill local bitmap
     m_local_drawing_attributes.set_area(DrawingArea(1000, 1000))
@@ -44,7 +42,7 @@ void Component::examine_visibility() {
     handle_event(SystemEvent(SystemEvent::event_id_enter));
   } else {
     handle_event(SystemEvent(SystemEvent::event_id_exit));
-    m_local_bitmap_data = BitmapData();
+    m_local_bitmap = BitmapData();
   }
 }
 

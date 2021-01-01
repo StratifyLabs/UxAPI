@@ -87,7 +87,7 @@ Layout &Layout::add_component(Component &component) {
 
   component.set_parent(this);
 
-  // check to see if a cp has been deleting -- insert the new component there
+  // check to see if a cp has been deleted -- insert the new component there
   for (Item &cp : m_component_list) {
     if (cp.component() == nullptr) {
       cp.set_component(&component);
@@ -187,52 +187,6 @@ void Layout::shift_origin(DrawingPoint shift) {
       }
     }
   }
-}
-
-DrawingPoint Layout::calculate_next_point(
-  const DrawingPoint &point,
-  const DrawingArea &area) {
-  // depending on the layout, calculate the point of the next component
-  DrawingPoint result(0, 0);
-  for (Item &component_pointer : m_component_list) {
-    if (component_pointer.component()) {
-      if (m_flow == Flow::vertical) {
-        result += DrawingPoint(0, component_pointer.drawing_area().height());
-      } else if (m_flow == Flow::horizontal) {
-        result += DrawingPoint(component_pointer.drawing_area().width(), 0);
-      }
-    }
-  }
-
-  switch (m_flow) {
-  case Flow::free:
-    result = point;
-    break;
-  case Flow::vertical:
-    // left,right,center alignment
-    if (is_align_left()) {
-      result.set_x(0);
-    } else if (is_align_right()) {
-      result.set_x(Drawing::scale() - area.width());
-    } else {
-      // center
-      result.set_x((Drawing::scale() - area.width()) / 2);
-    }
-    break;
-  case Flow::horizontal:
-    // top,bottom,middle alignment
-    if (is_align_top()) {
-      result.set_y(0);
-    } else if (is_align_bottom()) {
-      result.set_y(Drawing::scale() - area.height());
-    } else {
-      // middle
-      result.set_y((Drawing::scale() - area.height()) / 2);
-    }
-    break;
-  }
-
-  return result;
 }
 
 void Layout::scroll(DrawingPoint value) {
