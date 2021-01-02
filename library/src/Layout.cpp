@@ -14,11 +14,9 @@ Layout::Layout(const var::StringView name) : ComponentAccess(name) {
 }
 
 Layout::~Layout() {
-  for (Item &component_pointer : m_component_list) {
-    if (
-      component_pointer.component()
-      && component_pointer.component()->is_created()) {
-      delete component_pointer.component();
+  for (Item &item : m_component_list) {
+    if (item.component() && item.component()->is_created()) {
+      delete item.component();
     }
   }
 }

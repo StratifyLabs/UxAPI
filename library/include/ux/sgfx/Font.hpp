@@ -65,6 +65,16 @@ public:
   Font() {}
   Font(const fs::FileObject *file);
 
+  Font(const Font &a) = delete;
+  Font &operator=(const Font &a) = delete;
+
+  Font(Font &&a) { swap(a); }
+  Font &operator=(Font &&a) {
+    swap(a);
+    return *this;
+  }
+
+
   bool is_valid() const { return m_file != nullptr; }
 
   static var::StringView ascii_character_set();
@@ -115,18 +125,31 @@ public:
   // Bitmap character_bitmap(u32 offset);
 
 protected:
-  /*! \cond */
+  const fs::FileObject *m_file = nullptr;
+  mutable BitmapData m_canvas;
+  mutable u8 m_current_canvas = 0;
   mutable sg_font_char_t m_char = {0};
   bool m_is_kerning_enabled = true;
   sg_size_t m_letter_spacing = 1;
   int m_space_size = 8;
   sg_font_header_t m_header = {0};
-  mutable BitmapData m_canvas;
-  mutable u8 m_current_canvas = 0;
   u32 m_canvas_start = 0;
   u32 m_canvas_size = 0;
-  const fs::FileObject *m_file = nullptr;
   var::Vector<sg_font_kerning_pair_t> m_kerning_pairs;
+
+  void swap(Font &a) {
+    std::swap(m_file, a.m_file);
+    std::swap(m_canvas, a.m_canvas);
+    std::swap(m_current_canvas, a.m_current_canvas);
+    std::swap(m_char, a.m_char);
+    std::swap(m_is_kerning_enabled, a.m_is_kerning_enabled);
+    std::swap(m_letter_spacing, a.m_letter_spacing);
+    std::swap(m_space_size, a.m_space_size);
+    std::swap(m_header, a.m_header);
+    std::swap(m_canvas_start, a.m_canvas_start);
+    std::swap(m_canvas_size, a.m_canvas_size);
+    std::swap(m_kerning_pairs, a.m_kerning_pairs);
+  }
 
   void refresh();
   static int to_charset(char ascii);
@@ -138,7 +161,6 @@ protected:
   int load_char(sg_font_char_t &ch, char c, bool ascii) const;
   sg_font_kerning_pair_t load_kerning(u32 offset) const;
   int load_kerning(u16 first, u16 second) const;
-  /*! \endcond */
 
 private:
 };

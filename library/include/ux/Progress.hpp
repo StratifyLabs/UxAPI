@@ -31,14 +31,12 @@ public:
     return *this;
   }
 
-  ProgressBar &set_value(u16 value) {
-    progress().set_value(value);
-    set_model(var::NumberString(value).string_view());
-    return *this;
-  }
+  var::Array<u16, 2> value() const;
 
-  ProgressBar &set_maximum(u16 value) {
-    progress().set_maximum(value);
+  ProgressBar &set_value(u16 value, u16 maximum) {
+    progress().set_value(value).set_maximum(maximum);
+    set_model(
+      var::NumberString(value).append("/").append(var::NumberString(maximum)));
     return *this;
   }
 

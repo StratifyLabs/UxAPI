@@ -36,13 +36,12 @@ public:
   API_ACCESS_DERIVED_BOOL(ListItem, T, interactive)
 
   COMPONENT_ACCESS_DERIVED(Component, T)
-
   COMPONENT_ACCESS_CREATE()
 };
 
 class List : public LayoutAccess<List> {
 public:
-  List(const var::StringView name, EventLoop *event_loop) : LayoutAccess(name) {
+  List(const var::StringView name) : LayoutAccess(name) {
     set_flow(Flow::vertical);
   }
 

@@ -41,6 +41,14 @@ public:
 
   IconFont() {}
   explicit IconFont(const fs::FileObject *file);
+  IconFont(const IconFont &) = delete;
+  IconFont &operator=(const IconFont &) = delete;
+
+  IconFont(IconFont &&a) { swap(a); }
+  IconFont &operator=(IconFont &&a) {
+    swap(a);
+    return *this;
+  }
 
   bool is_valid() const { return m_file != nullptr; }
 
@@ -76,6 +84,14 @@ private:
   mutable BitmapData m_master_canvas;
   const fs::FileObject *m_file = nullptr;
   var::Vector<sg_font_icon_t> m_list;
+
+  void swap(IconFont &a) {
+    std::swap(m_master_canvas_idx, a.m_master_canvas_idx);
+    std::swap(m_header, a.m_header);
+    std::swap(m_master_canvas, a.m_master_canvas);
+    std::swap(m_file, a.m_file);
+    std::swap(m_list, a.m_list);
+  }
 };
 
 } // namespace ux::sgfx

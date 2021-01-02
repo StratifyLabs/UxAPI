@@ -11,16 +11,16 @@ namespace ux {
 
 class Assets {
 public:
-  template <class Font> class Asset {
-    API_AC(Asset<Font>, sgfx::Font::Info, info);
-    API_AC(Asset<Font>, Font, font);
+  template <class FontType> class Asset {
+    API_AC(Asset<FontType>, sgfx::Font::Info, info);
+    API_AC(Asset<FontType>, FontType, font);
     fs::File m_file;
 
   public:
-    const Asset<Font> *create() {
+    const Asset<FontType> *create() {
       if (m_font.is_valid() == false) {
         m_file = fs::File(m_info.file_path());
-        m_font = Font(&m_file);
+        m_font = FontType(&m_file);
       }
       return this;
     }
@@ -28,7 +28,7 @@ public:
     void destroy() {
       if (m_font.is_valid()) {
         m_file = fs::File();
-        m_font = Font();
+        m_font = FontType();
       }
     }
 
@@ -44,7 +44,7 @@ public:
   using FontAsset = Asset<sgfx::Font>;
   using IconFontAsset = Asset<sgfx::IconFont>;
 
-  static int initialize();
+  static void initialize();
 
   class FindFont {
     API_AC(FindFont, var::StringView, name);
@@ -70,6 +70,8 @@ public:
 
   static sgfx::VectorPath find_vector_path(const var::StringView  name);
 #endif
+
+  static void clear();
 
 private:
   static bool m_is_initialized;

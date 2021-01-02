@@ -130,7 +130,7 @@ void Font::refresh() {
 
   m_file->seek(sizeof(sg_font_header_t)).read(View(m_kerning_pairs));
 
-  set_space_size(m_header.max_word_width);
+  set_space_size(m_header.max_word_width * 8);
   set_letter_spacing(m_header.max_height / 8);
 
   return;

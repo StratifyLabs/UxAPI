@@ -11,7 +11,7 @@ using namespace ux::sgfx;
 Slider::Slider(const var::StringView name) : ComponentAccess(name) {}
 
 var::Array<u16, 2> Slider::value() const {
-  auto list = model_list();
+  auto list = get_model().split("/");
   var::Array<u16, 2> result;
   result.at(0) = list.count() ? list.at(0).to_unsigned_long() : 0;
   result.at(1) = list.count() > 1 ? list.at(1).to_unsigned_long() : 100;
@@ -83,8 +83,6 @@ void Slider::handle_event(const ux::Event &event) {
       trigger_event(event_id_pressed);
     }
   }
-
-  Component::handle_event(event);
 }
 
 void Slider::update_touch_point(const sgfx::Point display_point) {
@@ -101,5 +99,6 @@ void Slider::update_touch_point(const sgfx::Point display_point) {
   }
 
   set_value(v.at(0), v.at(1));
+  trigger_event(event_id_changed);
   redraw();
 }

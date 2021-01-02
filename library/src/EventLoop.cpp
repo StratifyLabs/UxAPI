@@ -15,15 +15,13 @@ EventLoop::EventLoop(
   : m_controller(controller), m_model(model), m_display(&display),
     m_theme(&theme) {}
 
-int EventLoop::loop() {
+void EventLoop::loop() {
   m_controller.distribute_event(SystemEvent(SystemEvent::event_id_enter));
   m_update_timer.restart();
   while (1) {
     process_events();
     process_update_event();
   }
-
-  return 0;
 }
 
 void EventLoop::process_update_event() {
@@ -47,7 +45,8 @@ void EventLoop::process_update_event() {
   }
 }
 
-void EventLoop::trigger_event(const Event &event) {
+EventLoop &EventLoop::trigger_event(const Event &event) {
   API_ASSERT(event.type() != SystemEvent::event_type());
   m_event_stack.push(event);
+  return *this;
 }

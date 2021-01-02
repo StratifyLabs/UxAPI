@@ -24,7 +24,7 @@ public:
     Display &display,
     const sgfx::Theme &theme);
 
-  int loop();
+  void loop();
 
   const chrono::ClockTimer &timer() { return m_timer; }
 
@@ -35,16 +35,16 @@ public:
    */
   virtual void process_events() = 0;
 
-  void trigger_event(const Event &event);
+  EventLoop &trigger_event(const Event &event);
 
-  void set_update_period(const chrono::MicroTime &duration) {
+  EventLoop &set_update_period(const chrono::MicroTime &duration) {
     m_update_period = duration;
+    return *this;
   }
 
   const sgfx::Theme *theme() const { return m_theme; }
 
   Display *display() { return m_display; }
-
   const Display *display() const { return m_display; }
 
   const Controller &controller() const { return m_controller; }

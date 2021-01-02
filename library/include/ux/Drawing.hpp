@@ -641,6 +641,18 @@ public:
     return derived_this();
   }
 
+  T &set_horizontal_border(u8 value) {
+    m_border.right = value;
+    m_border.left = value;
+    return derived_this();
+  }
+
+  T &set_vertical_border(u8 value) {
+    m_border.top = value;
+    m_border.bottom = value;
+    return derived_this();
+  }
+
   T &set_padding(u8 value) {
     m_padding.top = value;
     m_padding.bottom = value;
@@ -910,30 +922,148 @@ private:
   T &derived_this() { return static_cast<T &>(*this); }
 };
 
-/*! \brief Drawing Class
- * \details This is the base class for creating drawings.  A Drawing class
- * allows for nesting and positioning of graphics within a bitmap.
- *
- * ```
- *	void MyObject::draw(const DrawingAttributes::attr){
- *		Icon my_icon;
- *		drawing_area_t square;
- *
- *		square = attr.square_w(500);
- *
- *		//this will draw my icon centered in the bitmap specified by
- *attr
- *		//adding drawing_point(250, 250) offset the icon by 25% of the
- *bitmap in both x and y
- *		//adding a drawing_area_t will then scale icon to fit in a
- *square that is half the width of the bitmap (see square_width())
- *		//draw will call the underlying draw_to_scale() method unless
- *Icon re-implements draw my_icon.draw(attr + DrawingPoint(250, 250) + square);
- *
- *	}
- * ```
- *
- */
+#define DRAWING_COMPONENT_PROPERTIES_ACCESS(DERIVED_TYPE)                      \
+  DERIVED_TYPE &set_align_left(bool v = true) {                                \
+    DrawingComponentProperties::set_align_left(v);                             \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_align_right(bool v = true) {                               \
+    DrawingComponentProperties::set_align_right(v);                            \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_align_center(bool v = true) {                              \
+    DrawingComponentProperties::set_align_center(v);                           \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_align_top(bool v = true) {                                 \
+    DrawingComponentProperties::set_align_top(v);                              \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_align_bottom(bool v = true) {                              \
+    DrawingComponentProperties::set_align_bottom(v);                           \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_align_middle(bool v = true) {                              \
+    DrawingComponentProperties::set_align_middle(v);                           \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_alignment(u32 value) {                                     \
+    DrawingComponentProperties::set_alignment(value);                          \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_border(u8 value) {                                         \
+    DrawingComponentProperties::set_border(value);                             \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_top_border(u8 value) {                                     \
+    DrawingComponentProperties::set_top_border(value);                         \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_bottom_border(u8 value) {                                  \
+    DrawingComponentProperties::set_bottom_border(value);                      \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_left_border(u8 value) {                                    \
+    DrawingComponentProperties::set_left_border(value);                        \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_right_border(u8 value) {                                   \
+    DrawingComponentProperties::set_right_border(value);                       \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_horizontal_border(u8 value) {                              \
+    DrawingComponentProperties::set_horizontal_border(value);                  \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_vertical_border(u8 value) {                                \
+    DrawingComponentProperties::set_vertical_border(value);                    \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_padding(u8 value) {                                        \
+    DrawingComponentProperties::set_padding(value);                            \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_top_padding(u8 value) {                                    \
+    DrawingComponentProperties::set_top_padding(value);                        \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_bottom_padding(u8 value) {                                 \
+    DrawingComponentProperties::set_bottom_padding(value);                     \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_left_padding(u8 value) {                                   \
+    DrawingComponentProperties::set_left_padding(value);                       \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_right_padding(u8 value) {                                  \
+    DrawingComponentProperties::set_right_padding(value);                      \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_horizontal_padding(u8 value) {                             \
+    DrawingComponentProperties::set_horizontal_padding(value);                 \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_vertical_padding(u8 value) {                               \
+    DrawingComponentProperties::set_vertical_padding(value);                   \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_margin(u8 value) {                                         \
+    DrawingComponentProperties::set_margin(value);                             \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_top_margin(u8 value) {                                     \
+    DrawingComponentProperties::set_top_margin(value);                         \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_bottom_margin(u8 value) {                                  \
+    DrawingComponentProperties::set_bottom_margin(value);                      \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_left_margin(u8 value) {                                    \
+    DrawingComponentProperties::set_left_margin(value);                        \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_right_margin(u8 value) {                                   \
+    DrawingComponentProperties::set_right_margin(value);                       \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_horizontal_margin(u8 value) {                              \
+    DrawingComponentProperties::set_horizontal_margin(value);                  \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_vertical_margin(u8 value) {                                \
+    DrawingComponentProperties::set_vertical_margin(value);                    \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_outline(u8 value) {                                        \
+    DrawingComponentProperties::set_outline(value);                            \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_top_outline(u8 value) {                                    \
+    DrawingComponentProperties::set_top_outline(value);                        \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_bottom_outline(u8 value) {                                 \
+    DrawingComponentProperties::set_bottom_outline(value);                     \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_left_outline(u8 value) {                                   \
+    DrawingComponentProperties::set_left_outline(value);                       \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_right_outline(u8 value) {                                  \
+    DrawingComponentProperties::set_right_outline(value);                      \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_horizontal_outline(u8 value) {                             \
+    DrawingComponentProperties::set_horizontal_outline(value);                 \
+    return *this;                                                              \
+  }                                                                            \
+  DERIVED_TYPE &set_vertical_outline(u8 value) {                               \
+    DrawingComponentProperties::set_vertical_outline(value);                   \
+    return *this;                                                              \
+  }
+
 class Drawing : public api::ExecutionContext {
 public:
   Drawing();

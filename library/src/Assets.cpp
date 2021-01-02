@@ -25,10 +25,10 @@ var::Vector<fmt::Svic> Assets::m_vector_path_list;
 
 bool Assets::m_is_initialized = false;
 
-int Assets::initialize() {
+void Assets::initialize() {
   // search for fonts
   if (m_is_initialized) {
-    return 0;
+    return;
   }
 
   var::Array<const char *, 3> asset_directories
@@ -47,9 +47,17 @@ int Assets::initialize() {
   m_font_info_list.sort(FontAsset::ascending_point_size);
 
   m_icon_font_info_list.sort(IconFontAsset::ascending_point_size);
-
   m_is_initialized = true;
-  return 0;
+}
+
+void Assets::clear() {
+  for (auto &entry : m_icon_font_info_list) {
+    entry.destroy();
+  }
+
+  for (auto &entry : m_icon_font_info_list) {
+    entry.destroy();
+  }
 }
 
 void Assets::find_fonts_in_directory(const var::StringView path) {
@@ -132,19 +140,6 @@ Assets::find_icon_font(const FindIconFont &options) {
 
   initialize();
 
-  u32 active_icon_fonts = 0;
-  for (const auto &entry : m_icon_font_info_list) {
-    if (entry.info().is_valid()) {
-      active_icon_fonts++;
-    }
-  }
-
-  if (active_icon_fonts > 2) {
-    for (auto &entry : m_icon_font_info_list) {
-      entry.destroy();
-    }
-  }
-
   u8 closest_point_size = 0;
 
   // find point size and weight
@@ -184,19 +179,6 @@ const Assets::FontAsset *Assets::find_font(const FindFont &options) {
 
   initialize();
 
-  u32 active_fonts = 0;
-  for (const auto &entry : m_font_info_list) {
-    if (entry.info().is_valid()) {
-      active_fonts++;
-    }
-  }
-
-  if (active_fonts > 1) {
-    for (auto &entry : m_font_info_list) {
-      entry.destroy();
-    }
-  }
-
   u8 closest_point_size = 0;
   Font::Style closest_style = Font::Style::any;
 
@@ -235,7 +217,6 @@ const Assets::FontAsset *Assets::find_font(const FindFont &options) {
   // first pass is to find the exact style in a point size that is less than or
   // equal
   for (auto &entry : font_info_list()) {
-
     if (
       ((options.style() == Font::Style::icons)
        && (entry.info().style() == Font::Style::icons))

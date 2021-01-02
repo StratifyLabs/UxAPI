@@ -9,17 +9,6 @@ namespace ux {
 
 class Component;
 
-/*! \brief Event Class
- * \details This class defines action-able events (such as
- * button presses) that occur within ui::EventLoop and are handled
- * by ui::Element::handle_event().
- *
- * The event includes the type and a pointer to an object associated with the
- * event. For example, events of type Event::SIGNAL will include a pointer to a
- * sys::Signal object.
- *
- *
- */
 class Event {
 public:
   Event();
@@ -76,7 +65,8 @@ public:
     event_id_none,
     event_id_enter,
     event_id_exit,
-    event_id_periodic
+    event_id_periodic,
+    event_id_transition
   };
 };
 

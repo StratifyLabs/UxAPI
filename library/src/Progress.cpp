@@ -6,6 +6,14 @@
 using namespace ux::sgfx;
 using namespace ux;
 
+var::Array<u16, 2> ProgressBar::value() const {
+  auto list = get_model().split("/");
+  var::Array<u16, 2> result;
+  result.at(0) = list.count() ? list.at(0).to_unsigned_long() : 0;
+  result.at(1) = list.count() > 1 ? list.at(1).to_unsigned_long() : 100;
+  return result;
+}
+
 void ProgressBar::draw(const DrawingScaledAttributes &attributes) {
 
   // draw the Border
