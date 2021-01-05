@@ -11,13 +11,6 @@ namespace ux::sgfx {
 
 class IconFont;
 
-/*! \brief IconInfo Class
- * \details The IconInfo class
- * contains details of an icon that
- * is stored within an icon font.
- *
- */
-
 class IconFont : public api::ExecutionContext, public BitmapFlags {
 public:
   using FontInfo = Font::Info;
@@ -26,7 +19,7 @@ public:
   public:
     IconInfo(const sg_font_icon_t &icon) : m_icon(icon) {}
     Area area() const { return Area(m_icon.width, m_icon.height); }
-    const var::StringView  name() const { return var::StringView(m_icon.name); }
+    const var::StringView name() const { return var::StringView(m_icon.name); }
     u32 canvas_idx() const { return m_icon.canvas_idx; }
     Point canvas_point() const {
       return Point(m_icon.canvas_x, m_icon.canvas_y);

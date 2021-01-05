@@ -81,8 +81,12 @@ Font::Info::Info(const var::StringView path) {
 }
 
 var::StringView Font::Info::get_name() const {
-  const auto tokens = fs::Path::name(m_file_path).split("-.");
-  return tokens.at(0);
+  const auto file_name = fs::Path::name(m_file_path);
+  const size_t pos = file_name.find("-");
+  if (pos != StringView::npos) {
+    return file_name.get_substring_with_length(pos);
+  }
+  return "";
 }
 
 bool Font::Info::ascending_point_size(const Info &a, const Info &b) {
