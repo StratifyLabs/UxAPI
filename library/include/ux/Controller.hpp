@@ -22,6 +22,9 @@ public:
   Model &model();
   const Model &model() const;
 
+  Layout *current_layout() { return m_current_layout; }
+  const Layout *current_layout() const { return m_current_layout; }
+
 private:
   Layout *m_current_layout = nullptr;
   Layout *m_next_layout = nullptr;

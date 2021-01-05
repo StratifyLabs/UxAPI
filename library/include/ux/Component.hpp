@@ -40,7 +40,8 @@ class Component : public Drawing {
     flag_focus = (1 << 7),
     flag_horizontal_scroll_enabled = (1 << 8),
     flag_vertical_scroll_enabled = (1 << 9),
-    flag_touch_focus = (1 << 10)
+    flag_touch_focus = (1 << 10),
+    flag_auto_disable = (1 << 11)
   };
 
 public:
@@ -71,6 +72,7 @@ public:
   bool is_touch_focus() const { return m_flags & (flag_touch_focus); }
   bool is_layout() const { return m_flags & (flag_layout); }
   bool is_antialias() const { return m_flags & (flag_antialias); }
+  bool is_auto_disable() const { return m_flags & (flag_auto_disable); }
   bool is_vertical_scroll_enabled() const {
     return m_flags & (flag_vertical_scroll_enabled);
   }
@@ -180,6 +182,10 @@ protected:
     value ? m_flags |= (flag_focus) : m_flags &= ~(flag_focus);
   }
 
+  void set_auto_disable(bool value = true) {
+    value ? m_flags |= (flag_auto_disable) : m_flags &= ~(flag_auto_disable);
+  }
+
   void set_touch_focus(bool value = true) {
     value ? m_flags |= (flag_touch_focus) : m_flags &= ~(flag_touch_focus);
   }
@@ -261,6 +267,10 @@ private:
   EVENT_DECLARE_TYPE()                                                         \
   T &set_enabled(bool value = true) {                                          \
     B::set_enabled_examine(value);                                             \
+    return static_cast<T &>(*this);                                            \
+  }                                                                            \
+  T &set_auto_disable(bool value = true) {                                     \
+    B::set_auto_disable(value);                                                \
     return static_cast<T &>(*this);                                            \
   }                                                                            \
   T &set_drawing_area(drawing_size_t width, drawing_size_t height) {           \

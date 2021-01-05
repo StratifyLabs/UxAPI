@@ -94,6 +94,9 @@ void Component::refresh_drawing() {
     }
 
     clear_refresh_drawing_pending();
+    if (is_auto_disable()) {
+      set_enabled_examine(false);
+    }
   }
 }
 

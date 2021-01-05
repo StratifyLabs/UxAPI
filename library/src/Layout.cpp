@@ -86,9 +86,10 @@ Layout &Layout::add_component(Component &component) {
   component.set_parent(this);
 
   // check to see if a cp has been deleted -- insert the new component there
-  for (Item &cp : m_component_list) {
-    if (cp.component() == nullptr) {
-      cp.set_component(&component);
+  for (Item &item : m_component_list) {
+    if (item.component() == nullptr) {
+      item = Item(&component);
+      examine_visibility();
       return *this;
     }
   }
@@ -99,14 +100,12 @@ Layout &Layout::add_component(Component &component) {
 
 Layout &Layout::delete_component(const var::StringView component_name) {
 
-  for (Item &cp : m_component_list) {
-    if (cp.component() && (component_name == cp.component()->name())) {
-      cp.component()->set_enabled_examine(false);
-      API_ASSERT(cp.component()->is_busy() == false);
-      delete cp.component();
-      cp.set_component(nullptr);
-      cp.set_drawing_point(DrawingPoint(0, 0));
-      cp.set_drawing_area(DrawingArea(0, 0));
+  for (Item &item : m_component_list) {
+    if (item.component() && (component_name == item.component()->name())) {
+      item.component()->set_enabled_examine(false);
+      API_ASSERT(item.component()->is_busy() == false);
+      delete item.component();
+      item.set_component(nullptr);
       break;
     }
   }
@@ -117,9 +116,9 @@ Layout &Layout::delete_component(const var::StringView component_name) {
 void Layout::update_drawing_point(
   const Component *component,
   const DrawingPoint &point) {
-  for (Item &cp : m_component_list) {
-    if (cp.component() && component == cp.component()) {
-      cp.set_drawing_point(point);
+  for (Item &item : m_component_list) {
+    if (item.component() && (component == item.component())) {
+      item.set_drawing_point(point);
       shift_origin(DrawingPoint(0, 0));
       return;
     }
@@ -129,9 +128,9 @@ void Layout::update_drawing_point(
 void Layout::update_drawing_area(
   const Component *component,
   const DrawingArea &area) {
-  for (Item &cp : m_component_list) {
-    if (cp.component() && component == cp.component()) {
-      cp.set_drawing_area(area);
+  for (Item &item : m_component_list) {
+    if (item.component() && component == item.component()) {
+      item.set_drawing_area(area);
       shift_origin(DrawingPoint(0, 0));
       return;
     }
@@ -328,17 +327,17 @@ void Layout::generate_free_layout_positions() {
   drawing_int_t x_max = 0;
   drawing_int_t y_max = 0;
 
-  for (Item &component : m_component_list) {
+  for (Item &item : m_component_list) {
     if (
-      component.component()
-      && (component.drawing_point().x() + component.drawing_area().width() > x_max)) {
-      x_max = component.drawing_point().x() + component.drawing_area().width();
+      item.component()
+      && (item.drawing_point().x() + item.drawing_area().width() > x_max)) {
+      x_max = item.drawing_point().x() + item.drawing_area().width();
     }
 
     if (
-      component.component()
-      && (component.drawing_point().y() + component.drawing_area().height() > y_max)) {
-      x_max = component.drawing_point().y() + component.drawing_area().height();
+      item.component()
+      && (item.drawing_point().y() + item.drawing_area().height() > y_max)) {
+      y_max = item.drawing_point().y() + item.drawing_area().height();
     }
   }
 
