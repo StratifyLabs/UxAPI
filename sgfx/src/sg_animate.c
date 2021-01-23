@@ -2,8 +2,7 @@
 
 #include <sdk/types.h>
 #if !defined __link
-#include <mcu/arch.h>
-#include <mcu/mcu.h>
+#include <sos/arch.h>
 #endif
 
 #include <unistd.h>
