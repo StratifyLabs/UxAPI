@@ -17,5 +17,6 @@ include(CTest)
 
 add_subdirectory(sgfx sgfx)
 add_subdirectory(library library)
-add_subdirectory(tests tests)
-
+if(SOS_IS_TEST)
+	add_subdirectory(tests tests)
+endif()
