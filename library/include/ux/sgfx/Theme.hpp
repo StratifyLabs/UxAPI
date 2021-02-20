@@ -54,6 +54,11 @@ public:
     return *this;
   }
 
+  Theme &set_secondary_font_name(const var::StringView  name) {
+    m_secondary_font_name = name;
+    return *this;
+  }
+
   Theme &set_primary_icon_font_name(const var::StringView  name) {
     m_primary_icon_font_name = name;
     return *this;
@@ -61,6 +66,10 @@ public:
 
   const var::StringView  primary_font_name() const {
     return m_primary_font_name.string_view();
+  }
+
+  const var::StringView  secondary_font_name() const {
+    return m_secondary_font_name.string_view();
   }
 
   const var::StringView  primary_icon_font_name() const {
@@ -113,6 +122,7 @@ private:
   fs::File &m_color_file;
   AntiAliasFilter m_antialias_filter;
   var::KeyString m_primary_font_name;
+  var::KeyString m_secondary_font_name;
   var::KeyString m_primary_icon_font_name;
   chrono::MicroTime m_button_hold_duration = 750_milliseconds;
 

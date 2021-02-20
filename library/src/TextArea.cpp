@@ -24,7 +24,8 @@ void TextArea::draw(const DrawingScaledAttributes &attributes) {
 
   m_text_box.set_font(nullptr)
     .set_string(get_display_text())
-    .set_font_name(theme()->primary_font_name())
+    .set_font_name(
+      font_name().is_empty() ? theme()->primary_font_name() : font_name())
     .set_font_point_size(m_line_height)
     .set_color(theme()->text_color())
     .set_alignment(alignment())
@@ -39,8 +40,7 @@ TextArea &TextArea::set_value(const var::StringView value) {
 
   // if the value is too big --truncate it
   if (value.length() > max_length()) {
-    set_model(
-      value.get_substring_at_position(value.length() - max_length()));
+    set_model(value.get_substring_at_position(value.length() - max_length()));
   } else {
     set_model(value);
   }

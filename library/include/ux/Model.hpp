@@ -47,6 +47,11 @@ public:
     return interface_get(key);
   }
 
+  bool get_bool(const var::StringView key) const {
+    return interface_get(key) == "true";
+  }
+
+
   var::Array<var::StringView, 2> at(size_t offset) const {
     return interface_at(offset);
   }

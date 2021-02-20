@@ -156,6 +156,10 @@ public:
     Component::trigger_event(event_type, event_id);
   }
 
+  const DrawingPoint & origin() const {
+    return m_origin;
+  }
+
 protected:
 private:
   friend class Controller;
@@ -164,7 +168,6 @@ private:
   API_ACCESS_COMPOUND(Layout, var::Vector<Item>, component_list);
   DrawingPoint m_origin;
   DrawingArea m_area;
-  sgfx::Point m_touch_last;
 
   void shift_origin(DrawingPoint shift);
   drawing_int_t handle_vertical_scroll(sg_int_t scroll);

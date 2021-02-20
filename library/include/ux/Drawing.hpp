@@ -574,6 +574,15 @@ public:
     return (m_flags & (flag_align_top | flag_align_bottom)) == 0;
   }
 
+  T & set_font_name(const var::StringView value){
+    m_font_name = value;
+    return derived_this();
+  }
+
+  var::StringView font_name() const {
+    return m_font_name;
+  }
+
   T &set_align_left(bool v = true) {
     v ? m_flags |= flag_align_left : 0;
     return derived_this();
@@ -908,6 +917,7 @@ private:
   dimension_t m_margin = {0};
   dimension_t m_border = {1, 1, 1, 1};
   dimension_t m_outline = {0};
+  var::StringView m_font_name;
 
   u32 m_flags = 0; // default is middle/center
 

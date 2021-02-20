@@ -13,9 +13,7 @@ public:
   enum event_ids { event_id_none, event_id_selected };
 
   ListItem(const var::StringView name) : ComponentAccess(name) {
-    set_left_padding(5);
-    set_right_padding(5);
-    set_value(get_model());
+    set_left_padding(5).set_right_padding(5).set_value(get_model());
   }
 
   void draw(const DrawingScaledAttributes &attributes);
@@ -47,8 +45,7 @@ public:
 
   List &add_component(Component &component);
 
-  List &
-  add_filler(sgfx::Theme::Style style = sgfx::Theme::Style::outline_dark);
+  List &add_filler(sgfx::Theme::Style style = sgfx::Theme::Style::outline_dark);
 
 private:
   API_ACCESS_FUNDAMENTAL(List, drawing_size_t, item_height, 250);

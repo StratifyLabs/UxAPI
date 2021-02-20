@@ -9,22 +9,12 @@
 
 namespace ux::draw {
 
-/*! \brief Text Class
- * \details This is a text label.  The object automatically
- * chooses the correct font height to fit within the area
- * specified.
- *
- * In order for this class to work correctly, sys::Assets::init() must
- * be invoked so that the application is aware of the system fonts.
- *
- */
+
 class RichText : public Drawing, public DrawingComponentProperties<RichText> {
 public:
-  /*! \details Draw the scaled text as specified by \a attr */
   virtual void draw(const DrawingScaledAttributes &attr);
 
 protected:
-  /*! \cond */
   API_ACCESS_COMPOUND(RichText, var::StringView, value);
   API_ACCESS_COMPOUND(RichText, var::StringView, text_font_name);
   API_ACCESS_COMPOUND(RichText, var::StringView, icon_font_name);
@@ -50,8 +40,6 @@ protected:
     API_ACCESS_FUNDAMENTAL(RichToken, u32, icon_index, 0);
     API_ACCESS_COMPOUND(RichToken, var::StringView, value);
   };
-
-  /*! \endcond */
 };
 
 } // namespace ux::draw

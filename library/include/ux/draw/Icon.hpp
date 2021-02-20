@@ -8,21 +8,9 @@
 
 namespace ux::draw {
 
-/*! \brief Icon Class
- * \details This class draws icons that can be scaled and rotated on a bitmap.
- *
- * When an icon is drawn, the icon's pen attributes are used to draw on
- * the bitmap.
- *
- * The icon is looked up by name using any icon files that are installed
- * in any of the system assets locations.
- *
- *
- */
 
 class Icon : public Drawing, public DrawingComponentProperties<Icon> {
 public:
-  /*! \details Construct an empty graphic */
   Icon();
 
   Icon &set_name(const var::StringView  value) {
@@ -34,25 +22,15 @@ public:
     return *this;
   }
 
-  /*! \details Draws the graphic to scale on the specified bitmap */
   virtual void draw(const DrawingScaledAttributes &attr);
-
-  /*! \details This returns the bounds of the icon.  It is only valid after
-   * the icon has been drawn on a bitmap.
-   *
-   * @return The bounds of the last time this icon was drawn on a bitmap using
-   * draw_to_scale()
-   */
   sgfx::Region bounds() const { return m_bounds; }
 
 private:
   API_ACCESS_COMPOUND(Icon, var::String, icon_font_name);
   API_READ_ACCESS_COMPOUND(Icon, var::String, name);
   API_ACCESS_FUNDAMENTAL(Icon, sg_color_t, color, 0);
-  /*! \cond */
   sg_region_t m_bounds;
   const sgfx::IconFont *m_icon_font;
-  /*! \endcond */
 
   const sgfx::IconFont *icon_font() { return m_icon_font; }
 

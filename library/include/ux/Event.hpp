@@ -68,6 +68,22 @@ public:
     event_id_periodic,
     event_id_transition
   };
+
+  static bool is_enter(const Event & event){
+    return event == SystemEvent(event_id_enter);
+  }
+
+  static bool is_exit(const Event & event){
+    return event == SystemEvent(event_id_exit);
+  }
+
+  static bool is_periodic(const Event & event){
+    return event == SystemEvent(event_id_periodic);
+  }
+
+  static bool is_transition(const Event & event){
+    return event == SystemEvent(event_id_transition);
+  }
 };
 
 } // namespace ux
