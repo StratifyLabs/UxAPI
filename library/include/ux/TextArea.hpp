@@ -36,11 +36,6 @@ public:
   void draw(const DrawingScaledAttributes &attributes);
   void handle_event(const ux::Event &event);
 
-  TextArea &set_page_buffer(var::View value) {
-    m_page_buffer = value;
-    return *this;
-  }
-
   TextArea &scroll_top() {
     m_text_box.set_scroll(0);
     return *this;
@@ -51,6 +46,10 @@ public:
     return *this;
   }
 
+  TextArea & set_display_text(const var::StringView value){
+    m_display_text = value;
+    return *this;
+  }
 
   size_t scroll() const {
     return m_scroll;
@@ -62,7 +61,7 @@ public:
 
 
 private:
-  static constexpr size_t m_scroll_total = 25;
+  static constexpr size_t m_scroll_total = 50;
 
   API_ACCESS_FUNDAMENTAL(TextArea, drawing_size_t, text_height, 0);
   API_ACCESS_FUNDAMENTAL(TextArea, drawing_size_t, offset, 0);

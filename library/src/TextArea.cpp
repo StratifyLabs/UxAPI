@@ -13,15 +13,16 @@ using namespace ux;
 TextArea::TextArea(const var::StringView name, const Construct &options)
   : ComponentAccess(name), m_source(options.source()) {
 
-  API_ASSERT(m_source != nullptr);
-  m_page_buffer = options.page_buffer();
-
-  m_content_location = m_source->location();
-  m_content_size
-    = options.content_size() ? options.content_size() : m_source->size_signed();
-
-  m_page_start = m_content_location;
-  load_page_buffer();
+  if (m_source != nullptr) {
+    m_page_buffer = options.page_buffer();
+    m_content_location = m_source->location();
+    m_content_size = options.content_size() ? options.content_size()
+                                            : m_source->size_signed();
+    m_page_start = m_content_location;
+    load_page_buffer();
+  } else {
+    m_display_text = StringView(m_page_buffer.to_char(), m_page_buffer.size());
+  }
 }
 
 void TextArea::draw(const DrawingScaledAttributes &attributes) {
@@ -60,25 +61,30 @@ void TextArea::handle_event(const ux::Event &event) {
     if (event.id() == TouchContext::event_id_dragged_point) {
       if (contains(touch_context->point())) {
 
-        bool is_redraw = false;
+        bool is_increment = false;
+        bool is_decrement = false;
         const sg_size_t line_compare = m_line_height / 2;
         m_scroll_accumulator += touch_context->drag().y();
 
         while (m_scroll_accumulator > line_compare) {
           m_scroll_accumulator -= line_compare;
           handle_decrement_scroll();
-          trigger_event(event_id_scroll_decremented);
-          is_redraw = true;
+          is_decrement = true;
         }
 
         while (m_scroll_accumulator < -1 * line_compare) {
           m_scroll_accumulator += line_compare;
           handle_increment_scroll();
-          trigger_event(event_id_scroll_incremented);
-          is_redraw = true;
+          is_increment = true;
         }
 
-        if( is_redraw ){
+        if (is_decrement) {
+          trigger_event(event_id_scroll_decremented);
+        } else if (is_increment) {
+          trigger_event(event_id_scroll_incremented);
+        }
+
+        if (is_decrement || is_increment) {
           redraw();
         }
       }
@@ -108,15 +114,16 @@ void TextArea::load_page_buffer() {
     m_is_text_box_scroll_mode = false;
   }
 
-  m_scroll = (m_page_start - m_content_location) * 25 / m_content_size;
+  m_scroll = ((m_page_start - m_content_location) * 25 + m_content_size / 2)
+             / m_content_size;
   m_display_text = StringView(m_page_buffer.to_char(), bytes_read);
 }
 
 void TextArea::handle_increment_scroll() {
   // scroll to a place further a long in the file
-  if (m_is_text_box_scroll_mode) {
+  if (m_is_text_box_scroll_mode || m_source == nullptr) {
     m_text_box.increment_scroll();
-    if( m_text_box.scroll() == m_text_box.maximum_scroll() ){
+    if (m_text_box.scroll() > m_text_box.scroll_total()) {
       m_scroll = m_scroll_total;
     }
     return;
@@ -130,13 +137,17 @@ void TextArea::handle_increment_scroll() {
 
 void TextArea::handle_decrement_scroll() {
 
-  if (m_is_text_box_scroll_mode) {
+  if (m_is_text_box_scroll_mode || m_source == nullptr) {
     if (m_text_box.scroll() > 1) {
       m_text_box.decrement_scroll();
       redraw();
       return;
     }
-    m_is_text_box_scroll_mode = false;
+    if (m_source) {
+      m_is_text_box_scroll_mode = false;
+    } else {
+      return;
+    }
   }
 
   GeneralString line_buffer;

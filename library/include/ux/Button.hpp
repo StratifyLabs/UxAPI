@@ -20,7 +20,8 @@ public:
   };
 
   Button(const var::StringView name) : ComponentAccess(name) {
-    set_value(get_model());
+    const auto model_value = get_model();
+    set_value(model_value.is_empty() ? name : model_value);
   }
 
   Button &toggle() {
