@@ -9,7 +9,9 @@ namespace ux {
 
 class Separator : public ComponentAccess<Separator> {
 public:
-  Separator(const var::StringView name) : ComponentAccess(name) {}
+  Separator(const var::StringView name) : ComponentAccess(name) {
+    set_auto_disable();
+  }
   void draw(const DrawingScaledAttributes &attributes);
 };
 } // namespace ux

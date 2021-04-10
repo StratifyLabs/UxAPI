@@ -20,7 +20,7 @@ public:
   };
 
   Button(const var::StringView name) : ComponentAccess(name) {
-    set_model(name);
+    set_value(get_model());
   }
 
   Button &toggle() {

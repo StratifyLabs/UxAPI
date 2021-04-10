@@ -33,6 +33,11 @@ public:
     bool operator==(const Entry &a) const;
   };
 
+  Model &discard(const var::StringView key) {
+    interface_discard(key);
+    return *this;
+  }
+
   Model &set(const var::StringView key, const var::StringView value) {
     interface_set(key, value);
     return *this;
@@ -67,6 +72,10 @@ protected:
 
   virtual const var::Array<var::StringView, 2>
   interface_at(size_t offset) const = 0;
+
+  virtual void
+  interface_discard(const var::StringView key)
+    = 0;
 };
 
 } // namespace ux

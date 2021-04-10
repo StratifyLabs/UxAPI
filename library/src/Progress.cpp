@@ -6,12 +6,16 @@
 using namespace ux::sgfx;
 using namespace ux;
 
-var::Array<u16, 2> ProgressBar::value() const {
-  auto list = get_model().split("/");
-  var::Array<u16, 2> result;
+ProgressBar::Value ProgressBar::value_from_string(const var::StringView value){
+  auto list = value.split("/");
+  Value result;
   result.at(0) = list.count() ? list.at(0).to_unsigned_long() : 0;
   result.at(1) = list.count() > 1 ? list.at(1).to_unsigned_long() : 100;
   return result;
+}
+
+ProgressBar::Value ProgressBar::value() const {
+  return value_from_string(get_model());
 }
 
 void ProgressBar::draw(const DrawingScaledAttributes &attributes) {
@@ -22,19 +26,22 @@ void ProgressBar::draw(const DrawingScaledAttributes &attributes) {
   Region region_inside_padding
     = calculate_region_inside_padding(attributes.region());
 
-  u16 progress_width = progress().width();
+  const u16 progress_width = [](u16 width) {
+    u16 result = width;
+    if (result < 3) {
+      result = 3;
+    }
 
-  if (progress_width < 3) {
-    progress_width = 3;
-  }
+    if (result > 95) {
+      result = 95;
+    }
+    return result;
+  }(progress().width());
 
-  if (progress_width > 95) {
-    progress_width = 95;
-  }
 
   // calculate the width
-  bool is_indeterminate = (progress().maximum() == 0);
-  sg_size_t width = is_indeterminate
+  const bool is_indeterminate = (progress().maximum() == 0);
+  const sg_size_t width = is_indeterminate
                       ? region_inside_padding.width() / progress_width
                       : region_inside_padding.width() * progress().value()
                           / progress().maximum();

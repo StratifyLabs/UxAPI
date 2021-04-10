@@ -39,6 +39,7 @@ void Component::examine_visibility() {
 
     set_refresh_region(m_local_bitmap.region());
     redraw();
+
     handle_event(SystemEvent(SystemEvent::event_id_enter));
   } else {
     handle_event(SystemEvent(SystemEvent::event_id_exit));
@@ -130,10 +131,9 @@ void Component::apply_antialias_filter(const DrawingAttributes &attributes) {
   if (is_ready_to_draw()) {
     if (is_antialias()) {
 #if 0
-			attributes.bitmap().apply_antialias_filter(
-						theme().antialias_filter(),
-						attributes.bitmap().region()
-						);
+      attributes.bitmap().apply_antialias_filter(
+        theme().antialias_filter(),
+        attributes.bitmap().region());
 #endif
     }
     set_refresh_drawing_pending();
@@ -144,10 +144,9 @@ void Component::apply_antialias_filter(
   const DrawingScaledAttributes &attributes) {
   if (is_ready_to_draw()) {
 #if 0
-		attributes.bitmap().apply_antialias_filter(
-					theme().antialias_filter(),
-					attributes.bitmap().region()
-					);
+    attributes.bitmap().apply_antialias_filter(
+      theme().antialias_filter(),
+      attributes.bitmap().region());
 #endif
   }
 }
@@ -167,6 +166,10 @@ void Component::trigger_event(u32 event_type, u32 event_id) {
 
 void Component::set_model(const var::StringView value) {
   event_loop()->model().set(name(), value);
+}
+
+void Component::discard_model() {
+  event_loop()->model().discard(name());
 }
 
 void Component::set_model_bool(bool value) {

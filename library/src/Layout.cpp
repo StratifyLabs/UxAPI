@@ -48,7 +48,7 @@ void Layout::examine_visibility() {
 
   } else {
 
-    // if layout is enabled and visible -- components are not visible
+    // if layout is not ready -- components are not visible
     for (Item &component_pointer : m_component_list) {
       if (component_pointer.component()) {
         component_pointer.component()->set_visible_examine(false);
@@ -79,6 +79,23 @@ void Layout::set_refresh_region(const sgfx::Region &region) {
     }
   }
   m_refresh_region = region;
+}
+
+void Layout::erase_region(DrawingRegion region) {
+  const auto attributes
+    = reference_drawing_attributes() + region.point() + region.area();
+  const sgfx::Region window_region = attributes.calculate_region_on_bitmap();
+
+  theme()->set_display_palette(*display(), m_theme_style, m_theme_state);
+
+#if 1
+    printer::Printer p;
+    p.object("erase " + name(), window_region);
+#endif
+  if ((window_region.width() * window_region.height()) > 0) {
+    display()->set_window(window_region);
+    display()->clear();
+  }
 }
 
 Layout &Layout::add_component(Component &component) {
@@ -317,6 +334,9 @@ void Layout::generate_layout_positions() {
   case Flow::vertical:
     generate_vertical_layout_positions();
     return;
+  case Flow::vertical_no_scroll:
+    generate_vertical_no_scroll_layout_positions();
+    return;
   case Flow::horizontal:
     generate_horizontal_layout_positions();
     return;
@@ -365,6 +385,19 @@ void Layout::generate_vertical_layout_positions() {
       drawing_cursor
         = reference_drawing_attributes().calculate_height_on_drawing(
           bitmap_cursor);
+    }
+  }
+
+  m_area.set_height(drawing_cursor);
+}
+
+void Layout::generate_vertical_no_scroll_layout_positions() {
+  drawing_int_t drawing_cursor = 0;
+
+  for (Item &item : m_component_list) {
+    if (item.component()) {
+      item.set_drawing_point(DrawingPoint(0, drawing_cursor));
+      drawing_cursor += item.drawing_area().height();
     }
   }
 

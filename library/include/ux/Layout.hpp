@@ -42,7 +42,7 @@ public:
     DrawingArea m_drawing_area;
   };
 
-  enum class Flow { vertical, horizontal, free };
+  enum class Flow { vertical, horizontal, free, vertical_no_scroll };
 
   Layout(const var::StringView name);
 
@@ -63,7 +63,8 @@ public:
 
   void update_drawing_area(const Component *component, const DrawingArea &area);
 
-  void update_drawing_area(const var::StringView name, const DrawingArea &area) {
+  void
+  update_drawing_area(const var::StringView name, const DrawingArea &area) {
     update_drawing_area(find<Component>(name), area);
   }
 
@@ -106,7 +107,8 @@ public:
     return nullptr;
   }
 
-  template <class T, bool is_fatal = true> T *search(const var::StringView name) {
+  template <class T, bool is_fatal = true>
+  T *search(const var::StringView name) {
     for (Item &cp : m_component_list) {
       if (cp.component() && cp.component()->is_layout()) {
         T *result
@@ -145,6 +147,7 @@ public:
   }
 
   void scroll(DrawingPoint value);
+  void erase_region(DrawingRegion region);
 
   virtual void draw(const DrawingAttributes &attributes);
 
@@ -156,9 +159,7 @@ public:
     Component::trigger_event(event_type, event_id);
   }
 
-  const DrawingPoint & origin() const {
-    return m_origin;
-  }
+  const DrawingPoint &origin() const { return m_origin; }
 
 protected:
 private:
@@ -175,6 +176,7 @@ private:
 
   void generate_layout_positions();
   void generate_vertical_layout_positions();
+  void generate_vertical_no_scroll_layout_positions();
   void generate_horizontal_layout_positions();
   void generate_free_layout_positions();
 

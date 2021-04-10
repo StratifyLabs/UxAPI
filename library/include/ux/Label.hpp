@@ -11,7 +11,10 @@ namespace ux {
 
 class Label : public ComponentAccess<Label> {
 public:
-  Label(const var::StringView name) : ComponentAccess(name) { set_model(name); }
+  Label(const var::StringView name) : ComponentAccess(name) {
+    set_value(get_model());
+    set_auto_disable();
+  }
 
   void draw(const DrawingScaledAttributes &attributes);
 

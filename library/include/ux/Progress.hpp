@@ -13,8 +13,8 @@ class Progress {
 public:
 
 private:
-  API_AF(Progress, u16, value, 0);
-  API_AF(Progress, u16, maximum, 100);
+  API_AF(Progress, u32, value, 0);
+  API_AF(Progress, u32, maximum, 100);
   API_AF(Progress, u16, width, 20);
 };
 
@@ -31,13 +31,20 @@ public:
     return *this;
   }
 
-  var::Array<u16, 2> value() const;
+  using Value = var::Array<u32, 2>;
+  Value value() const;
 
-  ProgressBar &set_value(u16 value, u16 maximum) {
+  static Value value_from_string(const var::StringView value);
+
+  ProgressBar &set_value(u32 value, u32 maximum) {
     progress().set_value(value).set_maximum(maximum);
     set_model(
       var::NumberString(value).append("/").append(var::NumberString(maximum)));
     return *this;
+  }
+
+  ProgressBar & set_value(const Value value){
+    return set_value(value.at(0), value.at(1));
   }
 
   void draw(const DrawingScaledAttributes &attributes);

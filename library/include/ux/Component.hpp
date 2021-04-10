@@ -89,7 +89,9 @@ public:
 
   // update the location of the component (allow animations)
 
-  virtual void handle_event(const ux::Event &event) {}
+  virtual void handle_event(const ux::Event &event) {
+    MCU_UNUSED_ARGUMENT(event);
+  }
 
   const var::StringView name() const { return m_name.string_view(); }
 
@@ -123,6 +125,7 @@ public:
   const var::StringView get_model(const var::StringView key) const;
 
   void set_model(const var::StringView value);
+  void discard_model();
   void set_model_bool(bool value);
 
   void set_drawing_area(const DrawingArea &drawing_area) {
@@ -265,6 +268,10 @@ private:
   API_ACCESS_DERIVED_FUNDAMETAL(B, T, sgfx::Theme::State, theme_state)         \
   API_ACCESS_DERIVED_FUNDAMETAL(B, T, Layout *, parent)                        \
   EVENT_DECLARE_TYPE()                                                         \
+  T &erase() {                                                                 \
+    B::erase();                                                                \
+    return static_cast<T &>(*this);                                            \
+  }                                                                            \
   T &set_enabled(bool value = true) {                                          \
     B::set_enabled_examine(value);                                             \
     return static_cast<T &>(*this);                                            \
@@ -293,11 +300,9 @@ private:
   }
 
 template <class T>
-class ComponentAccess : public Component,
-                        public DrawingComponentProperties<T> {
+class ComponentAccess : public Component, public DrawingComponentProperties<T> {
 public:
-  ComponentAccess(const var::StringView name) : Component(name) {
-  }
+  ComponentAccess(const var::StringView name) : Component(name) {}
 
   COMPONENT_ACCESS_DERIVED(Component, T)
 
