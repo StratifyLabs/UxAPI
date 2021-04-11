@@ -98,6 +98,7 @@ void TextArea::handle_event(const ux::Event &event) {
 void TextArea::load_page_buffer() {
   API_ASSERT(m_source != nullptr);
 
+  printf("load %d bytes from %d\n", calculate_remaining(), m_source->location());
   const auto bytes_read
     = ViewFile(m_page_buffer)
         .write(*m_source, File::Write().set_size(calculate_remaining()))
@@ -116,6 +117,7 @@ void TextArea::load_page_buffer() {
 
   m_scroll = ((m_page_start - m_content_location) * 25 + m_content_size / 2)
              / m_content_size;
+
   m_display_text = StringView(m_page_buffer.to_char(), bytes_read);
 }
 
@@ -136,7 +138,6 @@ void TextArea::handle_increment_scroll() {
 }
 
 void TextArea::handle_decrement_scroll() {
-
   if (m_is_text_box_scroll_mode || m_source == nullptr) {
     if (m_text_box.scroll() > 1) {
       m_text_box.decrement_scroll();
@@ -160,6 +161,7 @@ void TextArea::handle_decrement_scroll() {
   const auto preload_size
     = is_full_capacity ? line_buffer.capacity() : m_page_start;
 
+
   m_source->seek(preload_start)
     .read(var::View(line_buffer.data(), preload_size));
   line_buffer.data()[preload_size] = 0;
@@ -177,7 +179,8 @@ void TextArea::handle_decrement_scroll() {
         ? m_content_location
         : m_page_start - count_lines_result.characters_on_last_line - 1;
 
-  m_source->seek(m_page_start - count_lines_result.characters_on_last_line - 1);
+
+  m_source->seek(m_page_start);
 
   load_page_buffer();
 }
