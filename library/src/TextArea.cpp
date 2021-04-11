@@ -98,7 +98,6 @@ void TextArea::handle_event(const ux::Event &event) {
 void TextArea::load_page_buffer() {
   API_ASSERT(m_source != nullptr);
 
-  printf("load %d bytes from %d\n", calculate_remaining(), m_source->location());
   const auto bytes_read
     = ViewFile(m_page_buffer)
         .write(*m_source, File::Write().set_size(calculate_remaining()))
