@@ -23,6 +23,7 @@ private:
   API_ACCESS_COMPOUND(ListItem, var::KeyString, label);
   API_ACCESS_COMPOUND(ListItem, var::KeyString, value);
   API_ACCESS_BOOL(ListItem, interactive, true);
+  bool m_is_dragged = false;
 };
 
 template <class T> class ListItemAccess : public ListItem {

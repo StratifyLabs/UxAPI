@@ -47,7 +47,7 @@ void ListItem::handle_event(const ux::Event &event) {
     if (event.id() == TouchContext::event_id_dragged_point) {
       if (theme_state() == Theme::State::highlighted) {
         set_theme_state(Theme::State::default_);
-        set_refresh_drawing_pending();
+        //set_refresh_drawing_pending();
       }
     }
 
@@ -65,7 +65,7 @@ void ListItem::handle_event(const ux::Event &event) {
       if (event.id() == TouchContext::event_id_pressed) {
         if (contains(touch_context->point())) {
           set_theme_state(Theme::State::highlighted);
-          set_refresh_drawing_pending();
+          //set_refresh_drawing_pending();
         }
       }
     }

@@ -25,6 +25,9 @@ public:
     const sgfx::Theme &theme);
 
   void loop();
+  void stop(){
+    m_is_stopped = true;
+  }
 
   const chrono::ClockTimer &timer() { return m_timer; }
 
@@ -58,6 +61,7 @@ private:
   Model &m_model;
   Display *m_display = nullptr;
   const sgfx::Theme *m_theme = nullptr;
+  bool m_is_stopped = false;
 
   chrono::ClockTimer m_timer;
   chrono::ClockTimer m_update_timer;

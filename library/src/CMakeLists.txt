@@ -23,6 +23,7 @@ set(SOURCES
 	Graph.cpp
 	Separator.cpp
 	TextArea.cpp
+	TextFileArea.cpp
 
 	#Drawing primitives
 	Drawing.cpp

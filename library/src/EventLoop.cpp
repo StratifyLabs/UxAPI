@@ -18,7 +18,7 @@ EventLoop::EventLoop(
 void EventLoop::loop() {
   m_controller.distribute_event(SystemEvent(SystemEvent::event_id_enter));
   m_update_timer.restart();
-  while (1) {
+  while (!m_is_stopped) {
     process_events();
     process_update_event();
   }

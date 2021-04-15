@@ -24,6 +24,7 @@ namespace ux {}
 #include "ux/Separator.hpp"
 #include "ux/Slider.hpp"
 #include "ux/TextArea.hpp"
+#include "ux/TextFileArea.hpp"
 #include "ux/ToggleSwitch.hpp"
 #include "ux/TouchGesture.hpp"
 

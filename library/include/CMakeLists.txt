@@ -17,6 +17,7 @@ set(SOURCES
 	ux/Graph.hpp
 	ux/Progress.hpp
 	ux/TextArea.hpp
+	ux/TextFileArea.hpp
 	ux/Controller.hpp
 	ux/Label.hpp
 	ux/ProgressBar.hpp
