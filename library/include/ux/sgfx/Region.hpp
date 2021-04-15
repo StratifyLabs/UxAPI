@@ -114,7 +114,7 @@ public:
     return true;
   }
 
-  Region overlap(const Region &region) {
+  Region overlap(const Region &region) const {
     Region result;
     {
       sg_int_t w;

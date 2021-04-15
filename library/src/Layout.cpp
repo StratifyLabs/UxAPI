@@ -88,10 +88,6 @@ void Layout::erase_region(DrawingRegion region) {
 
   theme()->set_display_palette(*display(), m_theme_style, m_theme_state);
 
-#if 1
-    printer::Printer p;
-    p.object("erase " + name(), window_region);
-#endif
   if ((window_region.width() * window_region.height()) > 0) {
     display()->set_window(window_region);
     display()->clear();
@@ -161,11 +157,8 @@ void Layout::shift_origin(DrawingPoint shift) {
     // determine scroll ends
     generate_layout_positions();
 
-    sgfx::Region layout_region
-      = reference_drawing_attributes().calculate_region_on_bitmap();
-
-    layout_region = Region(
-      layout_region.point() + m_refresh_region.point(),
+    const auto layout_region = Region(
+      Point(reference_drawing_attributes().calculate_region_on_bitmap().point) + m_refresh_region.point(),
       m_refresh_region.area());
 
     for (Item &item : m_component_list) {
@@ -175,13 +168,14 @@ void Layout::shift_origin(DrawingPoint shift) {
         item.component()->reference_drawing_attributes()
           = reference_drawing_attributes() + m_origin + item.drawing_point()
             + item.drawing_area();
-        sgfx::Region component_region = item.component()
+
+        const auto component_region = item.component()
                                           ->reference_drawing_attributes()
                                           .calculate_region_on_bitmap();
 
-        sgfx::Region overlap = layout_region.overlap(component_region);
+        const auto overlap = layout_region.overlap(component_region);
 
-        if ((overlap.width() * overlap.height()) > 0) {
+        if (overlap.width() * overlap.height() > 0) {
           // this calculates if only part of the element should be refreshed
           // (the mask)
 
@@ -196,6 +190,7 @@ void Layout::shift_origin(DrawingPoint shift) {
           item.component()->set_refresh_region(overlap);
 
         } else {
+          //no overlap with the layout view, so component is disabled
           item.component()->set_visible_examine(false);
         }
       }
@@ -237,7 +232,7 @@ void Layout::distribute_event(const ux::Event &event) {
   set_busy();
   if (is_focus()) {
 
-    TouchContext *touch_context = event.is_trigger<TouchContext>();
+    auto * const touch_context = event.is_trigger<TouchContext>();
 
     if (
       touch_context && event.id() == TouchContext::event_id_pressed

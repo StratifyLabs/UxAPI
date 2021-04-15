@@ -207,6 +207,8 @@ protected:
     }
   }
 
+  const sgfx::Region &refresh_region() const { return m_refresh_region; }
+
   virtual void set_enabled_examine(bool value = true) {
     if (is_enabled() != value) {
       if (value) {
@@ -314,9 +316,14 @@ public:
   var::StringView value() const { return get_model(); }
 
   bool contains(const sgfx::Point &point) {
-    return DrawingComponentProperties<T>::calculate_region_inside_margin(
-             reference_drawing_attributes().calculate_region_on_bitmap())
-      .contains(point);
+    const auto region_on_bitmap
+      = DrawingComponentProperties<T>::calculate_region_inside_margin(
+        reference_drawing_attributes().calculate_region_on_bitmap());
+    const auto refresh_on_bitmap = ux::sgfx::Region(
+      region_on_bitmap.point() + refresh_region().point(),
+      refresh_region().area());
+
+    return refresh_on_bitmap.contains(point);
   }
 
   COMPONENT_ACCESS_CREATE()

@@ -47,6 +47,7 @@ void ListItem::handle_event(const ux::Event &event) {
     if (event.id() == TouchContext::event_id_dragged_point) {
       if (theme_state() == Theme::State::highlighted) {
         set_theme_state(Theme::State::default_);
+        //it is a bit annoying to highlight and dehighlight
         //set_refresh_drawing_pending();
       }
     }
