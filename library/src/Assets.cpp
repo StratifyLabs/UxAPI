@@ -113,7 +113,7 @@ void Assets::find_vector_paths_in_directory(const var::StringView path) {
   for (const auto &entry : file_list) {
     if (fs::Path::suffix(entry) == "svic") {
       // format is name-weight-size.sbf
-      fmt::Svic svic = fmt::Svic(path + "/" + entry);
+      fmt::Svic svic = fmt::Svic(path / entry);
       svic.set_keep_open();
       m_vector_path_list.push_back(svic);
     }

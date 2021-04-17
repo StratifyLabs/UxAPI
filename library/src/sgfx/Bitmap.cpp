@@ -48,7 +48,7 @@ printer::operator<<(printer::Printer &printer, const ux::sgfx::Bitmap &a) {
         += Printer::get_bitmap_pixel_character(color, a.bmap()->bits_per_pixel);
     }
     line += ("|");
-    printer.key(var::String().format("line-%04d", i), line);
+    printer.key(var::NumberString().format("line-%04d", i), line);
     ux::sgfx::Bitmap::api()->cursor_inc_y(&y_cursor);
   }
   line.clear();

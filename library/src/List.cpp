@@ -93,7 +93,7 @@ List &List::add_filler(sgfx::Theme::Style style) {
                               .height();
 
   if (height < 1010) {
-    Separator *list_filler = &(Separator::create(var::String(name()) + "Filler")
+    Separator *list_filler = &(Separator::create(var::IdString(name()).append("Filler"))
                                  .set_drawing_area(1000, 1010 - height)
                                  .set_theme_style(style)
                                  .set_left_border(0)

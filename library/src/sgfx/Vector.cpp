@@ -16,7 +16,7 @@ printer::operator<<(printer::Printer &printer, const ux::sgfx::VectorPath &a) {
   for (u32 i = 0; i < a.icon_count(); i++) {
     printer.print_open_object(
       printer.verbose_level(),
-      var::String().format("[%d]", i).cstring());
+      var::NumberString().format("[%d]", i).cstring());
     {
       printer << ux::sgfx::VectorPathDescription(a.icon_list()[i]);
       printer.print_close_object();

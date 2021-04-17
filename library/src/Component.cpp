@@ -86,8 +86,8 @@ void Component::refresh_drawing() {
 
 #if 0
       printer::Printer p;
-      p.object("draw " + name(), window_region);
-      p.object("refreshRegion " + name(), m_refresh_region);
+      p.object("draw " | name(), window_region);
+      p.object("refreshRegion " | name(), m_refresh_region);
 #endif
 
       display()->write_bitmap(
@@ -118,7 +118,7 @@ void Component::erase() {
 
 #if 0
     printer::Printer p;
-    p.object("erase " + name(), window_region);
+    p.object("erase " | name(), window_region);
 #endif
     if ((window_region.width() * window_region.height()) > 0) {
       display()->set_window(window_region);
