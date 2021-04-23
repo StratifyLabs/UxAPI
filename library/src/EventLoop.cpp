@@ -52,7 +52,6 @@ void EventLoop::process_update_event() {
 
 EventLoop &EventLoop::trigger_event(const Event &event) {
   API_ASSERT(event.type() != SystemEvent::event_type());
-  API_PRINTF_TRACE_LINE();
   m_event_stack.push_back(event);
   return *this;
 }

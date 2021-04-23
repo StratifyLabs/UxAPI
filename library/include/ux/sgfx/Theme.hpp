@@ -89,7 +89,7 @@ public:
 
   Theme &write_palette(Style style, State state, const Palette &palette);
 
-  Palette read_palette(Style style, State state) const;
+  const Palette& read_palette(Style style, State state) const;
 
   const Theme &
   set_display_palette(const Display &display, Style style, State state) const;
@@ -125,8 +125,9 @@ private:
   var::KeyString m_secondary_font_name;
   var::KeyString m_primary_icon_font_name;
   chrono::MicroTime m_button_hold_duration = 750_milliseconds;
+  Palette m_current_palette;
 
-  header_t m_header = {0};
+  header_t m_header = {};
   u16 m_color_count = 0;
 
   size_t header_color_count() const { return 1 << (m_header.bits_per_pixel); }

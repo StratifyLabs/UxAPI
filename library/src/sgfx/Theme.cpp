@@ -121,6 +121,9 @@ size_t Theme::calculate_color_offset(Style style, State state) const {
 Theme &Theme::set_bits_per_pixel(u8 bits_per_pixel) {
   m_header.bits_per_pixel = bits_per_pixel;
   m_color_count = header_color_count();
+  m_current_palette
+    .set_pixel_format(static_cast<Palette::PixelFormat>(m_header.pixel_format))
+    .set_color_count(static_cast<Palette::ColorCount>(m_color_count));
   return *this;
 }
 
@@ -131,19 +134,18 @@ Theme &Theme::write_palette(Style style, State state, const Palette &palette) {
   return *this;
 }
 
-Palette Theme::read_palette(Style style, State state) const {
-  Palette result;
-  result
-    .set_pixel_format(static_cast<Palette::PixelFormat>(m_header.pixel_format))
-    .set_color_count(static_cast<Palette::ColorCount>(m_color_count));
+const Palette &Theme::read_palette(Style style, State state) const {
   const int offset = calculate_color_offset(style, state);
-  m_color_file.seek(offset).read(result.colors());
-  return result;
+  m_color_file.seek(offset).read(m_current_palette.colors());
+  return m_current_palette;
 }
 
 Theme &Theme::load(const var::StringView path) {
   m_color_file = std::move(fs::File(path).read(var::View(m_header)));
   m_color_count = header_color_count();
+  m_current_palette
+    .set_pixel_format(Palette::PixelFormat(m_header.pixel_format))
+    .set_color_count(Palette::ColorCount(m_color_count));
   return *this;
 }
 
@@ -162,6 +164,10 @@ Theme &Theme::create(
     = std::move(fs::File(is_overwrite, path).write(var::View(m_header)));
 
   m_color_count = header_color_count();
+
+  m_current_palette
+    .set_pixel_format(Palette::PixelFormat(m_header.pixel_format))
+    .set_color_count(Palette::ColorCount(m_color_count));
 
   return *this;
 }

@@ -70,7 +70,7 @@ void Button::handle_event(const ux::Event &event) {
         m_hold_timer.restart();
 
         set_theme_state(Theme::State::highlighted);
-        refresh_drawing();
+        set_refresh_drawing_pending();
       }
     }
   } else if (event.type() == SystemEvent::event_type()) {
