@@ -73,16 +73,32 @@ public:
     return event == SystemEvent(event_id_enter);
   }
 
+  static SystemEvent enter(){
+    return SystemEvent(event_id_enter);
+  }
+
   static bool is_exit(const Event & event){
     return event == SystemEvent(event_id_exit);
+  }
+
+  static SystemEvent exit(){
+    return SystemEvent(event_id_exit);
   }
 
   static bool is_periodic(const Event & event){
     return event == SystemEvent(event_id_periodic);
   }
 
+  static SystemEvent periodic(){
+    return SystemEvent(event_id_periodic);
+  }
+
   static bool is_transition(const Event & event){
     return event == SystemEvent(event_id_transition);
+  }
+
+  static SystemEvent transition(){
+    return SystemEvent(event_id_transition);
   }
 };
 

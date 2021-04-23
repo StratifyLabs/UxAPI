@@ -40,9 +40,9 @@ void Component::examine_visibility() {
     set_refresh_region(m_local_bitmap.region());
     redraw();
 
-    handle_event(SystemEvent(SystemEvent::event_id_enter));
+    handle_event(SystemEvent::enter());
   } else {
-    handle_event(SystemEvent(SystemEvent::event_id_exit));
+    handle_event(SystemEvent::exit());
     m_local_bitmap = BitmapData();
   }
 }

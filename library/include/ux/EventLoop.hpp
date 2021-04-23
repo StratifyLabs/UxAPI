@@ -67,8 +67,8 @@ private:
   chrono::ClockTimer m_update_timer;
   chrono::MicroTime m_update_period;
 
-  var::Stack<Event> m_event_stack;
-  var::Stack<Event> m_temporary_event_stack;
+  var::Vector<Event> m_event_stack;
+  var::Vector<Event> m_temporary_event_stack;
 
   void process_update_event();
 };

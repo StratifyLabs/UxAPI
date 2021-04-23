@@ -31,7 +31,7 @@ void Controller::distribute_event(const ux::Event &event) {
       if (m_current_layout->is_created()) {
         delete m_current_layout;
       }
-      handle_event(SystemEvent(SystemEvent::event_id_transition));
+      handle_event(SystemEvent::transition());
     }
 
 
