@@ -6,41 +6,39 @@
 using namespace ux::sgfx;
 using namespace ux;
 
-float GraphAxes::calculate_range_order_of_magnitude(float range){
-	return powf(10.f, floorf( log10f(range) ));
+float GraphAxes::calculate_range_order_of_magnitude(float range) {
+  return powf(10.f, floorf(log10f(range)));
 }
 
-float GraphAxes::get_minimum_axis_value(float value, float range){
-	float range_order_of_magnitude = calculate_range_order_of_magnitude(range);
-	return floorf( value / range_order_of_magnitude ) *
-			range_order_of_magnitude - range_order_of_magnitude/10.f;
+float GraphAxes::get_minimum_axis_value(float value, float range) {
+  float range_order_of_magnitude = calculate_range_order_of_magnitude(range);
+  return floorf(value / range_order_of_magnitude) * range_order_of_magnitude
+         - range_order_of_magnitude / 10.f;
 }
 
-float GraphAxes::get_maximum_axis_value(float value, float range){
-	float range_order_of_magnitude = calculate_range_order_of_magnitude(range);
-	return ceilf( value / range_order_of_magnitude ) *
-			range_order_of_magnitude + range_order_of_magnitude/10.f;
+float GraphAxes::get_maximum_axis_value(float value, float range) {
+  float range_order_of_magnitude = calculate_range_order_of_magnitude(range);
+  return ceilf(value / range_order_of_magnitude) * range_order_of_magnitude
+         + range_order_of_magnitude / 10.f;
 }
 
 sgfx::Point LineGraph::transform_point(
-		const Region & plot_region,
-		const LineGraphPoint & line_graph_point
-		){
+  const Region &plot_region,
+  const LineGraphPoint &line_graph_point) {
 
-	const sg_size_t height = plot_region.height() - 1;
-	const sg_size_t width = plot_region.width() - 1;
+  const sg_size_t height = plot_region.height() - 1;
+  const sg_size_t width = plot_region.width() - 1;
 
-
-	return Point(
-				plot_region.point().x() +
-				(line_graph_point.x() - x_axis().minimum()) *
-				width / x_axis().range(),
-				plot_region.point().y() +
-				(height -
-				 (line_graph_point.y() - y_axis().minimum()) *
-				 height / y_axis().range()
-				 )
-				);
+  return Point(
+    plot_region.point().x() +
+      (line_graph_point.x() - x_axis().minimum()) *
+        width / x_axis().range(),
+    plot_region.point().y() +
+      (height -
+       (line_graph_point.y() - y_axis().minimum()) *
+         height / y_axis().range()
+       )
+    );
 }
 
 void LineGraph::draw(const DrawingScaledAttributes &attributes) {
@@ -155,67 +153,42 @@ LineGraphPoint LineGraph::maximum() const {
   return LineGraphPoint(x_threshold, y_threshold);
 }
 
-LineGraph& LineGraph::fit_axes_to_data(){
+LineGraph &LineGraph::fit_axes_to_data() {
 
-	LineGraphPoint min = minimum();
-	LineGraphPoint max = maximum();
+  LineGraphPoint min = minimum();
+  LineGraphPoint max = maximum();
 
-	const float x_range = max.x() - min.x();
-	const float y_range = max.y() - min.y();
+  const float x_range = max.x() - min.x();
+  const float y_range = max.y() - min.y();
 
-	x_axis().set_minimum(
-				get_minimum_axis_value(min.x(), x_range)
-				);
+  x_axis()
+    .set_minimum(get_minimum_axis_value(min.x(), x_range))
+    .set_maximum(get_maximum_axis_value(max.x(), x_range));
 
-	x_axis().set_maximum(
-				get_maximum_axis_value(max.x(), x_range)
-				);
+  y_axis()
+    .set_minimum(get_minimum_axis_value(min.y(), y_range))
+    .set_maximum(get_maximum_axis_value(max.y(), y_range));
 
-	y_axis().set_minimum(
-				get_minimum_axis_value(min.y(), y_range)
-				);
+  if (x_range > 0.0f) {
+    x_axis().set_minimum(min.x()).set_maximum(max.x());
+  } else {
+    x_axis().set_minimum(min.x() - 1.0f).set_maximum(max.x() + 1.0f);
+  }
+  if (y_range > 0.0f) {
+    y_axis().set_minimum(min.y()).set_maximum(max.y());
+  } else {
+    y_axis().set_minimum(min.y() - 1.0f).set_maximum(max.y() + 1.0f);
+  }
 
-	y_axis().set_maximum(
-				get_maximum_axis_value(max.y(), y_range)
-				);
+  x_axis()
+    .set_major_tick(calculate_range_order_of_magnitude(x_range))
+    .set_minor_tick(x_axis().major_tick() / 5.0f);
 
-	if( x_range > 0.0f ){
-		x_axis().set_minimum(min.x());
-		x_axis().set_maximum(max.x());
-	} else {
-		x_axis().set_minimum(min.x() - 1.0f);
-		x_axis().set_maximum(max.x() + 1.0f);
-	}
-	if( y_range > 0.0f ){
-		y_axis().set_minimum(min.y());
-		y_axis().set_maximum(max.y());
-	} else {
-		y_axis().set_minimum(min.y() - 1.0f);
-		y_axis().set_maximum(max.y() + 1.0f);
-	}
+  y_axis()
+    .set_major_tick(calculate_range_order_of_magnitude(y_range))
+    .set_minor_tick(y_axis().major_tick() / 5.0f);
 
-	x_axis().set_major_tick(
-				calculate_range_order_of_magnitude(x_range)
-				);
-
-	x_axis().set_minor_tick(
-				x_axis().major_tick() / 5.0f
-				);
-
-	y_axis().set_major_tick(
-				calculate_range_order_of_magnitude(y_range)
-				);
-
-	y_axis().set_minor_tick(
-				y_axis().major_tick() / 5.0f
-				);
-
-
-	return *this;
+  return *this;
 }
 
-void BarGraph::draw(
-		const DrawingScaledAttributes & attributes
-		){
-
-}
+void BarGraph::draw(const DrawingScaledAttributes &attributes) {}
