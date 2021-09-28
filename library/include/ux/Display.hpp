@@ -19,7 +19,7 @@ public:
 
   class Info {
   public:
-    Info() { m_info = {0}; }
+    Info() = default;
     Info(const display_info_t &info) : m_info(info) {}
 
     bool is_valid() const { return memory_size() != 0; }
@@ -47,7 +47,7 @@ public:
     u16 rows() const { return m_info.rows; }
 
   private:
-    display_info_t m_info;
+    display_info_t m_info = {};
   };
 
   Display(fs::FileObject &device);

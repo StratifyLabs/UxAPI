@@ -128,11 +128,11 @@ protected:
   const fs::FileObject *m_file = nullptr;
   mutable BitmapData m_canvas;
   mutable u8 m_current_canvas = 0;
-  mutable sg_font_char_t m_char = {0};
+  mutable sg_font_char_t m_char = {};
   bool m_is_kerning_enabled = true;
   sg_size_t m_letter_spacing = 1;
   int m_space_size = 8;
-  sg_font_header_t m_header = {0};
+  sg_font_header_t m_header = {};
   u32 m_canvas_start = 0;
   u32 m_canvas_size = 0;
   var::Vector<sg_font_kerning_pair_t> m_kerning_pairs;

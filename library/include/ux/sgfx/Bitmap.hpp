@@ -32,7 +32,7 @@ private:
 #if defined __win32
 
 #else
-    = {0}
+    = {}
 #endif
     ;
 };

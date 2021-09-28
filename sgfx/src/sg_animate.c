@@ -2,7 +2,7 @@
 
 #include <sdk/types.h>
 #if !defined __link
-#include <sos/arch.h>
+//#include <sos/arch.h>
 #endif
 
 #include <unistd.h>
