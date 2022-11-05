@@ -252,13 +252,13 @@ sg_bmap_data_t *Bitmap::bmap_data(const Point &p) {
 }
 
 const Bitmap &Bitmap::save(const fs::File &file) const {
-  sg_bmap_header_t hdr;
-  hdr.width = width();
-  hdr.height = height();
-  hdr.size = calculate_size();
-  hdr.bits_per_pixel = api()->bits_per_pixel;
-  hdr.version = api()->sos_api.version;
-  file.write(View(hdr)).write(m_bmap.data, calculate_size());
+  auto hdr = sg_bmap_header_t{
+    .width = width(),
+    .height = height(),
+    .size = calculate_size(),
+    .bits_per_pixel = api()->bits_per_pixel,
+    .version = u16(api()->sos_api.version)};
+  file.write(View(hdr)).write(View(m_bmap.data, calculate_size()));
   return *this;
 }
 

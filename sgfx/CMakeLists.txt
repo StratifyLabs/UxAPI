@@ -1,11 +1,10 @@
 
-
-api_add_api_library(sgfx "" "")
-api_add_api_library_option(sgfx "" 1bpp)
-api_add_api_library_option(sgfx "" 2bpp)
-api_add_api_library_option(sgfx "" 4bpp)
-api_add_api_library_option(sgfx "" 8bpp)
-api_add_api_library_option(sgfx "" 16bpp)
+api2_add_library(NAME sgfx)
+api2_add_library(NAME sgfx OPTION 1bpp)
+api2_add_library(NAME sgfx OPTION 2bpp)
+api2_add_library(NAME sgfx OPTION 4bpp)
+api2_add_library(NAME sgfx OPTION 8bpp)
+api2_add_library(NAME sgfx OPTION 16bpp)
 
 
 

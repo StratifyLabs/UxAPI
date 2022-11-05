@@ -3,11 +3,13 @@
 #include "ux/Display.hpp"
 
 using namespace ux;
+using namespace fs;
+using namespace var;
 
 // const Display &Display::write(const sgfx::Bitmap &bitmap) const {}
 
-Display::Display(fs::FileObject &device)
-  : fs::FileMemberAccess<Display>(device) {
+Display::Display(var::StringView path)
+  : fs::FileMemberAccess<Display, File>(path) {
   Info info = get_info();
 
   set_bitmap(sgfx::Bitmap(
@@ -23,7 +25,7 @@ Display::Display(fs::FileObject &device)
 }
 
 const Display &Display::write_bitmap(const sgfx::Bitmap &bitmap) const {
-  return write(bitmap.bmap(), sizeof(*bitmap.bmap()));
+  return write(View(*bitmap.bmap()));
 }
 
 Display::Info Display::get_info() const {
@@ -72,7 +74,7 @@ const Display &Display::disable() const {
 }
 
 const Display &Display::refresh() const {
-  return ioctl(I_DISPLAY_REFRESH, nullptr);
+  return ioctl(I_DISPLAY_REFRESH);
 }
 
 const Display &Display::wait(const chrono::MicroTime &resolution) const {
@@ -83,7 +85,7 @@ const Display &Display::wait(const chrono::MicroTime &resolution) const {
 }
 
 bool Display::is_busy() const {
-  return ioctl(I_DISPLAY_ISBUSY, nullptr).return_value() > 0;
+  return ioctl(I_DISPLAY_ISBUSY).return_value() > 0;
 }
 
 const Display &Display::set_palette(const sgfx::Palette &palette) const {
