@@ -68,7 +68,7 @@ typedef u32 sg_unified_t;
  * \details This is the data structure for a
  * point on a bitmap.
  */
-typedef union MCU_PACK {
+typedef union __attribute__((packed)) {
   struct {
     sg_int_t x /*! X location */;
     sg_int_t y /*! Y location */;
@@ -80,7 +80,7 @@ typedef union MCU_PACK {
  * \details This is the data structure for a
  * dimension on a bitmap.
  */
-typedef union MCU_PACK {
+typedef union __attribute__((packed)) {
   struct {
     sg_size_t width /*! Width */;
     sg_size_t height /*! Height */;
@@ -119,14 +119,14 @@ enum {
 /*! \brief Graphics Pen
  * \details Data structure for holding data for a pen.
  */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   u16 o_flags /*! Flags (SG_PEN_FLAG_...) */;
   u8 thickness /*! Thickness in pixels */;
   u8 resd;
   sg_color_t color /*! Pen color */;
 } sg_pen_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   u32 mask;
   sg_bmap_data_t *colors;
 } sg_palette_t;
@@ -134,7 +134,7 @@ typedef struct MCU_PACK {
 /*! \brief Graphics Bitmap
  * \details Data structure for holding data for a bitmap.
  */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_bmap_data_t *data /*! A pointer to the bitmap data */;
   sg_pen_t pen /*! The bitmap pen used for drawing on the bitmap */;
   sg_area_t area /*! The bitmap's dimensions */;
@@ -148,13 +148,13 @@ typedef struct MCU_PACK {
     *palette /*! palette for importing bitmaps with fewer bits per pixel */;
 } sg_bmap_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   const sg_bmap_t *bmap;
   sg_bmap_data_t *target;
   sg_size_t shift;
 } sg_cursor_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_size_t width;
   sg_size_t height;
   u32 size;
@@ -165,7 +165,7 @@ typedef struct MCU_PACK {
 
 /*! \brief Graphics Region Structure
  * \details Describes an area using a point and a dimension */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_point_t point /*! Top left corner of the region */;
   sg_area_t area /*! Area of the region */;
 } sg_region_t;
@@ -186,31 +186,31 @@ enum {
   SG_VECTOR_PATH_TOTAL
 };
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_point_t point;
 } sg_vector_path_move_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_point_t point;
 } sg_vector_path_line_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_point_t point;
   sg_point_t control;
 } sg_vector_path_quadtratic_bezier_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_point_t point;
   sg_point_t control[2];
 } sg_vector_path_cubic_bezier_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_point_t point;
 } sg_vector_path_pour_t;
 
 /*! \brief Icon Path Structure
  * \details Describes a vector path */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   u16 type /*! type of primitive object (e.g. SG_LINE) */;
   union {
     sg_vector_path_move_t move /*! Move to a point */;
@@ -223,14 +223,14 @@ typedef struct MCU_PACK {
   };
 } sg_vector_path_description_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   u32 count; /*! The number of objects in \a path_description */
   const sg_vector_path_description_t *list;
 } sg_vector_path_icon_t;
 
 /*! \brief Graphics Map Structure
  * \details Describes how an sg_icon_t is mapped to a sg_bitmap_t */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_region_t region;
   s16 rotation; // rotation angle of map on the display
 } sg_vector_map_t;
@@ -238,7 +238,7 @@ typedef struct MCU_PACK {
 /*! \brief Data for drawing vectors using paths
  * \sa sg_draw_vector_path()
  */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   sg_vector_path_icon_t icon /*! The icon to draw */;
   sg_point_t start /*! Internal use */;
   sg_point_t current /*! Internal use */;
@@ -254,7 +254,7 @@ typedef struct MCU_PACK {
  * Y: sg_vector_path_icon_header_t next icon
  *
  */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   char name[24];
   u32 count /*! number of items in the vector icon */;
   u32 list_offset /*! Location of the list in the file */;
@@ -280,7 +280,7 @@ typedef struct {
  * Y: sg_vector_path_icon_header_t next icon
  *
  */
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   char name[24];
   u16 canvas_id /*! the canvas where the icon is located */;
   sg_point_t canvas_point /*! top left corner of the icon on the canvas */;
@@ -313,7 +313,7 @@ enum {
   SG_ANIMATION_PATH_SQUARED_UNDO
 };
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   u8 type;
   u16 step;
   u16 step_total;
@@ -322,13 +322,13 @@ typedef struct MCU_PACK {
   sg_size_t motion_total /*! \brief Total amount of animation movement */;
 } sg_animation_path_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   u8 type /*! \brief Animation type */;
   sg_region_t region /*! Animation region (start point and dimensions) */;
   sg_animation_path_t path;
 } sg_animation_t;
 
-typedef struct MCU_PACK {
+typedef struct __attribute__((packed)) {
   u8 contrast_map[8];
 } sg_antialias_filter_t;
 

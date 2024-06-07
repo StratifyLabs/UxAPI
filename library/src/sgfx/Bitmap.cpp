@@ -258,7 +258,7 @@ const Bitmap &Bitmap::save(const fs::File &file) const {
   hdr.size = calculate_size();
   hdr.bits_per_pixel = api()->bits_per_pixel;
   hdr.version = api()->sos_api.version;
-  file.write(View(hdr)).write(m_bmap.data, calculate_size());
+  file.write(View(hdr)).write(View(m_bmap.data, calculate_size()));
   return *this;
 }
 

@@ -1,13 +1,15 @@
 // Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
 
 #include "ux/Display.hpp"
+#include "fs/ViewFile.hpp"
+#include "var/StringView.hpp"
 
 using namespace ux;
 
 // const Display &Display::write(const sgfx::Bitmap &bitmap) const {}
 
-Display::Display(fs::FileObject &device)
-  : fs::FileMemberAccess<Display>(device) {
+Display::Display(var::StringView path)
+  : fs::FileMemberAccess<Display, fs::File>(path) {
   Info info = get_info();
 
   set_bitmap(sgfx::Bitmap(
@@ -23,7 +25,8 @@ Display::Display(fs::FileObject &device)
 }
 
 const Display &Display::write_bitmap(const sgfx::Bitmap &bitmap) const {
-  return write(bitmap.bmap(), sizeof(*bitmap.bmap()));
+  const auto view_bitmap = fs::ViewFile(var::View(bitmap.bmap(), sizeof(*bitmap.bmap())));
+  return write(view_bitmap);
 }
 
 Display::Info Display::get_info() const {
@@ -72,7 +75,7 @@ const Display &Display::disable() const {
 }
 
 const Display &Display::refresh() const {
-  return ioctl(I_DISPLAY_REFRESH, nullptr);
+  return ioctl(I_DISPLAY_REFRESH);
 }
 
 const Display &Display::wait(const chrono::MicroTime &resolution) const {
@@ -83,7 +86,7 @@ const Display &Display::wait(const chrono::MicroTime &resolution) const {
 }
 
 bool Display::is_busy() const {
-  return ioctl(I_DISPLAY_ISBUSY, nullptr).return_value() > 0;
+  return ioctl(I_DISPLAY_ISBUSY).return_value() > 0;
 }
 
 const Display &Display::set_palette(const sgfx::Palette &palette) const {

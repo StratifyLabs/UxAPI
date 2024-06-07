@@ -7,11 +7,13 @@
 #include <sos/dev/display.h>
 
 #include <var/View.hpp>
+#include <var/StringView.hpp>
+
 #include "sgfx/Bitmap.hpp"
 
 namespace ux {
 
-class Display : public fs::FileMemberAccess<Display>,
+class Display : public fs::FileMemberAccess<Display, fs::File>,
                 public api::ExecutionContext {
 public:
   enum class Mode { palette, raw };
@@ -50,7 +52,7 @@ public:
     display_info_t m_info = {};
   };
 
-  Display(fs::FileObject &device);
+  Display(var::StringView path);
 
   Display::Info get_info() const;
 
