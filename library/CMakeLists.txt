@@ -1,4 +1,5 @@
-set(LIBRARIES	JsonAPI FsAPI ChronoAPI VarAPI)
+
+set(LIBRARIES JsonAPI FsAPI ChronoAPI VarAPI)
 if(CMSDK_IS_LINK)
 	list(APPEND LIBRARIES StratifyOS)
 endif()
@@ -17,7 +18,14 @@ foreach(TARGET ${TARGET_LIST})
 	target_include_directories(${TARGET}
 		PUBLIC
 		$<INSTALL_INTERFACE:include/sgfx>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../sgfx/include>)
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../sgfx/include>
+		)
+
+	target_include_directories(${TARGET}
+		PUBLIC
+		$<INSTALL_INTERFACE:include/sgfx>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../sgfx/include>
+		)
 endforeach()
 
 

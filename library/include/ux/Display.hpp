@@ -7,6 +7,8 @@
 #include <sos/dev/display.h>
 
 #include <var/View.hpp>
+#include <var/StringView.hpp>
+
 #include "sgfx/Bitmap.hpp"
 
 namespace ux {

@@ -1,6 +1,8 @@
 // Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
 
 #include "ux/Display.hpp"
+#include "fs/ViewFile.hpp"
+#include "var/StringView.hpp"
 
 using namespace ux;
 using namespace fs;
@@ -9,7 +11,7 @@ using namespace var;
 // const Display &Display::write(const sgfx::Bitmap &bitmap) const {}
 
 Display::Display(var::StringView path)
-  : fs::FileMemberAccess<Display, File>(path) {
+  : fs::FileMemberAccess<Display, fs::File>(path) {
   Info info = get_info();
 
   set_bitmap(sgfx::Bitmap(
